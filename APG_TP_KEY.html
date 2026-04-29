@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Government & Politics — Master Answer Key</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-deep:#101739; --navy:#202A63; --navy-bright:#2C3170;
+  --red:#B22234; --red-bright:#D6424A;
+  --gold:#C8960C; --gold-bright:#E4B93C;
+  --cream:#F8F3E8; --parchment:#EFE5CE; --ink:#17172A;
+  --white:#FFFFFF; --muted:rgba(248,243,232,.64); --line:rgba(200,150,12,.28);
+  --green:#1B6B3A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(200,150,12,.22), transparent 32%),
+    linear-gradient(135deg, #101739 0%, #18204C 50%, #0A102A 100%);
+  color:var(--cream);
+  font-family:'Source Serif 4', Georgia, serif;
+  overflow-x:hidden;
+}
+body::before{
+  content:''; position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(248,243,232,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(248,243,232,.035) 1px, transparent 1px);
+  background-size:64px 64px; pointer-events:none; z-index:0;
+}
+body::after{
+  content:''; position:fixed; inset:0;
+  background:
+    radial-gradient(circle at 12% 25%, rgba(178,34,52,.18), transparent 30%),
+    radial-gradient(circle at 88% 20%, rgba(44,49,112,.32), transparent 32%),
+    radial-gradient(circle at 50% 100%, rgba(200,150,12,.10), transparent 35%);
+  pointer-events:none; z-index:0;
+}
+#stars-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.18;}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 2rem 5rem;}
+header{text-align:center;padding-top:3rem;}
+.seal{
+  display:inline-flex;align-items:center;justify-content:center;width:76px;height:76px;border-radius:50%;
+  background:linear-gradient(145deg,var(--gold-bright),var(--gold));border:3px solid rgba(248,243,232,.85);
+  color:var(--navy-deep);font-size:2.2rem;margin-bottom:1.35rem;
+  box-shadow:0 0 0 7px rgba(200,150,12,.16),0 0 52px rgba(200,150,12,.34);
+}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;color:var(--gold-bright);text-transform:uppercase;letter-spacing:.34em;font-size:.78rem;font-weight:700;margin-bottom:.7rem;}
+.main-title{font-family:'Playfair Display',serif;font-size:clamp(2.3rem,6vw,4.7rem);line-height:.95;font-weight:900;color:var(--white);text-shadow:0 5px 34px rgba(0,0,0,.45);}
+.main-title .red-word{color:var(--red-bright);}
+.main-title .gold-word{color:var(--gold-bright);}
+.tagline{margin-top:1rem;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.13em;font-weight:600;font-size:clamp(1rem,2.2vw,1.28rem);color:rgba(248,243,232,.56);}
+.navbar{
+  margin:2rem auto 2.4rem;display:flex;gap:.55rem;flex-wrap:wrap;justify-content:center;
+}
+.navbar a{
+  font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.12em;text-decoration:none;
+  color:var(--navy-deep);background:var(--parchment);border:1px solid rgba(228,185,60,.45);
+  padding:.52rem .8rem;border-radius:999px;font-size:.72rem;font-weight:800;transition:transform .2s, background .2s;
+}
+.navbar a:hover{transform:translateY(-2px);background:#fff6dc;}
+.key-shell{
+  background:rgba(16,23,57,.78);border:1px solid rgba(228,185,60,.32);border-radius:18px;overflow:hidden;
+  box-shadow:0 18px 55px rgba(0,0,0,.35), inset 0 1px 0 rgba(248,243,232,.08);position:relative;margin-bottom:1.4rem;
+}
+.key-shell::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--red),var(--gold-bright),var(--navy-bright),var(--gold-bright),var(--red));}
+.section-head{padding:1.7rem 1.7rem 1rem;border-bottom:1px solid rgba(228,185,60,.18);}
+.kicker{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.28em;font-size:.68rem;font-weight:800;color:var(--gold-bright);margin-bottom:.45rem;}
+h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.55rem);line-height:1.05;color:var(--white);}
+.section-sub{margin-top:.6rem;color:rgba(248,243,232,.65);font-size:.95rem;line-height:1.65;max-width:850px;}
+.content{padding:1.4rem 1.7rem 1.7rem;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;}
+.card{
+  background:linear-gradient(180deg,rgba(248,243,232,.10),rgba(248,243,232,.045));border:1px solid rgba(248,243,232,.14);
+  border-radius:14px;padding:1.15rem;overflow:hidden;position:relative;
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red-bright));opacity:.55;}
+.card h3{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:1.3rem;color:var(--white);line-height:1.1;margin:.25rem 0 .6rem;}
+.label{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.2em;color:var(--gold-bright);font-size:.62rem;font-weight:800;margin-bottom:.5rem;}
+p, li{font-size:.92rem;line-height:1.65;color:rgba(248,243,232,.75);}
+ul{padding-left:1.15rem;}
+strong{color:var(--gold-bright);font-weight:700;}
+.score{display:inline-block;margin-top:.7rem;background:rgba(27,107,58,.22);border:1px solid rgba(27,107,58,.55);color:#bff0cf;border-radius:999px;padding:.22rem .55rem;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;}
+.table-card{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;background:rgba(248,243,232,.045);border-radius:12px;overflow:hidden;}
+th,td{border-bottom:1px solid rgba(248,243,232,.12);padding:.78rem .75rem;text-align:left;vertical-align:top;font-size:.88rem;line-height:1.55;color:rgba(248,243,232,.76);}
+th{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.13em;color:var(--gold-bright);font-size:.72rem;background:rgba(16,23,57,.58);}
+tr:last-child td{border-bottom:none;}
+.callout{background:rgba(239,229,206,.10);border-left:4px solid var(--gold-bright);border-radius:0 10px 10px 0;padding:1rem 1.1rem;margin-bottom:1rem;}
+.example-title{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-bright);font-size:.78rem;font-weight:800;margin-bottom:.45rem;}
+.footer-link{text-align:center;margin-top:2rem;}
+.footer-link a{color:var(--gold-bright);font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;text-decoration:none;font-weight:800;}
+@media(max-width:650px){.wrap{padding:0 1rem 4rem;}th,td{font-size:.82rem}.content{padding:1rem}.section-head{padding:1.4rem 1rem .9rem;}}
+</style>
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+<div class="wrap">
+<header>
+  <div class="seal">📜</div>
+  <div class="eyebrow">AP Government &amp; Politics</div>
+  <h1 class="main-title">Master <span class="red-word">Answer</span><br><span class="gold-word">Key</span></h1>
+  <p class="tagline">FRQs · Foundational Documents · Landmark Cases · Due Process</p>
+</header>
+
+<nav class="navbar">
+  <a href="#purpose">Purpose</a><a href="#frq1">FRQ 1</a><a href="#frq2">FRQ 2</a><a href="#frq3">FRQ 3</a><a href="#frq4">FRQ 4</a><a href="#docs">Documents</a><a href="#cases">Cases</a><a href="#due">Due Process</a>
+</nav>
+
+<section class="key-shell" id="purpose">
+  <div class="section-head"><div class="kicker">Start Here</div><h2>Purpose &amp; Navigation</h2><p class="section-sub">This master key gives students clear model answers for FRQs and concise reference summaries for AP Government content.</p></div>
+  <div class="content"><div class="callout"><p>Use the section buttons above to jump between FRQ models, foundational documents, required Supreme Court cases, and due process / incorporation / equal protection review.</p></div></div>
+</section>
+
+<section class="key-shell" id="frq1">
+  <div class="section-head"><div class="kicker">FRQ 1</div><h2>Concept Application</h2><p class="section-sub">Model structure: describe the concept, connect it to the scenario, then extend the answer to a related institution or broader effect.</p></div>
+  <div class="content grid">
+    <div class="card"><div class="label">Question 1 · Federalism</div><h3>Federal-State Conflict</h3><p><strong>FEDERALISM</strong> is the division of power between national and state governments. State marijuana legalization while federal law still bans it shows federalism in action. The <strong>SUPREMACY CLAUSE</strong> could allow federal law to override state law, and federal courts could resolve the conflict.</p><span class="score">3 / 3</span></div>
+    <div class="card"><div class="label">Question 2 · Executive Power</div><h3>Executive Order</h3><p>An <strong>EXECUTIVE ORDER</strong> is a presidential directive that carries the force of law inside the executive branch. The president acts, Congress responds, and courts review the order, showing checks and balances. <strong>JUDICIAL REVIEW</strong> could stop the order if unconstitutional.</p><span class="score">3 / 3</span></div>
+    <div class="card"><div class="label">Question 3 · Socialization</div><h3>Belief Formation</h3><p><strong>POLITICAL SOCIALIZATION</strong> is how people develop political beliefs. Religious attendance and politically active households show religion and family shaping views. The <strong>MEDIA</strong> can also influence attitudes by shaping how people understand issues.</p><span class="score">3 / 3</span></div>
+    <div class="card"><div class="label">Question 4 · Turnout</div><h3>Rational Abstention</h3><p><strong>RATIONAL ABSTENTION</strong> happens when people choose not to vote because they believe their vote will not matter. Younger voters saying their vote “doesn’t matter” explains lower turnout. Interest groups act as <strong>LINKAGE INSTITUTIONS</strong> by mobilizing voters.</p><span class="score">3 / 3</span></div>
+  </div>
+</section>
+
+<section class="key-shell" id="frq2">
+  <div class="section-head"><div class="kicker">FRQ 2</div><h2>Quantitative Analysis</h2><p class="section-sub">Model structure: describe data, explain the pattern using an AP concept, then connect the pattern to political behavior or strategy.</p></div>
+  <div class="content grid">
+    <div class="card"><div class="label">Question 1 · Voter Turnout</div><h3>Age &amp; Participation</h3><p>The 60–74 group has the highest turnout at 76%. Turnout generally rises with age, from 50% among 18–29 year-olds to higher levels in older groups. <strong>POLITICAL SOCIALIZATION</strong> helps explain stronger civic habits among older voters. Parties and interest groups would focus outreach on reliable older voters.</p><span class="score">4 / 4</span></div>
+    <div class="card"><div class="label">Question 2 · Party ID</div><h3>Generational Divide</h3><p>Younger generations lean more Democratic, while older generations lean more Republican. <strong>POLITICAL SOCIALIZATION</strong> explains differences because beliefs are shaped by formative experiences, family, media, and major events. Parties adjust campaign strategy by targeting different age coalitions.</p><span class="score">4 / 4</span></div>
+  </div>
+</section>
+
+<section class="key-shell" id="frq3">
+  <div class="section-head"><div class="kicker">FRQ 3</div><h2>SCOTUS Comparison</h2><p class="section-sub">Model structure: state the required case holding, compare the constitutional issue, apply the rule, and argue the likely outcome.</p></div>
+  <div class="content grid">
+    <div class="card"><div class="label">Question 1 · Tinker</div><h3>Student Speech</h3><p><strong>Tinker v. Des Moines</strong> held that students have First Amendment rights in school unless speech causes substantial disruption. A post targeting a teacher and encouraging students to ignore work could meet the disruption standard. The Court would likely rule for the school.</p><span class="score">4 / 4</span></div>
+    <div class="card"><div class="label">Question 2 · McCulloch</div><h3>Federal Supremacy</h3><p><strong>McCulloch v. Maryland</strong> held that Congress has implied powers under the Necessary and Proper Clause and that states cannot interfere with federal institutions. A national gun database could be valid if necessary to enforce federal law, and state resistance could be overridden by federal supremacy.</p><span class="score">4 / 4</span></div>
+  </div>
+</section>
+
+<section class="key-shell" id="frq4">
+  <div class="section-head"><div class="kicker">FRQ 4</div><h2>Argumentative Essay Models</h2><p class="section-sub">Three acceptable positions: support, modify, or refute the claim. Each should include a thesis, evidence, reasoning, and counterargument response.</p></div>
+  <div class="content grid">
+    <div class="card"><div class="label">Support</div><h3>Checks Work</h3><p>Separation of powers with checks and balances is effective because each branch has formal powers to limit the others. <strong>Federalist No. 51</strong> explains ambition counteracting ambition, and <strong>Marbury v. Madison</strong> gives courts judicial review.</p></div>
+    <div class="card"><div class="label">Modify</div><h3>Mostly Effective</h3><p>Checks and balances are generally effective, but they can weaken when one branch becomes too dominant or political loyalty limits accountability. <strong>Federalist No. 51</strong> assumes active checking, while <strong>United States v. Lopez</strong> shows courts can still limit Congress.</p></div>
+    <div class="card"><div class="label">Refute</div><h3>Power Can Expand</h3><p>Separation of powers is not always effective because political realities can allow one branch or the national government to dominate. <strong>Brutus No. 1</strong> warns about centralized power, and <strong>McCulloch v. Maryland</strong> expanded federal authority.</p></div>
+  </div>
+</section>
+
+<section class="key-shell" id="docs">
+  <div class="section-head"><div class="kicker">Reference</div><h2>9 Foundational Documents</h2><p class="section-sub">Core questions and main ideas for the required AP Government documents.</p></div>
+  <div class="content table-card"><table>
+    <thead><tr><th>Document</th><th>Central Question</th><th>Key Argument / Main Idea</th></tr></thead>
+    <tbody>
+      <tr><td>Declaration of Independence</td><td>What justifies revolution?</td><td>Government exists to protect natural rights; people may overthrow it if it fails.</td></tr>
+      <tr><td>Articles of Confederation</td><td>What happens when national government is too weak?</td><td>A weak central government cannot tax, regulate, or enforce laws effectively.</td></tr>
+      <tr><td>Constitution / Bill of Rights</td><td>How should power be structured and limited?</td><td>Power is divided across branches and levels, with rights protected.</td></tr>
+      <tr><td>Federalist No. 10</td><td>How does a large republic control factions?</td><td>A large republic makes it harder for factions to dominate.</td></tr>
+      <tr><td>Federalist No. 51</td><td>How does structure prevent domination?</td><td>Separation of powers and checks and balances make ambition counteract ambition.</td></tr>
+      <tr><td>Federalist No. 70</td><td>Why have a single energetic executive?</td><td>A unified executive provides decisive leadership, accountability, and enforcement.</td></tr>
+      <tr><td>Federalist No. 78</td><td>Why have an independent judiciary?</td><td>Independent courts interpret law and protect the Constitution through judicial review.</td></tr>
+      <tr><td>Brutus No. 1</td><td>Why fear strong national power?</td><td>A powerful central government could threaten liberty and state power.</td></tr>
+      <tr><td>Letter from Birmingham Jail</td><td>When is civil disobedience justified?</td><td>People have a moral duty to resist unjust laws nonviolently.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="key-shell" id="cases">
+  <div class="section-head"><div class="kicker">Reference</div><h2>14 Required SCOTUS Cases</h2><p class="section-sub">Quick context for each required landmark case.</p></div>
+  <div class="content table-card"><table>
+    <thead><tr><th>Case</th><th>Context</th></tr></thead>
+    <tbody>
+      <tr><td>Marbury v. Madison</td><td>William Marbury was denied his judicial commission.</td></tr>
+      <tr><td>McCulloch v. Maryland</td><td>Maryland tried to tax the national bank.</td></tr>
+      <tr><td>Schenck v. United States</td><td>Schenck distributed anti-draft pamphlets.</td></tr>
+      <tr><td>Brown v. Board of Education</td><td>School segregation was challenged.</td></tr>
+      <tr><td>Baker v. Carr</td><td>Uneven state legislative districts were challenged.</td></tr>
+      <tr><td>Engel v. Vitale</td><td>School-sponsored prayer was challenged.</td></tr>
+      <tr><td>Gideon v. Wainwright</td><td>Gideon was denied a lawyer in a felony case.</td></tr>
+      <tr><td>Tinker v. Des Moines</td><td>Students wore armbands to protest war.</td></tr>
+      <tr><td>New York Times v. United States</td><td>The government tried to block the Pentagon Papers.</td></tr>
+      <tr><td>Wisconsin v. Yoder</td><td>Amish families resisted compulsory schooling past eighth grade.</td></tr>
+      <tr><td>Shaw v. Reno</td><td>Racially gerrymandered districts were challenged.</td></tr>
+      <tr><td>United States v. Lopez</td><td>Congress banned guns near schools.</td></tr>
+      <tr><td>Citizens United v. FEC</td><td>Restrictions on corporate political spending were challenged.</td></tr>
+      <tr><td>McDonald v. Chicago</td><td>Chicago restricted handgun ownership.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="key-shell" id="due">
+  <div class="section-head"><div class="kicker">Civil Rights &amp; Liberties</div><h2>Due Process, Incorporation &amp; Equal Protection</h2><p class="section-sub">Core concepts for how the Fourteenth Amendment changed federal-state power and rights protections.</p></div>
+  <div class="content grid">
+    <div class="card"><div class="label">Fifth Amendment</div><h3>Federal Due Process</h3><p><strong>Procedural due process</strong> requires fair procedures before government takes life, liberty, or property. <strong>Substantive due process</strong> protects fundamental rights from government interference, even when procedures are followed.</p></div>
+    <div class="card"><div class="label">Fourteenth Amendment</div><h3>State Due Process</h3><p>The Fourteenth Amendment allows the Supreme Court to apply parts of the Bill of Rights to the states, increasing federal power by letting national courts limit state actions that violate rights.</p></div>
+    <div class="card"><div class="label">Selective Incorporation</div><h3>Rights Applied to States</h3><p><strong>Selective incorporation</strong> is the process by which the Supreme Court applies specific Bill of Rights protections to the states. Examples include <strong>Gideon</strong>, <strong>Engel</strong>, <strong>Tinker</strong>, and <strong>McDonald</strong>.</p></div>
+    <div class="card"><div class="label">Equal Protection</div><h3>Fair Treatment</h3><p>The Equal Protection Clause says states cannot deny any person equal protection of the laws. Strict scrutiny applies to race, national origin, and religion; intermediate scrutiny often applies to gender; rational basis applies to most other categories.</p></div>
+  </div>
+</section>
+
+<div class="footer-link"><a href="index.html">← Back to Review Docket</a></div>
+</div>
+
+<script>
+var canvas=document.getElementById('stars-canvas'),ctx=canvas.getContext('2d'),W,H,stars=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+var symbols=['★','✦','§','•','★','✧','⚖','•','📜'];
+function Star(){this.reset=function(){this.x=Math.random()*W;this.y=-40-Math.random()*H;this.speed=.18+Math.random()*.62;this.size=8+Math.random()*14;this.sym=symbols[Math.floor(Math.random()*symbols.length)];this.alpha=.18+Math.random()*.5;this.drift=(Math.random()-.5)*.18;this.angle=0;this.spin=(Math.random()-.5)*.006;};this.reset();this.y=Math.random()*H;}
+for(var i=0;i<80;i++)stars.push(new Star());
+function animate(){ctx.clearRect(0,0,W,H);stars.forEach(function(s){ctx.save();ctx.globalAlpha=s.alpha;ctx.translate(s.x,s.y);ctx.rotate(s.angle);ctx.font='bold '+s.size+'px serif';ctx.fillStyle='#E4B93C';ctx.fillText(s.sym,0,0);ctx.restore();s.y+=s.speed;s.x+=s.drift;s.angle+=s.spin;if(s.y>H+60)s.reset();});requestAnimationFrame(animate);}
+animate();
+</script>
+</body>
+</html>
