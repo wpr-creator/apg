@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Rogers' AP Government & Politics Class</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Cutive+Mono&family=Tinos:wght@400;700&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-deep: #071426;
+  --navy-dark: #0b1e36;
+  --navy-mid: #12345a;
+  --federal-blue: #1c4e80;
+  --red-deep: #8f1d21;
+  --red-bright: #c53336;
+  --gold: #c9a24b;
+  --gold-bright: #f2d37a;
+  --parchment: #f2e6c8;
+  --parchment-deep: #d8c08a;
+  --cream: #fff8e7;
+  --ink: #111827;
+  --white: #ffffff;
+  --shadow: rgba(0,0,0,0.55);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--navy-deep);
+  color: var(--cream);
+  font-family: 'Tinos', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+#stars-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(115deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 80px),
+    linear-gradient(25deg, rgba(201,162,75,0.025) 0 1px, transparent 1px 70px),
+    radial-gradient(circle at 25% 15%, rgba(197,51,54,0.18), transparent 28%),
+    radial-gradient(circle at 75% 5%, rgba(28,78,128,0.32), transparent 30%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -24%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 950px;
+  height: 950px;
+  background: radial-gradient(ellipse, rgba(242,211,122,0.18) 0%, rgba(18,52,90,0.18) 38%, transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+header {
+  padding-top: 3.6rem;
+  text-align: center;
+  position: relative;
+}
+
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--gold-bright), var(--gold));
+  border: 3px solid var(--cream);
+  font-size: 2.15rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 0 7px rgba(201,162,75,0.17), 0 0 46px rgba(242,211,122,0.28);
+  animation: sealGlow 3.5s ease-in-out infinite;
+}
+
+@keyframes sealGlow {
+  0%, 100% { box-shadow: 0 0 0 7px rgba(201,162,75,0.17), 0 0 46px rgba(242,211,122,0.28); }
+  50% { box-shadow: 0 0 0 13px rgba(201,162,75,0.08), 0 0 70px rgba(242,211,122,0.43); }
+}
+
+.eyebrow {
+  font-family: 'Cutive Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 0.85rem;
+}
+
+.main-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: clamp(2.35rem, 6.7vw, 5.2rem);
+  line-height: 0.96;
+  color: var(--white);
+  text-shadow: 0 5px 32px rgba(0,0,0,0.52);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.main-title .red-word {
+  color: var(--red-bright);
+  position: relative;
+  display: inline-block;
+}
+
+.main-title .red-word::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--red-bright);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.main-title .gold-word { color: var(--gold-bright); }
+
+.tagline {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1rem, 2.4vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.52);
+  margin-top: 1rem;
+}
+
+.quote-strip {
+  max-width: 760px;
+  margin: 2rem auto 0;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(242,211,122,0.25);
+  border-bottom: 1px solid rgba(242,211,122,0.25);
+  color: rgba(255,248,231,0.76);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  background: rgba(7,20,38,0.28);
+}
+
+.quote-strip strong {
+  color: var(--gold-bright);
+  font-weight: 700;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2.7rem 0 3rem;
+}
+
+.divider .line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.divider .inner {
+  font-family: 'Cutive Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  white-space: nowrap;
+}
+
+.section-heading {
+  font-family: 'Cutive Mono', monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(242,211,122,0.64);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(242,211,122,0.16);
+}
+
+.units-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+
+.unit-card {
+  position: relative;
+  background:
+    linear-gradient(145deg, rgba(11,30,54,0.96), rgba(7,20,38,0.98));
+  border: 1px solid rgba(242,211,122,0.22);
+  border-radius: 14px;
+  padding: 1.85rem 1.55rem 1.55rem;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+  display: block;
+  cursor: default;
+  min-height: 430px;
+}
+
+.unit-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--red-bright), var(--gold-bright), var(--federal-blue));
+  opacity: 1;
+}
+
+.unit-card::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(242,230,200,0.07);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.unit-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold-bright);
+  box-shadow: 0 14px 44px rgba(0,0,0,0.42), 0 0 0 1px rgba(242,211,122,0.18), inset 0 1px 0 rgba(255,248,231,0.08);
+}
+
+.card-num {
+  font-family: 'Cutive Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.card-num .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red-bright);
+  display: inline-block;
+  box-shadow: 0 0 18px rgba(197,51,54,0.65);
+}
+
+.card-icon {
+  font-size: 2.35rem;
+  margin-bottom: 0.8rem;
+  display: block;
+  line-height: 1;
+}
+
+.card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 0.55rem;
+  letter-spacing: 0.02em;
+}
+
+.card-desc {
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: rgba(255,248,231,0.66);
+  margin-bottom: 1.25rem;
+}
+
+.card-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+  margin-bottom: 1.25rem;
+}
+
+.topic-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  background: rgba(242,211,122,0.09);
+  border: 1px solid rgba(242,211,122,0.22);
+  color: rgba(242,211,122,0.9);
+  padding: 0.22rem 0.52rem;
+  border-radius: 4px;
+}
+
+.review-links {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1.05rem;
+  position: relative;
+  z-index: 2;
+}
+
+.review-button {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: linear-gradient(135deg, var(--red-deep), var(--red-bright));
+  border: 1px solid rgba(242,211,122,0.5);
+  border-radius: 9px;
+  padding: 0.72rem 0.85rem;
+  transition: transform 0.2s, filter 0.2s, box-shadow 0.2s;
+}
+
+.review-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.32);
+}
+
+.review-button.gold {
+  color: var(--navy-deep);
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+}
+
+.review-button.blue {
+  background: linear-gradient(135deg, var(--federal-blue), var(--navy-mid));
+}
+
+.soon-note {
+  margin-top: 1.2rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 9px;
+  background: rgba(242,230,200,0.055);
+  border: 1px solid rgba(242,211,122,0.14);
+  color: rgba(255,248,231,0.55);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.card-watermark {
+  position: absolute;
+  bottom: -0.65rem;
+  right: 1rem;
+  font-family: 'Cinzel', serif;
+  font-size: 5.25rem;
+  font-weight: 900;
+  color: rgba(242,211,122,0.055);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.bottom-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+.mini-card {
+  border: 1px solid rgba(242,211,122,0.16);
+  border-radius: 10px;
+  padding: 1rem;
+  background: rgba(7,20,38,0.48);
+}
+
+.mini-card h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 0.45rem;
+}
+
+.mini-card p {
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: rgba(255,248,231,0.58);
+}
+
+.ticker-wrap {
+  background: linear-gradient(90deg, var(--red-deep), var(--gold), var(--federal-blue));
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0.57rem 0;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+}
+
+.ticker-inner {
+  display: inline-block;
+  animation: ticker 34s linear infinite;
+  font-family: 'Cutive Mono', monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-shadow: 0 1px 12px rgba(0,0,0,0.35);
+}
+
+.ticker-inner span { margin: 0 1.75rem; }
+.ticker-inner .sym { opacity: 0.45; }
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+footer {
+  text-align: center;
+  margin-top: 4rem;
+  font-family: 'Cutive Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(242,211,122,0.34);
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim { opacity: 0; animation: fadeSlideUp 0.65s ease forwards; }
+.d1 { animation-delay: 0.1s; }
+.d2 { animation-delay: 0.2s; }
+.d3 { animation-delay: 0.3s; }
+.d4 { animation-delay: 0.4s; }
+.d5 { animation-delay: 0.5s; }
+.d6 { animation-delay: 0.6s; }
+.d7 { animation-delay: 0.7s; }
+
+@media (max-width: 680px) {
+  .wrap { padding: 0 1.2rem 4rem; }
+  .units-grid { grid-template-columns: 1fr; }
+  .main-title { font-size: 2.35rem; }
+  .divider .inner { font-size: 0.62rem; letter-spacing: 0.16em; }
+  .unit-card { min-height: auto; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="seal anim d1">⚖️</div>
+    <div class="eyebrow anim d2">San Diego · AP Government &amp; Politics · Exam Review</div>
+    <h1 class="main-title anim d3">
+      Mr. Rogers'<br>
+      <span class="red-word">AP</span> <span class="gold-word">Government</span><br>
+      &amp; Politics Class
+    </h1>
+    <p class="tagline anim d4">Constitutional Review · Required Docs · Landmark Cases · FRQ Practice</p>
+    <div class="quote-strip anim d5">
+      <strong>Review like a constitutional scholar.</strong> Use this hub to practice the documents, cases, concepts, and writing moves that appear across the AP Government exam.
+    </div>
+  </header>
+
+  <div class="divider anim d5">
+    <div class="line"></div>
+    <div class="inner">★ Select Your Review Unit ★</div>
+    <div class="line"></div>
+  </div>
+
+  <div class="section-heading anim d5">AP Review Hub</div>
+
+  <div class="units-grid">
+
+    <div class="unit-card anim d6">
+      <div class="card-num"><span class="dot"></span> AP Test Prep Unit</div>
+      <span class="card-icon">📜</span>
+      <div class="card-title">The Final Briefing</div>
+      <div class="card-desc">A full AP Government review zone for foundational documents, required Supreme Court cases, concept practice, and FRQ preparation before test day.</div>
+      <div class="card-topics">
+        <span class="topic-tag">Foundational Docs</span>
+        <span class="topic-tag">Landmark Cases</span>
+        <span class="topic-tag">FRQs</span>
+        <span class="topic-tag">Units 1–5</span>
+      </div>
+
+      <div class="review-links">
+        <a class="review-button gold" href="APG_TP_S1_FRQ.html">FRQ Review</a>
+        <a class="review-button blue" href="APG_TP_S2_FD-SCOTUS.html">Foundational Docs &amp; SCOTUS</a>
+        <a class="review-button" href="APG_TP_S3_Argue.html">Argument Essay Practice</a>
+        <a class="review-button gold" href="APG_TP_Weak1.html">Weak Area Review 1</a>
+        <a class="review-button blue" href="APG_TP_Weak2.html">Weak Area Review 2</a>
+        <a class="review-button" href="APG_TP_Weak3.html">Weak Area Review 3</a>
+      </div>
+
+      <div class="soon-note">
+        Upload these six HTML review files beside this <strong>index.html</strong> file in the same GitHub repository so every button opens correctly.
+      </div>
+
+      <div class="card-watermark">AP</div>
+    </div>
+
+  </div>
+
+  <div class="bottom-panel anim d7">
+    <div class="mini-card">
+      <h3>Core Skills</h3>
+      <p>Identify key concepts, connect evidence to claims, and explain how constitutional principles shape real political outcomes.</p>
+    </div>
+    <div class="mini-card">
+      <h3>Exam Moves</h3>
+      <p>Practice short, direct reasoning: define the term, apply the example, and explain the relationship clearly.</p>
+    </div>
+    <div class="mini-card">
+      <h3>Final Goal</h3>
+      <p>Move from recognition to explanation so every document, case, and FRQ feels familiar before exam day.</p>
+    </div>
+  </div>
+
+  <div class="ticker-wrap anim d7">
+    <div class="ticker-inner">
+      <span>⚖️ Marbury v. Madison</span><span class="sym">·</span>
+      <span>📜 Federalist No. 10</span><span class="sym">·</span>
+      <span>🏛️ Separation of Powers</span><span class="sym">·</span>
+      <span>🗳️ Political Participation</span><span class="sym">·</span>
+      <span>📰 Linkage Institutions</span><span class="sym">·</span>
+      <span>🔒 Civil Liberties</span><span class="sym">·</span>
+      <span>⚖️ Selective Incorporation</span><span class="sym">·</span>
+      <span>📊 Public Opinion</span><span class="sym">·</span>
+      <span>📜 Required Documents</span><span class="sym">·</span>
+      <span>🏛️ Federalism</span><span class="sym">·</span>
+      <span>⚖️ Marbury v. Madison</span><span class="sym">·</span>
+      <span>📜 Federalist No. 10</span><span class="sym">·</span>
+      <span>🏛️ Separation of Powers</span><span class="sym">·</span>
+      <span>🗳️ Political Participation</span><span class="sym">·</span>
+      <span>📰 Linkage Institutions</span><span class="sym">·</span>
+      <span>🔒 Civil Liberties</span><span class="sym">·</span>
+      <span>⚖️ Selective Incorporation</span><span class="sym">·</span>
+      <span>📊 Public Opinion</span><span class="sym">·</span>
+      <span>📜 Required Documents</span><span class="sym">·</span>
+      <span>🏛️ Federalism</span>
+    </div>
+  </div>
+
+  <footer class="anim d7">
+    &copy; Mr. Rogers · AP Government &amp; Politics · Constitutional Review Desk
+  </footer>
+</div>
+
+<script>
+var canvas = document.getElementById('stars-canvas');
+var ctx = canvas.getContext('2d');
+var W, H, stars = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+var symbols = ['★', '✦', '•', '⚖', '§', '★', '✧', '•'];
+
+function Star() {
+  this.reset = function() {
+    this.x = Math.random() * W;
+    this.y = -40 - Math.random() * H;
+    this.speed = 0.25 + Math.random() * 0.65;
+    this.size = 8 + Math.random() * 17;
+    this.sym = symbols[Math.floor(Math.random() * symbols.length)];
+    this.alpha = 0.18 + Math.random() * 0.55;
+    this.rotate = (Math.random() - 0.5) * 0.3;
+    this.angle = 0;
+    this.drift = (Math.random() - 0.5) * 0.22;
+  };
+  this.reset();
+  this.y = Math.random() * H;
+}
+
+for (var i = 0; i < 70; i++) stars.push(new Star());
+
+function animateStars() {
+  ctx.clearRect(0, 0, W, H);
+  stars.forEach(function(s) {
+    ctx.save();
+    ctx.globalAlpha = s.alpha;
+    ctx.translate(s.x, s.y);
+    ctx.rotate(s.angle);
+    ctx.font = 'bold ' + s.size + 'px serif';
+    ctx.fillStyle = '#f2d37a';
+    ctx.fillText(s.sym, 0, 0);
+    ctx.restore();
+    s.y += s.speed;
+    s.x += s.drift;
+    s.angle += s.rotate * 0.015;
+    if (s.y > H + 60) s.reset();
+  });
+  requestAnimationFrame(animateStars);
+}
+animateStars();
+</script>
+</body>
+</html>
