@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Station 1 — Concept Application FRQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #2C3170;
+    --red: #B22234;
+    --gold: #C8960C;
+    --cream: #F8F3E8;
+    --dark: #1a1a2e;
+    --text: #1C1C2E;
+    --muted: #6B6B7E;
+    --border: #D8D4C8;
+    --success: #1B6B3A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--navy);
+    color: white;
+    padding: 0;
+    display: flex;
+    align-items: stretch;
+    border-bottom: 4px solid var(--red);
+  }
+  .header-stripe { width: 8px; background: var(--red); flex-shrink: 0; }
+  .header-content { padding: 16px 24px; flex: 1; }
+  .header-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #9BA3D4; margin-bottom: 2px; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; }
+  .header-sub { font-size: 13px; color: #B0B8E8; font-style: italic; margin-top: 2px; }
+  .header-timer-wrap { padding: 12px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid rgba(255,255,255,0.15); }
+
+  /* ── TIMER ── */
+  .timer-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 2px;
+    line-height: 1;
+    transition: color 0.3s;
+  }
+  .timer-display.warning { color: #FFB347; }
+  .timer-display.danger  { color: #FF6B6B; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+  .timer-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #9BA3D4; margin-top: 2px; text-align: center; }
+  .timer-controls { display: flex; gap: 6px; margin-top: 8px; }
+  .timer-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s;
+  }
+  .timer-btn:hover { background: rgba(255,255,255,0.22); }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 960px; margin: 0 auto; padding: 28px 20px 48px; }
+
+  /* ── PHASE INDICATOR ── */
+  .phase-bar {
+    display: flex;
+    gap: 0;
+    margin-bottom: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .phase-step {
+    flex: 1;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    background: white;
+    border-right: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .phase-step:last-child { border-right: none; }
+  .phase-step.active { background: var(--navy); color: white; }
+  .phase-step.done { background: var(--success); color: white; }
+
+  /* ── CARDS ── */
+  .card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .card-header {
+    padding: 14px 20px;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-header.navy { background: var(--navy); color: white; }
+  .card-header.red  { background: var(--red);  color: white; }
+  .card-header.gold { background: var(--gold); color: white; }
+  .card-header.green { background: var(--success); color: white; }
+  .card-header.gray { background: #F0EDE6; color: var(--muted); }
+  .card-body { padding: 20px 22px; }
+
+  /* ── SCENARIO TEXT ── */
+  .scenario-text {
+    font-size: 16px;
+    line-height: 1.75;
+    font-style: italic;
+    color: var(--text);
+  }
+  .scenario-meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    font-style: normal;
+    font-family: 'Source Serif 4', serif;
+  }
+  .tag-unit { background: #E8EAF6; color: var(--navy); }
+  .tag-concept { background: #FDF6E3; color: #7A5C0A; }
+
+  /* ── MOVES ── */
+  .move-grid { display: flex; flex-direction: column; gap: 14px; }
+  .move {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .move-header {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    color: white;
+  }
+  .move-header.m1 { background: var(--navy); }
+  .move-header.m2 { background: var(--red); }
+  .move-header.m3 { background: var(--success); }
+  .move-num { font-family: 'Playfair Display', serif; font-size: 20px; line-height: 1; }
+  .move-hint { font-size: 11.5px; opacity: 0.85; font-weight: 400; font-style: italic; }
+  .move-body { padding: 12px 14px; background: #FAFAFA; }
+  textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--text);
+    resize: vertical;
+    outline: none;
+    min-height: 70px;
+  }
+  textarea::placeholder { color: #AAAAAA; font-style: italic; }
+
+  /* ── SELF CHECK ── */
+  .check-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    font-size: 13px;
+    transition: all 0.2s;
+    background: white;
+    user-select: none;
+  }
+  .check-item.checked { border-color: var(--success); background: #E8F5E9; color: var(--success); font-weight: 600; }
+  .check-box { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; }
+
+  /* ── REVEAL ── */
+  .reveal-section { display: none; }
+  .reveal-section.visible { display: block; }
+  .model-move { margin-bottom: 14px; }
+  .model-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .model-label.m1 { color: var(--navy); }
+  .model-label.m2 { color: var(--red); }
+  .model-label.m3 { color: var(--success); }
+  .model-text { font-size: 14.5px; line-height: 1.7; padding-left: 14px; border-left: 3px solid var(--border); color: #333; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border-radius: 7px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: #3d43a0; }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { background: #8B1A28; }
+  .btn-ghost { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
+  .btn-ghost:hover { background: var(--navy); color: white; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  /* ── PAIR INDICATOR ── */
+  .pair-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: white;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* ── INTRO SCREEN ── */
+  .intro { display: block; }
+  .work { display: none; }
+  .intro-hero {
+    text-align: center;
+    padding: 48px 24px 36px;
+  }
+  .intro-icon { font-size: 56px; margin-bottom: 16px; }
+  .intro-hero h1 { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--navy); margin-bottom: 8px; }
+  .intro-hero p { font-size: 17px; color: var(--muted); max-width: 520px; margin: 0 auto 24px; line-height: 1.6; }
+  .intro-rules {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .intro-rules h3 { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 12px; }
+  .rule { display: flex; gap: 10px; align-items: baseline; margin-bottom: 8px; font-size: 14.5px; line-height: 1.5; }
+  .rule-num { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--red); flex-shrink: 0; }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  @media (max-width: 600px) {
+    .header-timer-wrap { display: none; }
+    .move-grid { gap: 10px; }
+    .check-grid { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- INTRO SCREEN -->
+<div class="intro" id="intro">
+  <div class="site-header">
+    <div class="header-stripe"></div>
+    <div class="header-content">
+      <div class="header-label">AP Gov & Politics — Exam Week Review</div>
+      <div class="header-title">Station 1 — Concept Application FRQ</div>
+      <div class="header-sub">FRQ Style 1 &nbsp;·&nbsp; 3 Points &nbsp;·&nbsp; Work in pairs</div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="intro-hero">
+      <div class="intro-icon">✍️</div>
+      <h1>Ready to write?</h1>
+      <p>You and your partner will get a randomized scenario. 15 minutes to write all three moves. Then compare your ① Describe answers out loud before revealing the model response.</p>
+    </div>
+    <div class="intro-rules">
+      <h3>How this station works</h3>
+      <div class="rule"><span class="rule-num">1</span><span>Click Start — each device gets a different scenario from the pool.</span></div>
+      <div class="rule"><span class="rule-num">2</span><span>Work independently for 12 minutes. Write ①, ②, and ③ on your own.</span></div>
+      <div class="rule"><span class="rule-num">3</span><span>At the 3-minute warning, stop writing and compare your ① Describe answer with your partner. Did you name the same concept?</span></div>
+      <div class="rule"><span class="rule-num">4</span><span>When time is up, hit "Reveal Model Response" and self-score together.</span></div>
+      <div class="rule"><span class="rule-num">5</span><span><strong>The #1 mistake:</strong> restating the scenario without naming a concept. Watch for it in each other's work.</span></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn btn-primary" onclick="startStation()" style="font-size:16px; padding:14px 32px;">
+        Start — Load My Scenario →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- WORK SCREEN -->
+<div class="work" id="work">
+  <div class="site-header">
+    <div class="header-stripe"></div>
+    <div class="header-content">
+      <div class="header-label">AP Gov & Politics — Station 1</div>
+      <div class="header-title">Concept Application FRQ</div>
+      <div class="header-sub" id="scenario-meta-header">Loading scenario...</div>
+    </div>
+    <div class="header-timer-wrap">
+      <div class="timer-display" id="timer">15:00</div>
+      <div class="timer-label">remaining</div>
+      <div class="timer-controls">
+        <button class="timer-btn" onclick="toggleTimer()" id="timer-toggle-btn">Pause</button>
+        <button class="timer-btn" onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+      <span class="pair-badge">👥 Work in Pairs</span>
+      <span style="font-size:13px; color:var(--muted);">Each device shows a different scenario — compare answers when the timer hits 3 minutes</span>
+    </div>
+
+    <!-- Phase bar -->
+    <div class="phase-bar">
+      <div class="phase-step active" id="ph1">① Write Independently</div>
+      <div class="phase-step" id="ph2">② Compare with Partner</div>
+      <div class="phase-step" id="ph3">③ Self-Score</div>
+    </div>
+
+    <!-- Scenario -->
+    <div class="card">
+      <div class="card-header navy">📋 &nbsp; Scenario</div>
+      <div class="card-body">
+        <p class="scenario-text" id="scenario-text">Loading...</p>
+        <div class="scenario-meta">
+          <span class="tag tag-unit" id="scenario-unit"></span>
+          <span class="tag tag-concept" id="scenario-concept"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Three moves -->
+    <div class="move-grid">
+      <div class="move">
+        <div class="move-header m1">
+          <span class="move-num">①</span>
+          <span>Describe</span>
+          <span class="move-hint">Name AND define the concept in your own words — before mentioning the scenario</span>
+        </div>
+        <div class="move-body"><textarea id="ans1" rows="4" placeholder="Name the concept, then define it. E.g. 'Federalism is the constitutional division of power between the national and state governments...'"></textarea></div>
+      </div>
+      <div class="move">
+        <div class="move-header m2">
+          <span class="move-num">②</span>
+          <span>Explain the Link</span>
+          <span class="move-hint">Connect the concept to specific details in the scenario — don't just repeat it</span>
+        </div>
+        <div class="move-body"><textarea id="ans2" rows="4" placeholder="The scenario illustrates [concept] because [specific detail from the scenario]..."></textarea></div>
+      </div>
+      <div class="move">
+        <div class="move-header m3">
+          <span class="move-num">③</span>
+          <span>Extend</span>
+          <span class="move-hint">Apply a related institution, actor, or concept beyond the scenario</span>
+        </div>
+        <div class="move-body"><textarea id="ans3" rows="4" placeholder="Another institution or effect that connects to this concept is..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- Partner compare callout -->
+    <div class="card" style="border-left: 4px solid var(--gold);">
+      <div class="card-body" style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <span style="font-size:28px;">🤝</span>
+        <div>
+          <div style="font-weight:700; font-size:15px; margin-bottom:3px;">Partner Discussion — Do this when 3 minutes remain</div>
+          <div style="font-size:13.5px; color:var(--muted);">Read your ① Describe answer out loud. Did you name the same concept? Did you define it or just restate the scenario? Discuss before time is up.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reveal -->
+    <div class="btn-row" style="margin-bottom:20px;">
+      <button class="btn btn-red" onclick="revealModel()">Reveal Model Response</button>
+      <button class="btn btn-ghost" onclick="nextScenario()">New Scenario →</button>
+    </div>
+
+    <div class="reveal-section card" id="reveal-section">
+      <div class="card-header green">✓ &nbsp; Model Response — Score Yourself</div>
+      <div class="card-body">
+        <div class="move-grid" style="margin-bottom:18px;">
+          <div class="model-move"><div class="model-label m1">① Describe</div><div class="model-text" id="model1"></div></div>
+          <div class="model-move"><div class="model-label m2">② Explain the Link</div><div class="model-text" id="model2"></div></div>
+          <div class="model-move"><div class="model-label m3">③ Extend</div><div class="model-text" id="model3"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-weight:700; font-size:14px; margin-bottom:12px;">Self-Score — check what you earned:</div>
+        <div class="check-grid" id="check-grid">
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>① Named AND defined the concept</span></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>② Linked to a specific detail</span></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>③ Extended beyond the scenario</span></div>
+        </div>
+        <div style="margin-top:14px; font-size:13.5px; color:var(--muted);">Score: <strong id="score-display">0</strong> / 3 &nbsp;·&nbsp; Compare with your partner — did you get the same score?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SCENARIOS POOL ───────────────────────────────────────────────────────────
+const scenarios = [
+  {
+    unit: "Unit 1 — Foundations",
+    concept: "Federalism",
+    text: "In 2023, several states passed laws legalizing recreational marijuana despite federal law still classifying it as an illegal controlled substance. State officials argued they had the authority to set their own drug policies, while federal officials debated whether to enforce federal law inside those states — creating a direct conflict between state and national authority.",
+    model1: "Federalism is the constitutional division of governmental power between the national government and state governments, with each level holding authority in certain areas. It is rooted in the Tenth Amendment, which reserves powers not delegated to the federal government to the states.",
+    model2: "The scenario directly illustrates federalism because state governments are claiming reserved powers over drug policy while the federal government maintains marijuana is illegal under the Controlled Substances Act — two levels of government are exercising authority over the same issue simultaneously.",
+    model3: "The Supremacy Clause of Article VI establishes that federal law is the supreme law of the land. Federal courts could invoke it to preempt state marijuana laws, forcing states to comply with federal drug policy — demonstrating how the judicial branch resolves federal-state conflicts.",
+  },
+  {
+    unit: "Unit 2 — Interactions Among Branches",
+    concept: "Checks and Balances",
+    text: "The President issues an executive order restricting immigration from several countries, citing national security concerns. Congress, controlled by the opposing party, passes a resolution denouncing the order but lacks the votes needed to override a presidential veto. A coalition of civil liberties organizations files suit in federal court, arguing the order exceeds the president's constitutional authority.",
+    model1: "Checks and balances is the constitutional system in which each branch of government holds powers that limit or oversee the other branches, preventing any single branch from accumulating too much power. It is part of the broader framework of separated powers established in Articles I, II, and III.",
+    model2: "All three branches exercised their checks in the scenario: the president used executive authority to issue the order, Congress used its legislative check by passing a resolution of disapproval, and the federal judiciary is exercising judicial review by hearing a constitutional challenge to the order.",
+    model3: "Judicial review — established in Marbury v. Madison (1803) — gives federal courts the power to strike down executive actions that violate the Constitution. If the court finds the order unconstitutional, it could permanently block enforcement, demonstrating the judiciary's independent check on executive power.",
+  },
+  {
+    unit: "Unit 4 — Ideologies & Beliefs",
+    concept: "Political Socialization",
+    text: "A national survey finds that adults who grew up in politically active households — where parents regularly discussed elections and current events — are nearly twice as likely to vote in every election compared to those from less politically engaged homes. The same survey finds that respondents who attended four-year colleges were significantly more likely to identify as liberal than those who did not.",
+    model1: "Political socialization is the process through which individuals develop their political values, beliefs, party identification, and civic habits over time. It begins in childhood and continues through adulthood, shaped by agents including family, education, media, religion, and peer groups.",
+    model2: "Both findings in the survey illustrate political socialization through different agents. The first shows family as an agent — children who observed political engagement in the home internalized voting as a civic norm. The second shows education as an agent — college attendance correlates with more liberal identification, likely due to exposure to diverse perspectives and faculty viewpoints.",
+    model3: "The media is another major agent of political socialization. Exposure to partisan news sources or social media algorithms that reinforce existing beliefs can deepen ideological polarization, shaping how individuals interpret political events and affecting long-term party identification.",
+  },
+  {
+    unit: "Unit 5 — Political Participation",
+    concept: "Voter Turnout / Rational Abstention",
+    text: "After a midterm election, analysts note that voter turnout among citizens aged 18–29 was only 27%, compared to 63% among citizens aged 50–64. Researchers point to several factors: younger voters are more likely to have recently moved, face stricter ID requirements, and report feeling that their individual vote doesn't change outcomes. Interest groups targeting older voters also spent three times as much on mobilization efforts.",
+    model1: "Rational abstention is the decision not to vote based on a cost-benefit calculation — when a citizen concludes that the personal time and effort required to vote outweighs the perceived probability that their single vote will affect the outcome. It explains why participation is lower among groups who feel less politically efficacious.",
+    model2: "The scenario directly illustrates rational abstention among younger voters: they report feeling their vote doesn't change outcomes, which is the core logic of rational abstention. Structural barriers like recent relocation and stricter ID requirements further raise the cost side of the equation, making non-participation more likely.",
+    model3: "Interest groups function as linkage institutions that connect citizens to government, in part through voter mobilization. The scenario shows them directing resources toward older, higher-turnout demographics — reinforcing the participation gap by underinvesting in younger voters, which has long-term consequences for which interests are represented in policy outcomes.",
+  },
+  {
+    unit: "Unit 1 — Foundations",
+    concept: "Separation of Powers",
+    text: "Congress passes legislation requiring the president to notify congressional leadership within 48 hours before withdrawing U.S. troops from any international conflict. The president signs the bill but later withdraws troops from a conflict without notification, arguing that the legislation unconstitutionally limits the commander-in-chief power granted by Article II. Several senators file suit to enforce the notification requirement.",
+    model1: "Separation of powers is the constitutional principle that divides governmental authority among three distinct and independent branches — the legislative, executive, and judicial — each with its own powers and responsibilities. It prevents any single branch from holding all governmental power.",
+    model2: "The scenario illustrates the tension inherent in separation of powers: Congress is asserting its constitutional role in overseeing military deployments through legislation, while the president is claiming that his Article II commander-in-chief authority cannot be constrained by Congress. Both claims are rooted in separated powers, creating institutional conflict.",
+    model3: "The War Powers Resolution of 1973 reflects this same tension — Congress attempted to limit presidential war-making power, but presidents have consistently argued it is unconstitutional. The federal courts, through judicial review, ultimately have the power to determine where the constitutional line falls between executive and legislative authority in military matters.",
+  },
+  {
+    unit: "Unit 2 — Civil Liberties",
+    concept: "First Amendment / Free Exercise",
+    text: "A city ordinance requires all food trucks operating in public spaces to obtain a permit and comply with noise ordinances. A church-run food truck that also plays religious music and distributes prayer cards is denied a permit renewal after neighbors complain about the religious content. The church argues the denial violates its constitutional rights.",
+    model1: "The Free Exercise Clause of the First Amendment prohibits the government from burdening or penalizing individuals or organizations for practicing their religion. Government cannot single out religious activity for unfavorable treatment that secular activity would not receive.",
+    model2: "The scenario illustrates the Free Exercise Clause because the city denied the permit specifically because of the religious content — the music and prayer cards — not because of neutral noise or safety regulations that apply to all food trucks equally. This targets religious expression for government action, which the Free Exercise Clause prohibits.",
+    model3: "In Wisconsin v. Yoder (1972), the Supreme Court held that the government's interest must be compelling before it can substantially burden religious practice. Under that framework, a city's interest in limiting noise must be weighed against the church's religious liberty — and applying permit rules differently to religious than secular activities is likely unconstitutional.",
+  },
+];
+
+let currentIdx = 0;
+let timerSeconds = 15 * 60;
+let timerInterval = null;
+let timerRunning = false;
+let checksCount = 0;
+
+function startStation() {
+  currentIdx = Math.floor(Math.random() * scenarios.length);
+  loadScenario(currentIdx);
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('work').style.display = 'block';
+  startTimer();
+}
+
+function loadScenario(idx) {
+  const s = scenarios[idx];
+  document.getElementById('scenario-text').textContent = s.text;
+  document.getElementById('scenario-unit').textContent = s.unit;
+  document.getElementById('scenario-concept').textContent = '💡 ' + s.concept;
+  document.getElementById('scenario-meta-header').textContent = s.unit + '  ·  ' + s.concept;
+  document.getElementById('ans1').value = '';
+  document.getElementById('ans2').value = '';
+  document.getElementById('ans3').value = '';
+  document.getElementById('reveal-section').classList.remove('visible');
+  document.getElementById('model1').textContent = s.model1;
+  document.getElementById('model2').textContent = s.model2;
+  document.getElementById('model3').textContent = s.model3;
+  document.querySelectorAll('.check-item').forEach(el => el.classList.remove('checked'));
+  document.getElementById('score-display').textContent = '0';
+  checksCount = 0;
+  setPhase(1);
+}
+
+function nextScenario() {
+  currentIdx = (currentIdx + 1) % scenarios.length;
+  loadScenario(currentIdx);
+  resetTimer();
+  startTimer();
+}
+
+function setPhase(n) {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('ph' + i);
+    el.classList.remove('active', 'done');
+    if (i < n) el.classList.add('done');
+    if (i === n) el.classList.add('active');
+  }
+}
+
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerRunning = true;
+  document.getElementById('timer-toggle-btn').textContent = 'Pause';
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if (timerSeconds === 3 * 60) {
+      setPhase(2);
+    }
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      setPhase(3);
+      document.getElementById('timer').textContent = '0:00';
+    }
+  }, 1000);
+}
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-toggle-btn').textContent = 'Resume';
+  } else {
+    startTimer();
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerSeconds = 15 * 60;
+  updateTimerDisplay();
+  document.getElementById('timer-toggle-btn').textContent = 'Start';
+  setPhase(1);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  const display = document.getElementById('timer');
+  display.textContent = m + ':' + String(s).padStart(2, '0');
+  display.className = 'timer-display';
+  if (timerSeconds <= 60) display.classList.add('danger');
+  else if (timerSeconds <= 3 * 60) display.classList.add('warning');
+}
+
+function revealModel() {
+  document.getElementById('reveal-section').classList.add('visible');
+  setPhase(3);
+  document.getElementById('reveal-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function toggleCheck(el) {
+  const wasChecked = el.classList.contains('checked');
+  el.classList.toggle('checked');
+  checksCount += wasChecked ? -1 : 1;
+  document.getElementById('score-display').textContent = checksCount;
+}
+</script>
+</body>
+</html>

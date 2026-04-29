@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept Clusters — Bureaucracy, Due Process, Linkage</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#2C3170;--red:#B22234;--gold:#C8960C;--cream:#F8F3E8;--text:#1C1C2E;--muted:#6B6B7E;--border:#D8D4C8;--success:#1B6B3A;--bg:#F2EDE0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--cream);color:var(--text);min-height:100vh;}
+.hdr{background:var(--navy);border-bottom:4px solid var(--red);display:flex;align-items:stretch;}
+.hs{width:8px;background:var(--red);flex-shrink:0;}
+.hb{padding:14px 22px;flex:1;}
+.hl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#9BA3D4;margin-bottom:2px;}
+.ht{font-family:'Playfair Display',serif;font-size:21px;font-weight:900;color:white;}
+.hsb{font-size:12px;color:#B0B8E8;font-style:italic;margin-top:2px;}
+.hr{padding:10px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.15);}
+.timer{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:white;letter-spacing:2px;line-height:1;}
+.timer.warn{color:#FFB347;}.timer.danger{color:#FF6B6B;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.tlbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#9BA3D4;margin-top:2px;text-align:center;}
+.tbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:white;padding:3px 9px;border-radius:4px;font-size:10px;cursor:pointer;margin-top:6px;font-family:inherit;}
+.tbtn:hover{background:rgba(255,255,255,.22);}
+.main{max-width:900px;margin:0 auto;padding:22px 18px 48px;}
+.tabs{display:flex;gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:22px;}
+.tab{flex:1;padding:12px 8px;text-align:center;cursor:pointer;background:white;border-right:1px solid var(--border);transition:all .2s;font-size:12.5px;font-weight:600;line-height:1.3;}
+.tab:last-child{border-right:none;}
+.tab.r.active{background:#B22234;color:white;}.tab.b.active{background:#2C3170;color:white;}.tab.g.active{background:#1B6B3A;color:white;}.tab.p.active{background:#5C3D99;color:white;}
+.tab:hover:not(.active){background:var(--bg);}
+.tw{display:block;font-size:10px;font-weight:700;margin-top:2px;color:var(--red);}
+.panel{display:none;}.panel.active{display:block;}
+.cc{background:white;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.cch{padding:15px 22px;color:white;}
+.cch h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;margin-bottom:2px;}
+.cch .sub{font-size:12px;opacity:.8;font-style:italic;}
+.ccs{padding:15px 22px;border-bottom:1px solid var(--border);}
+.ccs:last-child{border-bottom:none;}
+.ccsl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.ccst{font-size:14.5px;line-height:1.75;}
+.ccst strong{font-weight:700;}
+.def{background:var(--bg);border-left:4px solid var(--gold);padding:11px 15px;border-radius:0 8px 8px 0;font-size:14px;line-height:1.7;margin:8px 0;}
+.qblock{background:white;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px;}
+.qhdr{padding:11px 18px;}
+.qhdr.q1{background:var(--red);}.qhdr.q2{background:#1B4D8A;}.qhdr.q3{background:var(--success);}.qhdr.q4{background:var(--gold);}.qhdr.qf{background:#5C3D99;}
+.qhdr h3{font-family:'Playfair Display',serif;font-size:15px;color:white;}
+.qhdr p{font-size:11px;color:rgba(255,255,255,.8);margin-top:1px;}
+.qbody{padding:15px 18px;}
+.scn{background:var(--bg);border-left:4px solid var(--navy);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14px;line-height:1.65;font-style:italic;margin-bottom:12px;}
+.opts{display:flex;flex-direction:column;gap:7px;}
+.opt{padding:10px 14px;border:2px solid var(--border);border-radius:7px;font-size:13.5px;cursor:pointer;transition:all .2s;background:white;text-align:left;font-family:inherit;line-height:1.4;}
+.opt:hover{border-color:var(--navy);}
+.opt.correct{background:#E8F5E9;border-color:var(--success);color:var(--success);font-weight:700;}
+.opt.wrong{background:#FFF0F0;border-color:var(--red);color:var(--red);}
+.opt.reveal{background:#E8EAF6;border-color:var(--navy);}
+.exp{display:none;padding:10px 14px;background:#E8EAF6;border-radius:8px;font-size:14px;line-height:1.65;margin-top:7px;}
+.exp.show{display:block;}.exp strong{color:var(--navy);}
+textarea{width:100%;border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-family:inherit;font-size:14px;line-height:1.7;resize:vertical;outline:none;background:#FAFAFA;min-height:60px;}
+textarea:focus{border-color:var(--navy);}
+textarea::placeholder{color:#AAA;font-style:italic;}
+.mbtn{margin-top:7px;background:transparent;border:2px solid var(--navy);color:var(--navy);padding:6px 14px;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+.mbtn:hover{background:var(--navy);color:white;}
+.mans{display:none;margin-top:9px;padding:11px 14px;background:#E8F5E9;border-radius:8px;font-size:14px;line-height:1.7;border-left:4px solid var(--success);}
+.mans.show{display:block;}.mans strong{color:var(--success);}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.btn-n{background:var(--navy);color:white;}.btn-n:hover{background:#3d43a0;}
+.btn-g{background:transparent;border:2px solid var(--navy);color:var(--navy);}.btn-g:hover{background:var(--navy);color:white;}
+.btn-p{background:#5C3D99;color:white;}.btn-p:hover{background:#4A2D87;}
+.br{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.pb{display:inline-block;background:var(--gold);color:white;font-size:10px;padding:3px 9px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;font-weight:700;}
+/* QF mode */
+.qf-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.qf-score{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--navy);}
+.qf-tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px;color:white;}
+.prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:14px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--red));border-radius:3px;transition:width .4s;}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
+.rc{background:white;border-radius:10px;border:1px solid var(--border);padding:14px;text-align:center;}
+.rn{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;line-height:1;}
+.rn.g{color:var(--success);}.rn.r{color:var(--red);}
+.rl{font-size:11px;color:var(--muted);margin-top:3px;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hs"></div>
+  <div class="hb">
+    <div class="hl">AP Gov · Partner Check — Deep Drill</div>
+    <div class="ht">Concept Clusters — The Three Big Gaps</div>
+    <div class="hsb">Review → Practice Questions → Quick Fire Mode — all three clusters mixed</div>
+  </div>
+  <div class="hr">
+    <div class="timer" id="timer">30:00</div>
+    <div class="tlbl">remaining</div>
+    <button class="tbtn" onclick="toggleTimer()" id="tbtn">Start</button>
+  </div>
+</div>
+
+<div class="main">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <span class="pb">📚 Read + Practice + Quick Fire</span>
+    <span style="font-size:12px;color:var(--muted);">Three concept clusters · 5+ practice questions each · Quick Fire mixes all three</span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab r active" onclick="showPanel('bur',this)">🏛️ Bureaucracy<br>&amp; Iron Triangles<span class="tw">🔴 68%</span></div>
+    <div class="tab b" onclick="showPanel('dp',this)">⚖️ Due Process<br>&amp; Incorporation<span class="tw">🔴 53%</span></div>
+    <div class="tab g" onclick="showPanel('li',this)">🔗 Linkage<br>Institutions<span class="tw">🔴 53%</span></div>
+    <div class="tab p" onclick="showPanel('qf',this)">⚡ Quick Fire<br>All Three Mixed</div>
+  </div>
+
+  <!-- ═══ BUREAUCRACY ═══ -->
+  <div class="panel active" id="panel-bur">
+    <div class="cc"><div class="cch" style="background:#B22234;"><h3>The Federal Bureaucracy</h3><div class="sub">What it does and why it matters</div></div>
+      <div class="ccs"><div class="ccsl">4 Core Functions</div>
+        <div class="ccst"><strong>1. Implementation</strong> — Carrying out laws Congress passes (EPA enforces clean air laws).<br><br><strong>2. Rulemaking</strong> — Writing specific regulations that have the force of law. Congress sets broad goals; agencies fill in the details.<br><br><strong>3. Adjudication</strong> — Agencies resolve disputes about whether rules were violated — like a mini court system.<br><br><strong>4. Service delivery</strong> — Actually providing government services (Social Security checks, student loans, veterans' benefits).</div>
+      </div>
+      <div class="ccs"><div class="ccsl">Who Controls the Bureaucracy?</div>
+        <div class="ccst"><strong>Congress</strong> — creates agencies, funds them, holds oversight hearings.<br><strong>President</strong> — appoints agency heads, issues executive orders, controls budget via OMB.<br><strong>Courts</strong> — can strike down agency actions that violate law or rights.<br><strong>Interest groups</strong> — lobby agencies constantly; key to iron triangles.</div>
+      </div>
+    </div>
+    <div class="cc"><div class="cch" style="background:#7A1523;"><h3>Iron Triangles</h3><div class="sub">The most-tested bureaucracy concept</div></div>
+      <div class="ccs"><div class="ccsl">What It Is</div>
+        <div class="def">An iron triangle is a stable, mutually beneficial three-way relationship between a <strong>congressional subcommittee</strong>, a <strong>federal agency</strong>, and an <strong>interest group</strong> — all in the same policy area. Each helps the others, making them powerful and hard to break up.</div>
+      </div>
+      <div class="ccs"><div class="ccsl">How Each Corner Helps the Others</div>
+        <div class="ccst">
+          <strong>Subcommittee → Agency:</strong> Budget funding and favorable legislation<br>
+          <strong>Agency → Subcommittee:</strong> Expertise, info, helps members claim credit for policy wins<br>
+          <strong>Interest Group → Subcommittee:</strong> Campaign contributions, voter mobilization, expert testimony<br>
+          <strong>Subcommittee → Interest Group:</strong> Passes favorable laws and regulatory decisions<br>
+          <strong>Agency → Interest Group:</strong> Writes favorable regulations<br>
+          <strong>Interest Group → Agency:</strong> Political support and defense from budget cuts
+        </div>
+      </div>
+      <div class="ccs"><div class="ccsl">Classic Example + Issue Networks</div>
+        <div class="ccst"><strong>Defense Iron Triangle:</strong> Armed Services Committee + Department of Defense + defense contractors. Each feeds the others.<br><br><strong>Issue Networks</strong> (modern alternative) — Looser, more fluid webs of actors: academics, think tanks, journalists, advocacy groups, bureaucrats. No permanent deal. More open to change than iron triangles.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q1"><h3>Practice Q1 — Identify the Concept</h3></div>
+      <div class="qbody">
+        <div class="scn">The EPA writes detailed pollution limits after Congress passes the Clean Air Act. Congress only set broad goals — the EPA fills in the specifics with binding rules.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','bq1')">A. Legislative oversight</button>
+          <button class="opt" onclick="qchk(this,'c','bq1')">B. Bureaucratic rulemaking</button>
+          <button class="opt" onclick="qchk(this,'w','bq1')">C. Iron triangle</button>
+          <button class="opt" onclick="qchk(this,'w','bq1')">D. Judicial review</button>
+        </div>
+        <div class="exp" id="bq1"><strong>Bureaucratic rulemaking</strong> — Congress passes broad laws; agencies write specific binding regulations. This is one of the core functions of bureaucracy: translating legislative intent into enforceable rules. The EPA's pollution limits have the force of law even though Congress never voted on the specific numbers.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q2"><h3>Practice Q2 — Iron Triangle</h3></div>
+      <div class="qbody">
+        <div class="scn">A Senate agriculture subcommittee consistently gives the USDA favorable budget increases. Farm lobbyists donate heavily to those senators and provide expert testimony. The USDA writes regulations benefiting large agricultural corporations.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','bq2')">A. Issue network</button>
+          <button class="opt" onclick="qchk(this,'c','bq2')">B. Iron triangle</button>
+          <button class="opt" onclick="qchk(this,'w','bq2')">C. Divided government</button>
+          <button class="opt" onclick="qchk(this,'w','bq2')">D. Regulatory capture only</button>
+        </div>
+        <div class="exp" id="bq2"><strong>Iron triangle</strong> — Three corners, all helping each other: Senate agriculture subcommittee (budget/legislation) ↔ USDA (favorable regulations) ↔ agricultural interest groups (campaign contributions and expertise). Every corner benefits. This is the textbook example.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q3"><h3>Practice Q3 — Congressional Oversight</h3></div>
+      <div class="qbody">
+        <div class="scn">Congress holds hearings investigating whether the Department of Veterans Affairs mismanaged funds and calls agency officials to testify under oath.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','bq3')">A. Bureaucratic implementation</button>
+          <button class="opt" onclick="qchk(this,'c','bq3')">B. Congressional oversight</button>
+          <button class="opt" onclick="qchk(this,'w','bq3')">C. Iron triangle formation</button>
+          <button class="opt" onclick="qchk(this,'w','bq3')">D. Executive rulemaking</button>
+        </div>
+        <div class="exp" id="bq3"><strong>Congressional oversight</strong> — Congress has the power to investigate and monitor executive branch agencies through hearings, subpoenas, and the power of the purse. This is a key check Congress holds over the bureaucracy. It's also how iron triangles can be disrupted — public hearings expose the cozy relationships between agencies and interest groups.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q4"><h3>Practice Q4 — Iron Triangle vs. Issue Network</h3></div>
+      <div class="qbody">
+        <div class="scn">A loose coalition of climate scientists, environmental think tanks, journalists, advocacy organizations, and some EPA staffers all influence climate policy. Their relationships shift depending on the issue, and no stable exclusive deal connects them.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','bq4')">A. Iron triangle</button>
+          <button class="opt" onclick="qchk(this,'c','bq4')">B. Issue network</button>
+          <button class="opt" onclick="qchk(this,'w','bq4')">C. Political party</button>
+          <button class="opt" onclick="qchk(this,'w','bq4')">D. Bureaucratic adjudication</button>
+        </div>
+        <div class="exp" id="bq4"><strong>Issue network</strong> — Unlike iron triangles (stable, exclusive, three-corner), issue networks are fluid and open. They include a wider range of actors with varying influence. No permanent deal — just a complex web of people engaged in the same policy area. More democratic but also less predictable than iron triangles.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q1"><h3>Practice Q5 — Apply to FRQ</h3></div>
+      <div class="qbody">
+        <div class="scn">Essay prompt: "Iron triangles represent a failure of democratic accountability in the American system." Write one sentence connecting iron triangles to this argument.</div>
+        <textarea placeholder="Iron triangles represent... because..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model</button>
+        <div class="mans">Iron triangles — the stable, mutually reinforcing relationships between congressional subcommittees, federal agencies, and interest groups — represent a potential democratic accountability failure because policy in those domains is effectively made by three insulated actors rather than the broader public, insulating regulatory decisions from electoral pressure.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DUE PROCESS ═══ -->
+  <div class="panel" id="panel-dp">
+    <div class="cc"><div class="cch" style="background:#2C3170;"><h3>Due Process — 5th &amp; 14th Amendments</h3><div class="sub">Federal vs. State — and two different types</div></div>
+      <div class="ccs"><div class="ccsl">The Core Distinction</div>
+        <div class="ccst"><strong>5th Amendment</strong> — "No person shall be deprived of life, liberty, or property without due process." Limits the <strong>federal government</strong>.<br><br><strong>14th Amendment</strong> — "No state shall deprive any person of life, liberty, or property without due process." Limits <strong>state governments</strong>. Ratified 1868 after the Civil War.</div>
+        <div class="def">The 5th protects you from Washington. The 14th protects you from your state government. Same words, different targets.</div>
+      </div>
+      <div class="ccs"><div class="ccsl">Procedural vs. Substantive</div>
+        <div class="ccst"><strong>Procedural Due Process</strong> — The government must follow fair procedures: notice, a hearing, an impartial decision-maker. It's about HOW the government acts.<br><br><strong>Substantive Due Process</strong> — Some rights are so fundamental the government cannot take them away AT ALL — even with perfect procedures. It's about WHAT the government can do.</div>
+      </div>
+    </div>
+    <div class="cc"><div class="cch" style="background:#1B4D8A;"><h3>Selective Incorporation</h3><div class="sub">Applying the Bill of Rights to the states — one case at a time</div></div>
+      <div class="ccs"><div class="ccsl">How It Works</div>
+        <div class="ccst">The Bill of Rights originally only limited the <strong>federal</strong> government. The Supreme Court uses the 14th Amendment's Due Process Clause to apply specific rights to the states — but only when it decides a right is <strong>"fundamental to ordered liberty."</strong><br><br>Required cases that ARE incorporation examples:<br>• <strong>Gideon v. Wainwright (1963)</strong> — 6th Amendment right to counsel<br>• <strong>Engel v. Vitale (1962)</strong> — 1st Amendment Establishment Clause<br>• <strong>McDonald v. Chicago (2010)</strong> — 2nd Amendment right to bear arms<br>• <strong>Tinker v. Des Moines (1969)</strong> — 1st Amendment free speech in schools</div>
+      </div>
+    </div>
+    <div class="cc"><div class="cch" style="background:#1B6B3A;"><h3>Equal Protection — 14th Amendment</h3><div class="sub">Three levels of scrutiny — know which applies when</div></div>
+      <div class="ccs"><div class="ccsl">The Three Tiers</div>
+        <div class="ccst"><strong>Strict Scrutiny</strong> — Race, national origin, religion, alienage. Compelling interest + narrowly tailored. Government almost always <em>loses</em>. → Brown v. Board, Shaw v. Reno<br><br><strong>Intermediate Scrutiny</strong> — Gender. Important interest + substantially related means. Government sometimes wins.<br><br><strong>Rational Basis</strong> — Everything else (age, wealth, disability). Just needs a legitimate purpose. Government almost always <em>wins</em>.</div>
+        <div class="def">Memory trick: Strict = almost always struck down. Rational basis = almost always upheld. Intermediate = in between.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q1"><h3>Practice Q1 — Procedural Due Process</h3></div>
+      <div class="qbody">
+        <div class="scn">A city fires a public school teacher without giving her advance notice, a chance to respond, or any hearing of any kind.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','dq1')">A. Violation of substantive due process</button>
+          <button class="opt" onclick="qchk(this,'c','dq1')">B. Violation of procedural due process</button>
+          <button class="opt" onclick="qchk(this,'w','dq1')">C. Violation of equal protection</button>
+          <button class="opt" onclick="qchk(this,'w','dq1')">D. Violation of the 1st Amendment</button>
+        </div>
+        <div class="exp" id="dq1"><strong>Procedural due process violation</strong> — Before the government takes away a property interest (a job), it must follow fair procedures: notice and opportunity to be heard. Firing without any process violates the 14th Amendment's procedural due process guarantee against state governments.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q2"><h3>Practice Q2 — Levels of Scrutiny</h3></div>
+      <div class="qbody">
+        <div class="scn">A state passes a law restricting voting rights for people who have ever been convicted of a misdemeanor. Affected citizens challenge it under the Equal Protection Clause.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','dq2')">A. Strict scrutiny — criminal history is a suspect classification like race</button>
+          <button class="opt" onclick="qchk(this,'w','dq2')">B. Intermediate scrutiny — this affects a group that has faced historical discrimination</button>
+          <button class="opt" onclick="qchk(this,'c','dq2')">C. Rational basis — criminal history is not a suspect classification, so the law just needs a legitimate government purpose</button>
+          <button class="opt" onclick="qchk(this,'w','dq2')">D. No scrutiny — voting restrictions are political questions courts cannot review</button>
+        </div>
+        <div class="exp" id="dq2"><strong>Rational basis</strong> — The three suspect classifications for strict scrutiny are race, national origin, and religion (plus alienage). Criminal history is not a suspect classification. Laws affecting non-suspect groups get rational basis review — the government just needs a legitimate purpose, like protecting election integrity. Government almost always wins under this standard.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q3"><h3>Practice Q3 — Selective Incorporation</h3></div>
+      <div class="qbody">
+        <div class="scn">Florida charges a man with felony theft. He cannot afford a lawyer. Under Gideon v. Wainwright, the state must provide one because:</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','dq3')">A. The 6th Amendment directly applies to all state criminal proceedings</button>
+          <button class="opt" onclick="qchk(this,'c','dq3')">B. The 6th Amendment right to counsel was incorporated against the states through the 14th Amendment's Due Process Clause in Gideon v. Wainwright</button>
+          <button class="opt" onclick="qchk(this,'w','dq3')">C. States are required to fund public defenders under federal statute</button>
+          <button class="opt" onclick="qchk(this,'w','dq3')">D. The 5th Amendment's due process clause requires states to provide lawyers</button>
+        </div>
+        <div class="exp" id="dq3"><strong>B is correct — and this is the key.</strong> The 6th Amendment alone didn't originally apply to states. Gideon v. Wainwright is an incorporation case — the Court used the 14th Amendment's Due Process Clause to incorporate the 6th Amendment right to counsel against the states. Always connect Gideon to both the 6th AND 14th Amendments.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q4"><h3>Practice Q4 — Equal Protection Classic</h3></div>
+      <div class="qbody">
+        <div class="scn">A state law segregates public school students by race, providing separate but ostensibly equal facilities. Under Brown v. Board of Education:</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','dq4')">A. The law is upheld because facilities are equal — separate but equal is constitutionally permissible</button>
+          <button class="opt" onclick="qchk(this,'c','dq4')">B. The law is struck down — separate educational facilities are inherently unequal and violate the Equal Protection Clause of the 14th Amendment</button>
+          <button class="opt" onclick="qchk(this,'w','dq4')">C. The law is a political question that courts cannot review</button>
+          <button class="opt" onclick="qchk(this,'w','dq4')">D. Only Congress can desegregate public schools — courts lack jurisdiction</button>
+        </div>
+        <div class="exp" id="dq4"><strong>Brown v. Board held</strong> that separate is inherently unequal — even with equal physical facilities, the very act of separation sends a message of inferiority that violates equal protection. This overturned Plessy v. Ferguson (1896). It applies strict scrutiny to racial classifications, which the state almost never survives.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q1"><h3>Practice Q5 — 5th vs. 14th Amendment</h3></div>
+      <div class="qbody">
+        <div class="scn">A federal agency seizes a person's property without any notice or hearing. vs. A state court convicts a person without providing a lawyer. Which amendment is the primary basis for each challenge?</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','dq5')">A. Both are 14th Amendment due process violations</button>
+          <button class="opt" onclick="qchk(this,'c','dq5')">B. Federal agency seizure = 5th Amendment due process; State court conviction without lawyer = 14th Amendment due process (incorporating the 6th Amendment through Gideon)</button>
+          <button class="opt" onclick="qchk(this,'w','dq5')">C. Federal agency seizure = 4th Amendment; State court = 6th Amendment only</button>
+          <button class="opt" onclick="qchk(this,'w','dq5')">D. Both are 5th Amendment violations since due process applies universally</button>
+        </div>
+        <div class="exp" id="dq5"><strong>B is the key distinction.</strong> The 5th Amendment limits the FEDERAL government — the federal agency seizure is a 5th Amendment issue. The 14th Amendment limits STATE governments — the state court case is a 14th Amendment issue (due process incorporating the 6th Amendment right to counsel). This distinction is exactly what the exam tests.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LINKAGE INSTITUTIONS ═══ -->
+  <div class="panel" id="panel-li">
+    <div class="cc"><div class="cch" style="background:#1B6B3A;"><h3>Linkage Institutions — The Four Bridges</h3><div class="sub">What connects citizens to government</div></div>
+      <div class="ccs"><div class="ccsl">The Four Types</div>
+        <div class="ccst"><strong>1. Political Parties</strong> — Recruit candidates, mobilize voters, organize government. Connect citizens to elections through clear choices.<br><br><strong>2. Interest Groups</strong> — Organize citizens with shared goals and advocate for them. Lobby Congress, mobilize members, litigate, contribute via PACs.<br><br><strong>3. Elections</strong> — Primary mechanism for citizen accountability over government.<br><br><strong>4. Media</strong> — Sets the agenda, acts as watchdog, connects government and citizens through information.</div>
+      </div>
+    </div>
+    <div class="cc"><div class="cch" style="background:#7A1523;"><h3>Interest Groups — The Most Tested</h3><div class="sub">What they do, how they do it, and the free-rider problem</div></div>
+      <div class="ccs"><div class="ccsl">What Interest Groups Actually Do</div>
+        <div class="ccst"><strong>Lobbying</strong> — Directly contacting members of Congress or agency officials to advocate for positions.<br><br><strong>Electioneering</strong> — Contributing to candidates via PACs or Super PACs (after Citizens United), endorsing candidates, mobilizing members to vote.<br><br><strong>Litigation</strong> — Filing lawsuits or amicus curiae (friend of the court) briefs to influence courts. ACLU, NAACP LDF are examples.<br><br><strong>Grassroots mobilization</strong> — Organizing members to contact officials, attend town halls, and vote.</div>
+      </div>
+      <div class="ccs"><div class="ccsl">The Free-Rider Problem</div>
+        <div class="def">People benefit from interest group wins without joining. If the Sierra Club wins clean air regulations, everyone benefits — not just members. This creates a rational incentive to let others do the work. Groups overcome it with selective benefits — perks only members get.</div>
+      </div>
+      <div class="ccs"><div class="ccsl">Pluralism vs. Elite Theory</div>
+        <div class="ccst"><strong>Pluralism</strong> — Policy is made through competition among interest groups; none dominates. This is Federalist No. 10's vision applied to modern politics.<br><br><strong>Elite theory</strong> — A small, wealthy elite uses interest groups to dominate policy outcomes — real pluralism doesn't exist.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q1"><h3>Practice Q1 — Type of Interest Group Activity</h3></div>
+      <div class="qbody">
+        <div class="scn">The NAACP files an amicus curiae brief in a Supreme Court case arguing that a state's redistricting plan discriminates against Black voters.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','lq1')">A. Lobbying</button>
+          <button class="opt" onclick="qchk(this,'w','lq1')">B. Electioneering</button>
+          <button class="opt" onclick="qchk(this,'c','lq1')">C. Litigation / legal advocacy</button>
+          <button class="opt" onclick="qchk(this,'w','lq1')">D. Grassroots mobilization</button>
+        </div>
+        <div class="exp" id="lq1"><strong>Litigation</strong> — Interest groups frequently use courts as a political arena. An amicus curiae brief is a formal legal filing where a non-party organization shares its perspective with the court. The NAACP LDF has used litigation strategically for decades — including in Brown v. Board of Education.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q2"><h3>Practice Q2 — Linkage Institutions and Turnout</h3></div>
+      <div class="qbody">
+        <div class="scn">18–29 year old voters turn out at 27%; voters 50–64 turn out at 63%. Interest groups targeting older voters spend three times more on mobilization than those targeting younger voters.</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','lq2')">A. This illustrates that young people don't care about politics</button>
+          <button class="opt" onclick="qchk(this,'c','lq2')">B. This shows interest groups functioning as linkage institutions that connect some citizens to government while leaving others underserved — reinforcing existing participation gaps</button>
+          <button class="opt" onclick="qchk(this,'w','lq2')">C. This is an iron triangle situation</button>
+          <button class="opt" onclick="qchk(this,'w','lq2')">D. This shows the free-rider problem in action</button>
+        </div>
+        <div class="exp" id="lq2"><strong>Linkage institutions and selective mobilization</strong> — Interest groups connect citizens to government, but they don't do it equally. By concentrating resources on high-turnout groups, they reinforce the participation gap. Who gets linked to government depends on who gets organized — and organizations follow resources, not civic need.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q3"><h3>Practice Q3 — Citizens United + Linkage</h3></div>
+      <div class="qbody">
+        <div class="scn">After Citizens United v. FEC (2010), a Super PAC spends $50 million on ads supporting a Senate candidate without coordinating with the campaign. This demonstrates interest groups acting as linkage institutions through:</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','lq3')">A. Illegal campaign coordination</button>
+          <button class="opt" onclick="qchk(this,'c','lq3')">B. Electioneering through independent expenditures — protected 1st Amendment speech after Citizens United</button>
+          <button class="opt" onclick="qchk(this,'w','lq3')">C. A direct contribution to the candidate's campaign</button>
+          <button class="opt" onclick="qchk(this,'w','lq3')">D. Grassroots mobilization of ordinary voters</button>
+        </div>
+        <div class="exp" id="lq3"><strong>Independent expenditures after Citizens United</strong> — The key is 'independent' — Super PACs cannot coordinate with the campaign. Citizens United held that this spending is protected 1st Amendment speech. This is electioneering — interest groups influencing elections — which is one of the core ways they function as linkage institutions connecting concentrated wealth to political outcomes.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q4"><h3>Practice Q4 — Pluralism vs. Elite Theory</h3></div>
+      <div class="qbody">
+        <div class="scn">A political scientist argues: "Defense contractors, pharmaceutical companies, and financial institutions consistently get favorable policies because they can afford expensive lobbying and campaign contributions that ordinary citizens cannot match."</div>
+        <div class="opts">
+          <button class="opt" onclick="qchk(this,'w','lq4')">A. This supports pluralism — many different interest groups are competing for policy influence</button>
+          <button class="opt" onclick="qchk(this,'c','lq4')">B. This supports elite theory — wealthy interest groups dominate policy outcomes rather than all groups competing equally</button>
+          <button class="opt" onclick="qchk(this,'w','lq4')">C. This supports iron triangle theory — only three actors are involved</button>
+          <button class="opt" onclick="qchk(this,'w','lq4')">D. This supports Madison's argument in Federalist No. 10 that factions balance each other</button>
+        </div>
+        <div class="exp" id="lq4"><strong>Elite theory</strong> — The scenario describes systematic dominance by wealthy, well-resourced groups rather than equal competition. Pluralism would say all groups compete and balance each other out (Madison's Federalist 10 vision). Elite theory says the playing field isn't level and a small group consistently wins. Knowing this distinction lets you argue either side of a FRQ prompt about interest group influence.</div>
+      </div>
+    </div>
+    <div class="qblock"><div class="qhdr q1"><h3>Practice Q5 — FRQ Application</h3></div>
+      <div class="qbody">
+        <div class="scn">Essay prompt: "Interest groups serve as effective linkage institutions in American democracy." Write one sentence using evidence to support OR refute this claim.</div>
+        <textarea placeholder="Interest groups function as linkage institutions by... However/and..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model</button>
+        <div class="mans"><strong>Support version:</strong> Interest groups serve as effective linkage institutions by translating the shared concerns of citizens — from environmental protection to gun rights to labor conditions — into organized political pressure through lobbying, litigation, and voter mobilization, connecting policy preferences that might otherwise go unrepresented to the formal institutions of government.<br><br><strong>Refute version:</strong> While interest groups function as linkage institutions in theory, their effectiveness is distributed unequally — well-funded groups representing corporations and wealthy constituencies consistently outspend and outlobby groups representing ordinary citizens, making the linkage they provide more reflective of concentrated economic power than broad democratic preferences.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ QUICK FIRE ═══ -->
+  <div class="panel" id="panel-qf">
+    <div style="background:white;border-radius:10px;border:1px solid var(--border);padding:20px 22px;margin-bottom:20px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:20px;color:#5C3D99;margin-bottom:8px;">⚡ Quick Fire Mode</h3>
+      <p style="font-size:14.5px;line-height:1.7;color:var(--text);">All three concept clusters mixed together — 12 randomized questions. No review text. No hints. Just the scenario and four choices. This is closest to what the MCQ will feel like.</p>
+      <p style="font-size:13px;color:var(--muted);margin-top:8px;">After answering each question, read the explanation — it's where the learning happens.</p>
+      <div class="br"><button class="btn btn-p" onclick="startQF()" id="qf-start-btn">⚡ Start Quick Fire →</button></div>
+    </div>
+    <div id="qf-game" style="display:none;">
+      <div class="qf-bar">
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:2px;">Question <span id="qf-num">1</span> of 12</div>
+          <div class="prog-bar" style="width:200px;margin-bottom:0;"><div class="prog-fill" id="qf-prog" style="width:0%"></div></div>
+        </div>
+        <div>
+          <span class="qf-score" id="qf-score">0</span><span style="font-size:14px;color:var(--muted);"> / <span id="qf-total">0</span></span>
+        </div>
+        <div style="font-size:11px;"><span class="qf-tag" id="qf-tag" style="background:#888;">Loading...</span></div>
+      </div>
+      <div class="qblock">
+        <div class="qhdr qf"><h3 id="qf-type">Quick Fire</h3><p>Choose the best answer</p></div>
+        <div class="qbody">
+          <div class="scn" id="qf-scn"></div>
+          <div class="opts" id="qf-opts"></div>
+          <div class="exp" id="qf-exp"></div>
+          <div class="br"><button class="btn btn-p" id="qf-next" style="display:none;" onclick="nextQF()">Next Question →</button></div>
+        </div>
+      </div>
+    </div>
+    <div id="qf-results" style="display:none;">
+      <div style="text-align:center;margin-bottom:22px;">
+        <div style="font-size:44px;margin-bottom:8px;">⚡</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:#5C3D99;margin-bottom:5px;">Quick Fire Complete</h2>
+      </div>
+      <div class="rg">
+        <div class="rc"><div class="rn g" id="qfr-right">0</div><div class="rl">Correct</div></div>
+        <div class="rc"><div class="rn r" id="qfr-wrong">0</div><div class="rl">Incorrect</div></div>
+      </div>
+      <div class="br">
+        <button class="btn btn-p" onclick="startQF()">Play Again (Reshuffled)</button>
+        <button class="btn btn-g" onclick="showPanel('bur',document.querySelector('.tab.r'))">Review Concepts</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const allQs = [
+  {cluster:"Bureaucracy",q:"Congress passes a broad education reform bill. The Department of Education then writes detailed rules about graduation requirements, teacher qualifications, and testing standards.",opts:["Legislative oversight","Bureaucratic rulemaking","Iron triangle activity","Adjudication"],correct:1,exp:"<strong>Bureaucratic rulemaking</strong> — Congress sets broad goals; agencies write binding specific regulations. The Dept of Education's detailed rules have the force of law even though Congress never voted on the specifics."},
+  {cluster:"Bureaucracy",q:"A defense contractor donates heavily to the Armed Services Committee. The committee funds the Pentagon generously. The Pentagon gives the contractor favorable weapons contracts.",opts:["Issue network","Iron triangle","Divided government","Regulatory capture only"],correct:1,exp:"<strong>Iron triangle</strong> — Defense contractor (interest group) ↔ Armed Services Committee (congressional subcommittee) ↔ Pentagon (federal agency). Each benefits the others. Classic iron triangle."},
+  {cluster:"Bureaucracy",q:"A Senate committee holds hearings and calls agency heads to explain their budget decisions, demanding documentation of how funds were spent.",opts:["Rulemaking","Iron triangle formation","Congressional oversight","Executive adjudication"],correct:2,exp:"<strong>Congressional oversight</strong> — Congress has the power to investigate, monitor, and demand accountability from executive branch agencies. Hearings, subpoenas, and the power of the purse are the tools of oversight."},
+  {cluster:"Due Process",q:"A state fires a government worker without telling her why or giving her any chance to respond. She claims this is unconstitutional.",opts:["Violation of 1st Amendment free speech","Violation of procedural due process","Violation of substantive due process","Violation of equal protection"],correct:1,exp:"<strong>Procedural due process</strong> — Before the government takes away a property interest (employment), it must follow fair procedures: notice of the reason and an opportunity to respond. No process at all = procedural due process violation."},
+  {cluster:"Due Process",q:"A state law bans interracial marriage. It is challenged under the Equal Protection Clause. Which level of scrutiny applies?",opts:["Rational basis — the state just needs a legitimate purpose","Intermediate scrutiny — marriage is a gender-based classification","Strict scrutiny — race is a suspect classification","No scrutiny — marriage law is a reserved state power under the 10th Amendment"],correct:2,exp:"<strong>Strict scrutiny</strong> — Race is the quintessential suspect classification under the Equal Protection Clause. The government must show a compelling interest and narrowly tailored means. There is no compelling interest for restricting marriage by race. This is struck down."},
+  {cluster:"Due Process",q:"A state court convicts a man of burglary without providing him a lawyer because he couldn't afford one. The constitutional basis for his appeal is:",opts:["5th Amendment due process — the federal government violated his rights","6th Amendment incorporated against states through the 14th Amendment via Gideon v. Wainwright","4th Amendment unreasonable seizure","Equal protection — he was treated differently than wealthy defendants"],correct:1,exp:"<strong>Gideon v. Wainwright</strong> incorporated the 6th Amendment right to counsel against the states through the 14th Amendment's Due Process Clause. The 5th Amendment limits federal government, not states. This is a classic selective incorporation scenario."},
+  {cluster:"Due Process",q:"A law classifies people by age to determine Social Security eligibility. Older citizens challenge it as age discrimination under the Equal Protection Clause.",opts:["Strict scrutiny — age is a suspect classification","Intermediate scrutiny — age has been historically discriminatory","Rational basis — age is not a suspect classification; law just needs a legitimate purpose","No scrutiny — age classifications are always permissible"],correct:2,exp:"<strong>Rational basis</strong> — Age is not a suspect or quasi-suspect classification. Only race, national origin, religion, and alienage trigger strict scrutiny. Gender triggers intermediate. Age gets rational basis — the government just needs a legitimate purpose, which Social Security administration easily satisfies."},
+  {cluster:"Linkage",q:"The Sierra Club sends 50,000 form letters to congressional offices, organizes rallies at the Capitol, and creates a phone bank for members to call their representatives about climate legislation.",opts:["Electioneering","Litigation","Lobbying and grassroots mobilization","Iron triangle activity"],correct:2,exp:"<strong>Lobbying and grassroots mobilization</strong> — Directly contacting members of Congress is lobbying; organizing members to contact their own representatives is grassroots mobilization. Both are core interest group activities that connect citizens to the legislative process."},
+  {cluster:"Linkage",q:"The NRA publishes voter guides rating every member of Congress on gun rights, endorses pro-gun candidates, and urges its 5 million members to vote for endorsed candidates.",opts:["Lobbying — directly contacting Congress","Electioneering — influencing elections through mobilization and endorsement","Litigation — using courts to advance policy","Rulemaking — influencing agency regulations"],correct:1,exp:"<strong>Electioneering</strong> — When interest groups endorse candidates, publish voter guides, and mobilize members to vote, they're functioning in the electoral arena. This is how interest groups influence who gets elected — and therefore who makes policies they care about."},
+  {cluster:"Linkage",q:"A researcher argues: 'All groups compete equally in American politics and no single interest dominates policy — competing pressures produce balanced outcomes.' This describes:",opts:["Elite theory","Pluralism","Iron triangle theory","Rational choice theory"],correct:1,exp:"<strong>Pluralism</strong> — The theory that policy results from competition among many interest groups with no one dominating — Madison's Federalist No. 10 vision applied to modern politics. Elite theory argues the opposite: a small wealthy group consistently wins. Knowing both lets you argue either side on the FRQ."},
+  {cluster:"Bureaucracy",q:"A diverse web of environmental scientists, think tanks, journalists, advocacy groups, and EPA officials all influence climate policy. Their relationships shift, and no stable deal connects them.",opts:["Iron triangle","Issue network","Political party coalition","Bureaucratic rulemaking"],correct:1,exp:"<strong>Issue network</strong> — Unlike iron triangles (stable, exclusive, three corners), issue networks are fluid, open webs of actors with varying influence. More people, less predictability. More democratic in theory, but less able to deliver consistent policy wins than an iron triangle."},
+  {cluster:"Linkage",q:"After Citizens United (2010), a billionaire's Super PAC spends $30 million on ads against a candidate — with no contact with any campaign. This is:",opts:["Illegal campaign coordination","Protected independent expenditure under the 1st Amendment","A direct donation to the candidate's opponent","Illegal because Super PACs cannot criticize candidates"],correct:1,exp:"<strong>Protected independent expenditure</strong> — Citizens United held that independent political spending by outside groups is protected 1st Amendment speech. The key: 'independent' means no coordination with any campaign. Super PACs can spend unlimited amounts as long as they don't coordinate. This is electioneering — interest groups acting as linkage institutions in the electoral arena."},
+];
+
+let qfDeck=[],qfIdx=0,qfRight=0,qfWrong=0;
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function showPanel(id,tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  tab.classList.add('active');
+}
+function qchk(btn,result,expId){
+  btn.parentElement.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  if(result==='c'){btn.classList.add('correct');}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt').forEach(o=>{if(!o.classList.contains('wrong'))o.classList.add('reveal');});}
+  const e=document.getElementById(expId);if(e)e.classList.add('show');
+}
+function revMdl(btn){const ans=btn.nextElementSibling;ans.classList.add('show');btn.style.display='none';}
+function startQF(){
+  qfDeck=shuffle([...allQs]);qfIdx=0;qfRight=0;qfWrong=0;
+  document.getElementById('qf-start-btn').style.display='none';
+  document.getElementById('qf-game').style.display='block';
+  document.getElementById('qf-results').style.display='none';
+  loadQF();
+}
+function loadQF(){
+  if(qfIdx>=qfDeck.length){showQFResults();return;}
+  const q=qfDeck[qfIdx];
+  const colors={Bureaucracy:'#B22234','Due Process':'#2C3170',Linkage:'#1B6B3A'};
+  document.getElementById('qf-num').textContent=qfIdx+1;
+  document.getElementById('qf-total').textContent=qfDeck.length;
+  document.getElementById('qf-prog').style.width=(qfIdx/qfDeck.length*100)+'%';
+  document.getElementById('qf-score').textContent=qfRight;
+  document.getElementById('qf-tag').textContent=q.cluster;
+  document.getElementById('qf-tag').style.background=colors[q.cluster]||'#888';
+  document.getElementById('qf-type').textContent='⚡ Quick Fire — '+q.cluster;
+  document.getElementById('qf-scn').textContent=q.q;
+  document.getElementById('qf-opts').innerHTML=q.opts.map((o,i)=>
+    `<button class="opt" onclick="qfChk(this,${i},${q.correct})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+  document.getElementById('qf-exp').className='exp';
+  document.getElementById('qf-exp').innerHTML='';
+  document.getElementById('qf-next').style.display='none';
+}
+function qfChk(btn,chosen,correct){
+  btn.parentElement.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  if(chosen===correct){btn.classList.add('correct');qfRight++;}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt')[correct].classList.add('reveal');qfWrong++;}
+  document.getElementById('qf-exp').innerHTML=qfDeck[qfIdx].exp;
+  document.getElementById('qf-exp').classList.add('show');
+  document.getElementById('qf-next').style.display='flex';
+  document.getElementById('qf-score').textContent=qfRight;
+}
+function nextQF(){qfIdx++;loadQF();}
+function showQFResults(){
+  document.getElementById('qf-game').style.display='none';
+  document.getElementById('qf-results').style.display='block';
+  document.getElementById('qfr-right').textContent=qfRight;
+  document.getElementById('qfr-wrong').textContent=qfWrong;
+  document.getElementById('qf-start-btn').style.display='flex';
+}
+let timerSecs=30*60,timerInt=null,timerOn=false;
+function toggleTimer(){
+  if(timerOn){clearInterval(timerInt);timerOn=false;document.getElementById('tbtn').textContent='Resume';}
+  else{timerOn=true;document.getElementById('tbtn').textContent='Pause';
+    timerInt=setInterval(()=>{timerSecs--;updTimer();if(timerSecs<=0){clearInterval(timerInt);timerOn=false;}},1000);}
+}
+function updTimer(){
+  const m=Math.floor(timerSecs/60),s=timerSecs%60;
+  const el=document.getElementById('timer');
+  el.textContent=m+':'+String(s).padStart(2,'0');
+  el.className='timer'+(timerSecs<=60?' danger':timerSecs<=5*60?' warn':'');
+}
+</script>
+</body>
+</html>

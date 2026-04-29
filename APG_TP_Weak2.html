@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundational Documents — Argument Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#2C3170;--red:#B22234;--gold:#C8960C;--cream:#F8F3E8;--text:#1C1C2E;--muted:#6B6B7E;--border:#D8D4C8;--success:#1B6B3A;--bg:#F2EDE0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--cream);color:var(--text);min-height:100vh;}
+.hdr{background:var(--navy);border-bottom:4px solid var(--red);display:flex;align-items:stretch;}
+.hs{width:8px;background:var(--red);flex-shrink:0;}
+.hb{padding:14px 22px;flex:1;}
+.hl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#9BA3D4;margin-bottom:2px;}
+.ht{font-family:'Playfair Display',serif;font-size:21px;font-weight:900;color:white;}
+.hsb{font-size:12px;color:#B0B8E8;font-style:italic;margin-top:2px;}
+.hr{padding:10px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.15);}
+.timer{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:white;letter-spacing:2px;line-height:1;}
+.timer.warn{color:#FFB347;}.timer.danger{color:#FF6B6B;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.tlbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#9BA3D4;margin-top:2px;text-align:center;}
+.tbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:white;padding:3px 9px;border-radius:4px;font-size:10px;cursor:pointer;margin-top:6px;font-family:inherit;}
+.tbtn:hover{background:rgba(255,255,255,.22);}
+.main{max-width:900px;margin:0 auto;padding:22px 18px 48px;}
+.tabs{display:flex;gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:22px;flex-wrap:wrap;}
+.tab{flex:1;min-width:110px;padding:10px 8px;text-align:center;font-size:11.5px;font-weight:600;cursor:pointer;background:white;border-right:1px solid var(--border);transition:all .2s;line-height:1.3;}
+.tab:last-child{border-right:none;}
+.tab.active{background:var(--navy);color:white;}
+.tab:hover:not(.active){background:var(--bg);}
+.tw{font-size:9px;display:block;font-weight:700;opacity:.9;margin-top:2px;color:var(--red);}
+.panel{display:none;}.panel.active{display:block;}
+.doc-hdr{border-radius:10px 10px 0 0;padding:18px 22px;color:white;}
+.doc-hdr h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:3px;}
+.doc-hdr .by{font-size:12px;opacity:.8;font-style:italic;}
+.doc-hdr .heat{display:inline-block;background:rgba(255,255,255,.2);border-radius:12px;padding:2px 10px;font-size:11px;margin-top:6px;font-weight:700;}
+.doc-body{background:white;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;margin-bottom:18px;}
+.ds{padding:16px 22px;border-bottom:1px solid var(--border);}
+.ds:last-child{border-bottom:none;}
+.dsl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.dst{font-size:14.5px;line-height:1.75;}
+.dst strong{color:var(--navy);}
+.qb{background:var(--bg);border-left:4px solid var(--gold);padding:12px 16px;border-radius:0 8px 8px 0;margin:10px 0;font-style:italic;font-size:14px;line-height:1.7;color:#333;}
+.pq-section{background:white;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px;}
+.pq-hdr{padding:11px 18px;}
+.pq-hdr.q1{background:var(--red);}.pq-hdr.q2{background:#1B4D8A;}.pq-hdr.q3{background:var(--success);}
+.pq-hdr h3{font-family:'Playfair Display',serif;font-size:15px;color:white;}
+.pq-hdr p{font-size:11px;color:rgba(255,255,255,.8);margin-top:1px;}
+.pq-body{padding:15px 18px;}
+.pq-prompt{background:var(--bg);border-left:4px solid var(--navy);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14px;line-height:1.65;margin-bottom:12px;font-style:italic;}
+.opts{display:flex;flex-direction:column;gap:7px;}
+.opt{padding:10px 14px;border:2px solid var(--border);border-radius:7px;font-size:13.5px;cursor:pointer;transition:all .2s;background:white;text-align:left;font-family:inherit;line-height:1.4;}
+.opt:hover{border-color:var(--navy);}
+.opt.correct{background:#E8F5E9;border-color:var(--success);color:var(--success);font-weight:700;}
+.opt.wrong{background:#FFF0F0;border-color:var(--red);color:var(--red);}
+.opt.reveal{background:#E8EAF6;border-color:var(--navy);}
+.exp{display:none;padding:10px 14px;background:#E8EAF6;border-radius:8px;font-size:14px;line-height:1.65;margin-top:7px;}
+.exp.show{display:block;}.exp strong{color:var(--navy);}
+.match-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.mopt{padding:9px 12px;border:2px solid var(--border);border-radius:7px;font-size:13px;cursor:pointer;background:white;text-align:left;font-family:inherit;line-height:1.4;transition:all .2s;}
+.mopt:hover{border-color:var(--navy);}
+.mopt.correct{background:#E8F5E9;border-color:var(--success);color:var(--success);font-weight:700;}
+.mopt.wrong{background:#FFF0F0;border-color:var(--red);color:var(--red);}
+.mopt.reveal{background:#E8EAF6;border-color:var(--navy);}
+textarea{width:100%;border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-family:inherit;font-size:14px;line-height:1.7;resize:vertical;outline:none;background:#FAFAFA;min-height:60px;}
+textarea:focus{border-color:var(--navy);}
+textarea::placeholder{color:#AAA;font-style:italic;}
+.mbtn{margin-top:7px;background:transparent;border:2px solid var(--navy);color:var(--navy);padding:6px 14px;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+.mbtn:hover{background:var(--navy);color:white;}
+.mans{display:none;margin-top:9px;padding:11px 14px;background:#E8F5E9;border-radius:8px;font-size:14px;line-height:1.7;border-left:4px solid var(--success);}
+.mans.show{display:block;}.mans strong{color:var(--success);}
+.score-row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap;}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:12px;font-size:11.5px;font-weight:700;}
+.chip-g{background:#E8F5E9;color:var(--success);}.chip-r{background:#FFF0F0;color:var(--red);}
+.pb{display:inline-block;background:var(--gold);color:white;font-size:10px;padding:3px 9px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hs"></div>
+  <div class="hb">
+    <div class="hl">AP Gov · Partner Check — Deep Drill</div>
+    <div class="ht">Foundational Documents — Argument Toolkit</div>
+    <div class="hsb">Read → 3 practice questions per document → Write a sentence → Compare with model</div>
+  </div>
+  <div class="hr">
+    <div class="timer" id="timer">25:00</div>
+    <div class="tlbl">remaining</div>
+    <button class="tbtn" onclick="toggleTimer()" id="tbtn">Start</button>
+  </div>
+</div>
+
+<div class="main">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <span class="pb">📄 Read + Practice</span>
+    <span style="font-size:12px;color:var(--muted);">Red = flagged weak by your class · 3 practice questions per document after reading</span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showDoc('f78',this)">Federalist 78<span class="tw">🔴 53%</span></div>
+    <div class="tab" onclick="showDoc('bjl',this)">Birm. Jail<span class="tw">🔴 51%</span></div>
+    <div class="tab" onclick="showDoc('f10',this)">Federalist 10<span class="tw">🔴 46%</span></div>
+    <div class="tab" onclick="showDoc('b1',this)">Brutus No. 1<span class="tw">38%</span></div>
+    <div class="tab" onclick="showDoc('f70',this)">Federalist 70<span class="tw">36%</span></div>
+    <div class="tab" onclick="showDoc('f51',this)">Federalist 51<span class="tw">35%</span></div>
+  </div>
+
+  <!-- ── FEDERALIST 78 ── -->
+  <div class="panel active" id="doc-f78">
+    <div class="doc-hdr" style="background:#1B4D8A;">
+      <h2>Federalist No. 78</h2><div class="by">Alexander Hamilton, 1788</div>
+      <div class="heat">🔴 53% flagged — your weakest document</div>
+    </div>
+    <div class="doc-body">
+      <div class="ds"><div class="dsl">Central Argument</div>
+        <div class="dst">Hamilton calls the judiciary the <strong>"least dangerous branch"</strong> — it has neither force (military) nor will (budget). It has only judgment. Because judges have no political power to abuse, they need <strong>lifetime tenure</strong> to rule based on law rather than political pressure. Crucially, Hamilton argues courts must be able to void laws that contradict the Constitution — the theoretical foundation for <strong>judicial review</strong> before Marbury v. Madison made it law.</div>
+        <div class="qb">"The judiciary... has no influence over either the sword or the purse... It may truly be said to have neither FORCE nor WILL, but merely judgment."</div>
+      </div>
+      <div class="ds"><div class="dsl">How to USE It in an FRQ</div>
+        <div class="dst">
+          ✅ <strong>Argue FOR judicial independence</strong> — lifetime tenure protects courts from political pressure<br>
+          ✅ <strong>Support judicial review</strong> — pair with Marbury v. Madison, which put Hamilton's theory into practice<br>
+          ✅ <strong>Argue checks and balances work</strong> — courts checking Congress is part of the Federalist 51 framework<br>
+          ❌ <strong>Don't use to argue courts have too much power</strong> — that's Brutus No. 1's argument
+        </div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q1"><h3>① Argument Challenge</h3><p>Pick the best way to use Federalist 78 in an FRQ</p></div>
+      <div class="pq-body">
+        <div class="pq-prompt">"The Supreme Court's power of judicial review threatens democratic self-governance because unelected judges can override elected majorities." — Refute using Federalist No. 78.</div>
+        <div class="opts">
+          <button class="opt" onclick="chk(this,'w','f78-1')">A. Hamilton thought judicial review was dangerous and should be rarely used.</button>
+          <button class="opt" onclick="chk(this,'c','f78-1')">B. Hamilton argued in Federalist 78 that the judiciary's lack of political power — no army, no budget — makes judicial review safe, because courts can only rule on law, not impose their will on society.</button>
+          <button class="opt" onclick="chk(this,'w','f78-1')">C. Federalist 78 shows Hamilton believed democracy should override the courts on major questions.</button>
+        </div>
+        <div class="exp" id="f78-1">The key move: use Hamilton's own reasoning — courts have no force or will, only judgment — to argue that judicial review isn't a power grab, it's a structural check with no enforcement muscle behind it. <strong>This is what earns the reasoning point: connecting the document's argument to the thesis.</strong></div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q2"><h3>② Which Document Fits?</h3><p>Match the argument to the right foundational document</p></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Essay prompt: "Congress passes a law expanding presidential war powers. A senator argues the courts should strike it down." Which foundational document best supports the senator's argument?</div>
+        <div class="match-opts">
+          <button class="mopt" onclick="mchk(this,'c','f78-2')">Federalist No. 78 — judiciary has the power and duty to void laws that violate the Constitution</button>
+          <button class="mopt" onclick="mchk(this,'w','f78-2')">Federalist No. 70 — the executive needs energy and decisiveness</button>
+          <button class="mopt" onclick="mchk(this,'w','f78-2')">Brutus No. 1 — federal power threatens state authority</button>
+          <button class="mopt" onclick="mchk(this,'w','f78-2')">Federalist No. 10 — factions need to be controlled in a republic</button>
+        </div>
+        <div class="exp" id="f78-2"><strong>Federalist 78</strong> is correct — it directly addresses the judiciary's role in voiding unconstitutional laws. The senator is making a judicial review argument, which is Hamilton's core argument in Federalist 78. Pair it with Marbury v. Madison for maximum FRQ impact.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q3"><h3>③ Write It</h3><p>One sentence using Federalist 78 in an FRQ argument</p></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Prompt: "Judicial independence is essential to maintaining the constitutional system of checks and balances."</div>
+        <textarea placeholder="In Federalist No. 78, Hamilton argued... This supports the claim that..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model Sentence</button>
+        <div class="mans">In Federalist No. 78, Hamilton argued that the judiciary is the "least dangerous branch" precisely because it possesses only judgment — not force or will — making lifetime tenure essential to insulate judicial decisions from political pressure and preserve the Court's ability to check the other branches through judicial review.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LETTER FROM BIRMINGHAM JAIL ── -->
+  <div class="panel" id="doc-bjl">
+    <div class="doc-hdr" style="background:#7A1523;">
+      <h2>Letter from Birmingham Jail</h2><div class="by">Dr. Martin Luther King Jr., 1963</div>
+      <div class="heat">🔴 51% flagged — second weakest</div>
+    </div>
+    <div class="doc-body">
+      <div class="ds"><div class="dsl">Central Argument</div>
+        <div class="dst">King argues there are <strong>just and unjust laws</strong>. An unjust law is one that <strong>(1) degrades human personality</strong> or <strong>(2) is imposed on a minority by a majority that does not bind itself</strong> to the same rule. When a law is unjust, it is not just permissible to disobey — it is a moral obligation. But civil disobedience must be <strong>nonviolent, open, and willing to accept legal consequences</strong>.</div>
+        <div class="qb">"One has not only a legal but a moral responsibility to obey just laws. Conversely, one has a moral responsibility to disobey unjust laws."</div>
+      </div>
+      <div class="ds"><div class="dsl">How to USE It in an FRQ</div>
+        <div class="dst">
+          ✅ <strong>Civil rights arguments</strong> — legal rights alone are insufficient without moral pressure<br>
+          ✅ <strong>Equal protection</strong> — laws that apply only to minorities violate King's definition of justice AND the 14th Amendment<br>
+          ✅ <strong>Connect to Brown v. Board</strong> — King's unjust law = degrades human personality; Brown = segregation is inherently unequal<br>
+          ❌ <strong>Don't just say "King believed in civil rights"</strong> — name his specific just/unjust distinction and its TWO definitions
+        </div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q1"><h3>① Argument Challenge</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">"Political participation through established legal channels is sufficient for achieving justice." — Refute using the Letter from Birmingham Jail.</div>
+        <div class="opts">
+          <button class="opt" onclick="chk(this,'w','bjl-1')">A. King believed people should always work within the legal system to avoid setting a dangerous precedent.</button>
+          <button class="opt" onclick="chk(this,'w','bjl-1')">B. King's letter shows that protesting and marching are the most effective forms of participation.</button>
+          <button class="opt" onclick="chk(this,'c','bjl-1')">C. King argued that when laws themselves are unjust — imposed on a minority by a majority that exempts itself — working within those laws perpetuates injustice, making nonviolent civil disobedience morally required.</button>
+        </div>
+        <div class="exp" id="bjl-1"><strong>C uses King's specific definition</strong> of an unjust law and connects it directly to the prompt. The power move: when the legal channel IS the injustice, you can't use it to fix itself. This directly refutes "legal channels are sufficient."</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q2"><h3>② Which Document Fits?</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Essay prompt argues: "Civil rights progress in America has required citizens to act outside the normal political process." Which foundational document best supports this claim?</div>
+        <div class="match-opts">
+          <button class="mopt" onclick="mchk(this,'w','bjl-2')">Federalist No. 51 — checks and balances prevent tyranny</button>
+          <button class="mopt" onclick="mchk(this,'c','bjl-2')">Letter from Birmingham Jail — moral obligation to disobey unjust laws through nonviolent civil disobedience</button>
+          <button class="mopt" onclick="mchk(this,'w','bjl-2')">Federalist No. 10 — large republic controls dangerous factions</button>
+          <button class="mopt" onclick="mchk(this,'w','bjl-2')">Brutus No. 1 — strong national government threatens liberty</button>
+        </div>
+        <div class="exp" id="bjl-2"><strong>Letter from Birmingham Jail</strong> — King's entire argument is that when legal channels produce unjust laws, citizens have a moral obligation to disobey through nonviolent direct action. This is the document that directly addresses acting outside the normal political process as a legitimate and necessary form of participation.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q3"><h3>③ Write It</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Prompt: "The 14th Amendment's Equal Protection Clause alone was insufficient to produce racial equality in America."</div>
+        <textarea placeholder="In the Letter from Birmingham Jail, King argued... This supports the claim that..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model Sentence</button>
+        <div class="mans">In the Letter from Birmingham Jail (1963), King argued that an unjust law — one imposed on a minority by a majority that does not bind itself to the same rule — carries no moral authority and demands active disobedience, demonstrating that formal legal equality under the 14th Amendment was insufficient to dismantle systems of racial injustice without sustained nonviolent direct action.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEDERALIST 10 ── -->
+  <div class="panel" id="doc-f10">
+    <div class="doc-hdr" style="background:#2C3170;">
+      <h2>Federalist No. 10</h2><div class="by">James Madison, 1787</div>
+      <div class="heat">🔴 46% flagged</div>
+    </div>
+    <div class="doc-body">
+      <div class="ds"><div class="dsl">Central Argument</div>
+        <div class="dst">Madison defines a <strong>faction</strong> as any group driven by self-interest against the rights of others or the common good. Factions can't be eliminated without destroying liberty — so you control their <em>effects</em>. The solution: a <strong>large republic</strong>. In a large, diverse republic, so many competing factions exist that no single one can dominate. They cancel each other out. <strong>Representative government</strong> also refines public opinion through elected representatives.</div>
+        <div class="qb">"The latent causes of faction are sown in the nature of man... relief is only to be sought in the means of controlling its effects."</div>
+      </div>
+      <div class="ds"><div class="dsl">How to USE It in an FRQ</div>
+        <div class="dst">
+          ✅ <strong>Interest group arguments</strong> — interest groups are Madison's factions; the system lets them compete without any one dominating<br>
+          ✅ <strong>Defend pluralism</strong> — competing interests balancing each other is a feature, not a bug<br>
+          ✅ <strong>Argue FOR representative over direct democracy</strong><br>
+          ❌ <strong>Don't confuse with Federalist 51</strong> — No. 10 = factions and the extended republic; No. 51 = institutional checks between branches
+        </div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q1"><h3>① Argument Challenge</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">The NRA, NAACP, Sierra Club, and Chamber of Commerce all lobby Congress and regularly counteract each other's influence. Does this support or undermine Federalist No. 10?</div>
+        <div class="opts">
+          <button class="opt" onclick="chk(this,'c','f10-1')">A. Supports it — multiple competing factions prevent any single interest from dominating, which is exactly what a large republic was designed to produce.</button>
+          <button class="opt" onclick="chk(this,'w','f10-1')">B. Undermines it — having too many factions makes government unable to function efficiently.</button>
+          <button class="opt" onclick="chk(this,'w','f10-1')">C. Madison thought factions were a positive good and should be encouraged to multiply.</button>
+        </div>
+        <div class="exp" id="f10-1"><strong>A is correct.</strong> Madison didn't think factions were good — he thought they were inevitable and dangerous. His solution was structural: make the republic large enough that no faction can dominate. When interest groups counteract each other, that's exactly the outcome the extended republic was designed to produce. Madison would not have been surprised by modern lobbying — he anticipated it.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q2"><h3>② Which Document Fits?</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Essay prompt: "Political parties and interest groups threaten to undermine democratic governance by prioritizing narrow interests over the public good." Which foundational document most directly addresses this concern — and from which angle?</div>
+        <div class="match-opts">
+          <button class="mopt" onclick="mchk(this,'c','f10-2')">Federalist No. 10 — warns that factions are dangerous but argues a large republic controls their effects</button>
+          <button class="mopt" onclick="mchk(this,'w','f10-2')">Brutus No. 1 — argues the national government will swallow state power</button>
+          <button class="mopt" onclick="mchk(this,'w','f10-2')">Federalist No. 51 — argues ambition must counteract ambition between branches</button>
+          <button class="mopt" onclick="mchk(this,'w','f10-2')">Declaration of Independence — governments derive legitimacy from consent of the governed</button>
+        </div>
+        <div class="exp" id="f10-2"><strong>Federalist No. 10</strong> — Madison directly addresses the danger of factions (narrow interest groups) and offers a structural solution. You could use it to support the prompt (factions are dangerous, Madison acknowledged it) OR to refute it (the large republic controls their effects). It's the most flexible document for interest group and party arguments.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q3"><h3>③ Write It</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Prompt: "The American political system has effectively managed competing interests without allowing any single faction to dominate."</div>
+        <textarea placeholder="In Federalist No. 10, Madison argued... This supports/refutes the claim that..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model Sentence</button>
+        <div class="mans">In Federalist No. 10, Madison argued that a large, diverse republic controls the dangerous effects of factions by ensuring no single interest group can achieve majority dominance — a structural logic that supports the claim that the American political system, with its many competing interests, tends toward balance rather than factional tyranny.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BRUTUS NO. 1 ── -->
+  <div class="panel" id="doc-b1">
+    <div class="doc-hdr" style="background:#3D5A3E;">
+      <h2>Brutus No. 1</h2><div class="by">Anti-Federalist (Robert Yates?), 1787</div>
+      <div class="heat">38% flagged</div>
+    </div>
+    <div class="doc-body">
+      <div class="ds"><div class="dsl">Central Argument</div>
+        <div class="dst">Brutus argues that a <strong>large republic cannot protect liberty</strong> — only small communities where citizens know their representatives can do that. The proposed Constitution is dangerous because the <strong>Necessary and Proper Clause</strong> gives Congress unlimited implied power and the <strong>Supremacy Clause</strong> will eventually override all state laws. The national government will inevitably expand until it absorbs state authority entirely. This is the direct counter to Federalist No. 10.</div>
+        <div class="qb">"The general government... comprehends every object of human concern... and is capable of being extended to embrace every case that can possibly occur."</div>
+      </div>
+      <div class="ds"><div class="dsl">How to USE It in an FRQ</div>
+        <div class="dst">
+          ✅ <strong>States' rights / federalism arguments</strong> — when arguing federal power has grown too large<br>
+          ✅ <strong>Pair with US v. Lopez</strong> — when the Court limited Commerce Clause power, Brutus's warning was finally heeded<br>
+          ✅ <strong>Use as a counterargument</strong> — if supporting federal power, Brutus is the opposing view to address<br>
+          ❌ <strong>Don't confuse with Federalist 51</strong> — Brutus FEARS concentrated power; Fed 51 says the system PREVENTS it
+        </div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q1"><h3>① Argument Challenge</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">"Federal power expansion since the Founding has come at the cost of the constitutional balance the Framers intended." — Support using Brutus No. 1.</div>
+        <div class="opts">
+          <button class="opt" onclick="chk(this,'w','b1-1')">A. Brutus argued the Constitution was well-designed and should be ratified without changes.</button>
+          <button class="opt" onclick="chk(this,'c','b1-1')">B. Brutus predicted this exact outcome — warning that the Necessary and Proper and Supremacy Clauses would give the national government unlimited authority to expand at the expense of the states.</button>
+          <button class="opt" onclick="chk(this,'w','b1-1')">C. Brutus argued federal expansion was necessary for national security and international credibility.</button>
+        </div>
+        <div class="exp" id="b1-1"><strong>The power move with Brutus:</strong> show that his prediction came true. This turns a founding-era document into evidence about a modern pattern. You're not just summarizing Brutus — you're using his argument as a lens on current reality. This earns both the document point AND the reasoning point.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q2"><h3>② Federalist 10 vs. Brutus No. 1</h3><p>These two documents argue opposite sides of the same question</p></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Both Federalist No. 10 and Brutus No. 1 address the question of whether a large republic can protect liberty. Which statement correctly distinguishes their positions?</div>
+        <div class="opts">
+          <button class="opt" onclick="chk(this,'c','b1-2')">A. Federalist 10 argues a large republic controls factions and protects liberty through diversity; Brutus No. 1 argues a large republic is too distant and powerful to protect individual liberty, which only small communities can do.</button>
+          <button class="opt" onclick="chk(this,'w','b1-2')">B. Both documents agree that a large republic is necessary, but disagree about whether it needs a Bill of Rights.</button>
+          <button class="opt" onclick="chk(this,'w','b1-2')">C. Brutus No. 1 supports the Constitution and Federalist 10 opposes it.</button>
+        </div>
+        <div class="exp" id="b1-2"><strong>This contrast is exam gold.</strong> Madison (Fed 10): large republic = safety because factions cancel each other. Brutus: large republic = danger because government becomes too distant and powerful. Same question, opposite conclusions. Knowing both sides lets you support OR modify any federalism prompt.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q3"><h3>③ Write It</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Prompt: "The Anti-Federalists' concerns about concentrated national power have proven more accurate than the Federalists' optimism."</div>
+        <textarea placeholder="In Brutus No. 1, the Anti-Federalist author argued... This supports the claim that..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model Sentence</button>
+        <div class="mans">In Brutus No. 1, the Anti-Federalist author warned that the Necessary and Proper and Supremacy Clauses would give the national government virtually unlimited authority to expand its power at the expense of the states — a prediction that the growth of federal programs, Commerce Clause legislation, and implied powers doctrine has largely confirmed over time.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEDERALIST 70 ── -->
+  <div class="panel" id="doc-f70">
+    <div class="doc-hdr" style="background:#5C3D1E;">
+      <h2>Federalist No. 70</h2><div class="by">Alexander Hamilton, 1788</div>
+      <div class="heat">36% flagged</div>
+    </div>
+    <div class="doc-body">
+      <div class="ds"><div class="dsl">Central Argument</div>
+        <div class="dst">Hamilton argues for <strong>"energy in the executive"</strong> — a strong, single president is essential for <strong>decision, activity, secrecy, and dispatch (speed)</strong>. A single president can act quickly in emergencies, be held accountable by the public, and protect the nation. A plural or weak executive would be too slow and diffuse accountability so no one can be blamed.</div>
+        <div class="qb">"Energy in the executive is a leading character in the definition of good government... a feeble executive implies a feeble execution of the government."</div>
+      </div>
+      <div class="ds"><div class="dsl">How to USE It in an FRQ</div>
+        <div class="dst">
+          ✅ <strong>Defend executive orders or unilateral presidential action</strong> — Hamilton's energy argument supports acting without waiting for Congress<br>
+          ✅ <strong>National security and foreign policy</strong> — Hamilton specifically mentions secrecy and speed as executive virtues<br>
+          ❌ <strong>Don't confuse with Federalist 51</strong> — No. 70 is specifically about why the EXECUTIVE should be strong; No. 51 is about checks on ALL branches
+        </div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q1"><h3>① Argument Challenge</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">The president issues an executive order deploying troops without a congressional declaration of war. Critics argue this violates separation of powers. Which argument best uses Federalist No. 70?</div>
+        <div class="opts">
+          <button class="opt" onclick="chk(this,'w','f70-1')">A. Hamilton would have opposed this — he believed Congress should control all major policy decisions.</button>
+          <button class="opt" onclick="chk(this,'c','f70-1')">B. Hamilton's argument for energy and decisiveness in the executive supports unilateral presidential action in situations requiring speed and secrecy that congressional deliberation cannot provide.</button>
+          <button class="opt" onclick="chk(this,'w','f70-1')">C. Federalist 70 argues the executive should be accountable only to the states, not the people directly.</button>
+        </div>
+        <div class="exp" id="f70-1"><strong>Hamilton's argument</strong> is fundamentally about why a strong, single executive is valuable — decisiveness and speed. Military deployments require exactly this. Hamilton also emphasized accountability: one president means one person responsible. This directly supports unilateral executive action in time-sensitive situations.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q2"><h3>② Federalist 70 vs. Federalist 51 — Know the Difference</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">An essay prompt argues: "The Founders designed the executive branch to be strong enough to act decisively." Which document best supports this specific claim?</div>
+        <div class="match-opts">
+          <button class="mopt" onclick="mchk(this,'c','f70-2')">Federalist No. 70 — directly argues for energy and strength in the executive branch</button>
+          <button class="mopt" onclick="mchk(this,'w','f70-2')">Federalist No. 51 — argues ambition must counteract ambition between all branches</button>
+          <button class="mopt" onclick="mchk(this,'w','f70-2')">Federalist No. 78 — argues the judiciary needs independence</button>
+          <button class="mopt" onclick="mchk(this,'w','f70-2')">Federalist No. 10 — argues factions are controlled in a large republic</button>
+        </div>
+        <div class="exp" id="f70-2"><strong>Federalist 70</strong> is the right choice — Hamilton specifically argued that the executive MUST be strong and energetic. Federalist 51 is about checks on all branches, which actually argues the opposite: no branch should become too powerful. When the prompt is specifically about executive strength, reach for Federalist 70.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q3"><h3>③ Write It</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Prompt: "The unitary executive — a single, powerful president — is essential to effective American governance."</div>
+        <textarea placeholder="In Federalist No. 70, Hamilton argued... This supports the claim that..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model Sentence</button>
+        <div class="mans">In Federalist No. 70, Hamilton argued that "energy in the executive" — the capacity for decisiveness, secrecy, and speed in a single accountable leader — is essential to effective government, directly supporting the claim that a unitary, powerful executive is a constitutional feature rather than a flaw.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEDERALIST 51 ── -->
+  <div class="panel" id="doc-f51">
+    <div class="doc-hdr" style="background:#1B4D35;">
+      <h2>Federalist No. 51</h2><div class="by">James Madison, 1788</div>
+      <div class="heat">35% flagged</div>
+    </div>
+    <div class="doc-body">
+      <div class="ds"><div class="dsl">Central Argument</div>
+        <div class="dst">Madison's answer to tyranny is institutional design. <strong>"Ambition must be made to counteract ambition."</strong> Each branch must have the constitutional tools and personal motivation to resist the others. If men were angels, no government would be necessary — but since they aren't, the structure must do the work. The same logic applies to federalism: national and state governments check each other.</div>
+        <div class="qb">"If men were angels, no government would be necessary... In framing a government which is to be administered by men over men, the great difficulty lies in this: you must first enable the government to control the governed; and in the next place oblige it to control itself."</div>
+      </div>
+      <div class="ds"><div class="dsl">How to USE It in an FRQ</div>
+        <div class="dst">
+          ✅ <strong>Any separation of powers argument</strong> — this is the foundational defense of checks and balances<br>
+          ✅ <strong>Pair with Marbury v. Madison</strong> — Fed 51 theorizes judicial independence; Marbury put it into practice<br>
+          ❌ <strong>Don't confuse with Federalist 10</strong> — No. 51 = institutional checks between branches; No. 10 = faction control through a large republic
+        </div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q1"><h3>① Argument Challenge</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">The president vetoes legislation passed by Congress. Congress fails to override the veto. Does this support or undermine Federalist No. 51?</div>
+        <div class="opts">
+          <button class="opt" onclick="chk(this,'c','f51-1')">A. Supports it — this is exactly the system working as designed. The executive branch used its constitutional check (veto) to resist the legislature. Ambition counteracted ambition.</button>
+          <button class="opt" onclick="chk(this,'w','f51-1')">B. Undermines it — if the president can stop Congress, one branch is too powerful.</button>
+          <button class="opt" onclick="chk(this,'w','f51-1')">C. Federalist 51 doesn't address the veto — that's a Federalist 70 argument about executive energy.</button>
+        </div>
+        <div class="exp" id="f51-1"><strong>Madison explicitly designed</strong> the system so each branch could resist the others. The veto is the executive's check on the legislature. The fact that Congress couldn't override shows the check functioned. This is the system working — ambition (presidential) counteracting ambition (congressional). Exactly what Federalist 51 describes.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q2"><h3>② The Big Four — Match the Document</h3><p>Four Federalist Papers, four different arguments</p></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Match: "The structural design of government — separated powers, checks and balances, and dual sovereignty — prevents any one group from seizing control."</div>
+        <div class="match-opts">
+          <button class="mopt" onclick="mchk(this,'w','f51-2')">Federalist No. 10 — controls factions through the extended republic</button>
+          <button class="mopt" onclick="mchk(this,'c','f51-2')">Federalist No. 51 — institutional structure makes ambition counteract ambition</button>
+          <button class="mopt" onclick="mchk(this,'w','f51-2')">Federalist No. 70 — the executive needs energy and decisiveness</button>
+          <button class="mopt" onclick="mchk(this,'w','f51-2')">Federalist No. 78 — the judiciary is the least dangerous branch</button>
+        </div>
+        <div class="exp" id="f51-2"><strong>Federalist 51</strong> — the argument is specifically about structural institutional design preventing tyranny. No. 10 also touches this but focuses on factions, not institutional structure. The phrase "ambition must counteract ambition" is the Federalist 51 signature — use it as a signal to grab that document.</div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <div class="pq-hdr q3"><h3>③ Write It</h3></div>
+      <div class="pq-body">
+        <div class="pq-prompt">Prompt: "The constitutional design of checks and balances effectively prevents any one branch from becoming too powerful."</div>
+        <textarea placeholder="In Federalist No. 51, Madison argued... This supports the claim that..."></textarea>
+        <button class="mbtn" onclick="revMdl(this)">Reveal Model Sentence</button>
+        <div class="mans">In Federalist No. 51, Madison argued that "ambition must be made to counteract ambition" — each branch must hold the constitutional means and institutional motivation to resist encroachment by the others — creating a structural framework in which the separated powers system actively prevents single-branch dominance rather than merely hoping for virtue from those in office.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showDoc(id,tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('doc-'+id).classList.add('active');
+  tab.classList.add('active');
+}
+function chk(btn,result,expId){
+  btn.parentElement.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  if(result==='c'){btn.classList.add('correct');}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt').forEach(o=>{if(!o.classList.contains('wrong'))o.classList.add('reveal');});}
+  const e=document.getElementById(expId);if(e)e.classList.add('show');
+}
+function mchk(btn,result,expId){
+  btn.parentElement.querySelectorAll('.mopt').forEach(o=>o.disabled=true);
+  if(result==='c'){btn.classList.add('correct');}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.mopt').forEach(o=>{if(!o.classList.contains('wrong'))o.classList.add('reveal');});}
+  const e=document.getElementById(expId);if(e)e.classList.add('show');
+}
+function revMdl(btn){
+  const ans=btn.nextElementSibling;ans.classList.add('show');btn.style.display='none';
+}
+let timerSecs=25*60,timerInt=null,timerOn=false;
+function toggleTimer(){
+  if(timerOn){clearInterval(timerInt);timerOn=false;document.getElementById('tbtn').textContent='Resume';}
+  else{timerOn=true;document.getElementById('tbtn').textContent='Pause';
+    timerInt=setInterval(()=>{timerSecs--;updTimer();if(timerSecs<=0){clearInterval(timerInt);timerOn=false;}},1000);}
+}
+function updTimer(){
+  const m=Math.floor(timerSecs/60),s=timerSecs%60;
+  const el=document.getElementById('timer');
+  el.textContent=m+':'+String(s).padStart(2,'0');
+  el.className='timer'+(timerSecs<=60?' danger':timerSecs<=5*60?' warn':'');
+}
+</script>
+</body>
+</html>

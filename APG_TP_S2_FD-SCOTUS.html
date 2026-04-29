@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Station 2 — Cases & Documents Speed Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #2C3170;
+    --red: #B22234;
+    --gold: #C8960C;
+    --cream: #F8F3E8;
+    --text: #1C1C2E;
+    --muted: #6B6B7E;
+    --border: #D8D4C8;
+    --success: #1B6B3A;
+    --bg-light: #F2EDE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Serif 4', Georgia, serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  .site-header {
+    background: var(--navy);
+    color: white;
+    display: flex;
+    align-items: stretch;
+    border-bottom: 4px solid var(--red);
+  }
+  .header-stripe { width: 8px; background: var(--red); flex-shrink: 0; }
+  .header-content { padding: 16px 24px; flex: 1; }
+  .header-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #9BA3D4; margin-bottom: 2px; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; }
+  .header-sub { font-size: 13px; color: #B0B8E8; font-style: italic; margin-top: 2px; }
+  .header-right { padding: 12px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid rgba(255,255,255,0.15); min-width: 120px; }
+  .score-big { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: white; line-height: 1; }
+  .score-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #9BA3D4; margin-top: 2px; }
+
+  .main { max-width: 800px; margin: 0 auto; padding: 28px 20px 48px; }
+
+  /* INTRO */
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .intro-hero { text-align: center; padding: 40px 20px 28px; }
+  .intro-icon { font-size: 52px; margin-bottom: 14px; }
+  .intro-hero h1 { font-family: 'Playfair Display', serif; font-size: 34px; color: var(--navy); margin-bottom: 8px; }
+  .intro-hero p { font-size: 16px; color: var(--muted); max-width: 500px; margin: 0 auto 24px; line-height: 1.65; }
+  .intro-rules { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 20px 24px; margin-bottom: 24px; text-align: left; }
+  .intro-rules h3 { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 12px; }
+  .rule { display: flex; gap: 10px; align-items: baseline; margin-bottom: 8px; font-size: 14px; line-height: 1.5; }
+  .rule-num { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--red); flex-shrink: 0; }
+
+  /* FILTER TABS */
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    background: white;
+    font-family: 'Source Serif 4', serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .filter-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .filter-btn:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
+
+  /* CARD FLIP */
+  .card-scene {
+    perspective: 1000px;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+  .card-flip {
+    width: 100%;
+    min-height: 260px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-flip.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    width: 100%;
+    min-height: 260px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .card-face.back { transform: rotateY(180deg); }
+
+  /* FRONT FACE */
+  .front-header {
+    padding: 18px 24px 14px;
+    flex-shrink: 0;
+  }
+  .front-header.case-type { background: var(--navy); }
+  .front-header.doc-type { background: var(--red); }
+  .card-type-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+  .card-name { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: white; line-height: 1.2; }
+  .card-year { font-size: 14px; color: rgba(255,255,255,0.75); margin-top: 4px; font-style: italic; }
+  .front-body {
+    background: white;
+    flex: 1;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+  }
+  .flip-hint { font-size: 13px; color: var(--muted); font-style: italic; }
+  .flip-icon { font-size: 32px; opacity: 0.4; }
+  .think-prompt {
+    background: var(--bg-light);
+    border-radius: 8px;
+    padding: 14px 18px;
+    width: 100%;
+    text-align: left;
+  }
+  .think-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .think-questions { font-size: 13.5px; line-height: 1.6; color: var(--text); }
+
+  /* BACK FACE */
+  .back-header { padding: 14px 22px; flex-shrink: 0; }
+  .back-header.case-type { background: var(--success); }
+  .back-header.doc-type { background: var(--gold); }
+  .back-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-bottom: 2px; }
+  .back-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: white; }
+  .back-body { background: white; flex: 1; padding: 18px 22px; }
+  .back-section { margin-bottom: 14px; }
+  .back-section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .back-section-text { font-size: 14.5px; line-height: 1.7; }
+  .back-section-text strong { color: var(--navy); }
+
+  /* VERDICT BUTTONS */
+  .verdict-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .verdict-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .verdict-know { background: var(--success); color: white; }
+  .verdict-know:hover { background: #145530; transform: translateY(-1px); }
+  .verdict-review { background: var(--red); color: white; }
+  .verdict-review:hover { background: #8B1A28; transform: translateY(-1px); }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 22px; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.5px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--navy), var(--red)); border-radius: 3px; transition: width 0.4s ease; }
+
+  /* TIMER */
+  .timer-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .timer-display.warning { color: #FFB347; }
+  .timer-display.danger { color: #FF6B6B; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.6} }
+  .timer-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #9BA3D4; margin-top: 2px; text-align:center; }
+  .timer-controls { display: flex; gap: 6px; margin-top: 8px; }
+  .timer-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; font-family: 'Source Serif 4', serif; transition: background 0.2s; }
+  .timer-btn:hover { background: rgba(255,255,255,0.22); }
+
+  /* RESULTS */
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .result-card { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 18px; text-align: center; }
+  .result-num { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; line-height: 1; }
+  .result-num.green { color: var(--success); }
+  .result-num.red { color: var(--red); }
+  .result-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .needs-review-list { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 18px; margin-bottom: 20px; }
+  .needs-review-list h3 { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--red); margin-bottom: 12px; }
+  .review-item { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .review-item:last-child { border-bottom: none; }
+  .review-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+
+  /* BUTTONS */
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 7px; font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: #3d43a0; }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-ghost { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
+  .btn-ghost:hover { background: var(--navy); color: white; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .pair-badge { display: inline-block; background: var(--gold); color: white; font-size: 11px; padding: 3px 10px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="header-stripe"></div>
+  <div class="header-content">
+    <div class="header-label">AP Gov & Politics — Station 2</div>
+    <div class="header-title">Cases & Documents Speed Drill</div>
+    <div class="header-sub">Retrieval practice · 14 Cases + 9 Documents · Work in pairs</div>
+  </div>
+  <div class="header-right" id="header-right">
+    <div class="timer-display" id="timer">20:00</div>
+    <div class="timer-label">remaining</div>
+    <div class="timer-controls">
+      <button class="timer-btn" onclick="toggleTimer()" id="timer-toggle-btn">Start</button>
+      <button class="timer-btn" onclick="resetTimer()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="screen active" id="screen-intro">
+  <div class="main">
+    <div class="intro-hero">
+      <div class="intro-icon">🃏</div>
+      <h1>Speed Drill</h1>
+      <p>Flashcard-style retrieval for all 14 required cases and 9 foundational documents. Try to recall before you flip. The act of trying is what builds memory.</p>
+    </div>
+    <div class="intro-rules">
+      <h3>How this station works</h3>
+      <div class="rule"><span class="rule-num">1</span><span>One partner reads the card name out loud. Both partners try to recall the key facts from memory — don't look at your sheets yet.</span></div>
+      <div class="rule"><span class="rule-num">2</span><span>After 20–30 seconds, click the card to flip and reveal. Compare what you said to what's shown.</span></div>
+      <div class="rule"><span class="rule-num">3</span><span>Mark <strong>"Got it"</strong> if you recalled the key holding and impact. Mark <strong>"Review"</strong> if you missed something important.</span></div>
+      <div class="rule"><span class="rule-num">4</span><span>At the end, your Review pile tells you exactly what to study tonight.</span></div>
+      <div class="rule"><span class="rule-num">5</span><span>You can filter by Cases only, Documents only, or shuffle all together.</span></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn btn-primary" onclick="startDrill()" style="font-size:16px; padding:14px 32px;">Start the Drill →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DRILL -->
+<div class="screen" id="screen-drill">
+  <div class="main">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+      <span class="pair-badge">👥 Work in Pairs</span>
+      <div class="filter-bar" style="margin-bottom:0;">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All Cards</button>
+        <button class="filter-btn" onclick="setFilter('case', this)">Cases Only</button>
+        <button class="filter-btn" onclick="setFilter('doc', this)">Documents Only</button>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="progress-text">Card 1 of 23</span>
+        <span id="progress-counts">✓ 0 &nbsp;·&nbsp; ✗ 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Verdict buttons ABOVE the card so they're always visible -->
+    <div class="verdict-row" id="verdict-row" style="display:none; margin-bottom:14px;">
+      <button class="verdict-btn verdict-know" onclick="markCard(true)">✓ &nbsp; Got it</button>
+      <button class="verdict-btn verdict-review" onclick="markCard(false)">✗ &nbsp; Need to Review</button>
+    </div>
+
+    <div style="font-size:13px; color:var(--muted); text-align:center; margin-bottom:10px;" id="flip-hint-bottom">Click the card to flip and reveal</div>
+
+    <div class="card-scene" onclick="flipCard()">
+      <div class="card-flip" id="card-flip">
+        <!-- FRONT -->
+        <div class="card-face front" id="card-front">
+          <div class="front-header" id="front-header">
+            <div class="card-type-label" id="card-type-label">REQUIRED SCOTUS CASE</div>
+            <div class="card-name" id="card-name">Marbury v. Madison</div>
+            <div class="card-year" id="card-year">1803</div>
+          </div>
+          <div class="front-body">
+            <div class="flip-icon">↻</div>
+            <div class="flip-hint">Take 20 seconds to recall — then click to flip</div>
+            <div class="think-prompt">
+              <div class="think-label" id="think-label-text">Before flipping, ask yourself:</div>
+              <div class="think-questions" id="think-questions">Loading...</div>
+            </div>
+          </div>
+        </div>
+        <!-- BACK -->
+        <div class="card-face back" id="card-back">
+          <div class="back-header" id="back-header">
+            <div class="back-label" id="back-label">ANSWER</div>
+            <div class="back-name" id="back-name">Marbury v. Madison</div>
+          </div>
+          <div class="back-body">
+            <div class="back-section" id="back-context-wrap">
+              <div class="back-section-label" id="back-context-label">Context</div>
+              <div class="back-section-text" id="back-context"></div>
+            </div>
+            <div class="back-section">
+              <div class="back-section-label" id="back-holding-label">Holding</div>
+              <div class="back-section-text" id="back-holding"></div>
+            </div>
+            <div class="back-section">
+              <div class="back-section-label">Impact / Key Argument</div>
+              <div class="back-section-text" id="back-impact"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="screen-results">
+  <div class="main">
+    <div style="text-align:center; margin-bottom:28px;">
+      <div style="font-size:48px; margin-bottom:10px;">📊</div>
+      <h2 style="font-family:'Playfair Display',serif; font-size:30px; color:var(--navy); margin-bottom:6px;">Drill Complete</h2>
+      <p style="color:var(--muted); font-size:15px;">Here's what tonight's review should focus on.</p>
+    </div>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-num green" id="r-know">0</div>
+        <div class="result-label">Recalled correctly</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num red" id="r-review">0</div>
+        <div class="result-label">Need more review</div>
+      </div>
+    </div>
+    <div class="needs-review-list" id="review-list-wrap">
+      <h3>🔴 Study These Tonight</h3>
+      <div id="review-list"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="restartDrill()">Drill Again (Shuffled)</button>
+      <button class="btn btn-gold" onclick="drillReviewOnly()">Drill Review Pile Only</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const cards = [
+  // CASES
+  { type: 'case', name: 'Marbury v. Madison', year: '1803', unit: 'Unit 2',
+    context: 'William Marbury was denied a judicial commission he had been promised by the outgoing Adams administration.',
+    holding: 'The Supreme Court ruled it could not compel delivery of the commission, but — more importantly — declared a section of the Judiciary Act of 1789 unconstitutional.',
+    impact: 'Established judicial review — the power of the Supreme Court to strike down laws that violate the Constitution. Foundation of judicial power.',
+    thinkQ: 'What did the Court decide? What power did this case establish? What document/clause does it connect to?',
+  },
+  { type: 'case', name: 'McCulloch v. Maryland', year: '1819', unit: 'Unit 1',
+    context: 'Maryland taxed the Second Bank of the United States. The federal cashier McCulloch refused to pay.',
+    holding: 'Congress has implied powers under the Necessary and Proper Clause to create a national bank. States cannot tax federal institutions.',
+    impact: 'Established the doctrine of implied powers and federal supremacy over conflicting state actions. Expanded congressional authority beyond enumerated powers.',
+    thinkQ: 'What constitutional clause did this case rely on? What did it say about federal vs. state power? What doctrine did it create?',
+  },
+  { type: 'case', name: 'Schenck v. United States', year: '1919', unit: 'Unit 3',
+    context: 'Schenck distributed leaflets urging resistance to the draft during World War I.',
+    holding: 'The Supreme Court upheld his conviction. Free speech can be limited when it presents a "clear and present danger."',
+    impact: 'Established the clear and present danger test for limiting First Amendment speech. Later weakened by Brandenburg v. Ohio (1969), which required imminent lawless action.',
+    thinkQ: 'What standard did this case create for restricting speech? What amendment does it involve? Has this standard changed since?',
+  },
+  { type: 'case', name: 'Brown v. Board of Education', year: '1954', unit: 'Unit 3',
+    context: 'Black students in Topeka, Kansas were denied admission to white-only public schools under a "separate but equal" doctrine.',
+    holding: 'Separate educational facilities are inherently unequal. Racial segregation in public schools violates the Equal Protection Clause of the 14th Amendment.',
+    impact: 'Overturned Plessy v. Ferguson (1896). Foundation of modern civil rights law. Applied strict scrutiny to racial classifications.',
+    thinkQ: 'What constitutional clause was the basis for this ruling? What earlier case did it overturn? What level of scrutiny does it involve?',
+  },
+  { type: 'case', name: 'Baker v. Carr', year: '1962', unit: 'Unit 2',
+    context: 'Tennessee had not redrawn its legislative districts in 60 years, leading to severe population imbalances between districts.',
+    holding: 'Federal courts have jurisdiction over legislative apportionment cases — they are justiciable political questions.',
+    impact: 'Led to the one person, one vote principle. States must draw legislative districts with roughly equal populations to satisfy equal protection.',
+    thinkQ: 'What did this case say courts could rule on? What principle did it lead to? What amendment is involved?',
+  },
+  { type: 'case', name: 'Engel v. Vitale', year: '1962', unit: 'Unit 3',
+    context: 'New York public schools began each day with a state-written prayer.',
+    holding: 'Government-sponsored prayer in public schools violates the Establishment Clause of the First Amendment.',
+    impact: 'Incorporated the Establishment Clause against the states via the 14th Amendment. Established the wall between government and religion in public schools.',
+    thinkQ: 'Which clause of the 1st Amendment does this involve? What did the Court say the government cannot do? How does the 14th Amendment connect?',
+  },
+  { type: 'case', name: 'Gideon v. Wainwright', year: '1963', unit: 'Unit 3',
+    context: 'Clarence Earl Gideon was convicted of a felony in Florida without being provided an attorney because he was too poor to afford one.',
+    holding: 'The 6th Amendment right to counsel must be provided to criminal defendants who cannot afford an attorney, and this right applies to state courts through the 14th Amendment.',
+    impact: 'Incorporated the right to counsel against the states. Established the public defender system. Major example of selective incorporation.',
+    thinkQ: 'Which amendment guarantees the right to counsel? How does this case connect to selective incorporation? What practical system did it create?',
+  },
+  { type: 'case', name: 'Tinker v. Des Moines', year: '1969', unit: 'Unit 3',
+    context: 'Students wore black armbands to school to protest the Vietnam War and were suspended.',
+    holding: 'Students do not "shed their constitutional rights at the schoolhouse gate." Schools may only restrict student speech if it causes substantial disruption to the educational environment.',
+    impact: 'Established the substantial disruption standard for student speech. Incorporated First Amendment free speech into the school context.',
+    thinkQ: 'What standard did this case establish for restricting student speech? What amendment does it involve? Could a school restrict social media posts under this standard?',
+  },
+  { type: 'case', name: 'New York Times Co. v. United States', year: '1971', unit: 'Unit 3',
+    context: 'The Nixon administration sought to block the New York Times from publishing the Pentagon Papers — classified documents about the Vietnam War.',
+    holding: 'The government failed to meet the heavy burden required for prior restraint. The newspapers could publish.',
+    impact: 'Established a very high bar for prior restraint — government censorship of press before publication. Strong protection for press freedom under the First Amendment.',
+    thinkQ: 'What is prior restraint? What did this case say about the government\'s ability to stop publication? What burden does the government face?',
+  },
+  { type: 'case', name: 'Wisconsin v. Yoder', year: '1972', unit: 'Unit 3',
+    context: 'Amish families refused to send their children to school beyond 8th grade, violating Wisconsin\'s compulsory education law, citing religious beliefs.',
+    holding: 'The Free Exercise Clause protects the Amish families. Wisconsin\'s interest in education did not outweigh the substantial burden on religious practice.',
+    impact: 'Established that government must show a compelling interest before substantially burdening sincere religious practice. Key Free Exercise Clause case.',
+    thinkQ: 'Which clause of the 1st Amendment does this involve? What test did the Court use? How does it differ from rational basis review?',
+  },
+  { type: 'case', name: 'Shaw v. Reno', year: '1993', unit: 'Units 2/5',
+    context: 'North Carolina created a majority-minority congressional district with an unusual shape designed to elect a Black representative.',
+    holding: 'Race-based congressional redistricting is subject to strict scrutiny. States cannot use race as the predominant factor in drawing district lines.',
+    impact: 'Limited racial gerrymandering. Applied Equal Protection Clause to redistricting. Requires compelling government interest for race-based districts.',
+    thinkQ: 'What does this case say about using race in redistricting? What level of scrutiny applies? What clause of the 14th Amendment is involved?',
+  },
+  { type: 'case', name: 'United States v. Lopez', year: '1995', unit: 'Unit 1',
+    context: 'Congress passed the Gun-Free School Zones Act, making it a federal crime to possess a gun near a school, citing the Commerce Clause.',
+    holding: 'The law exceeded Congress\'s Commerce Clause authority. Carrying a gun near a school is not an economic activity that substantially affects interstate commerce.',
+    impact: 'First case in 60 years to limit Congress\'s Commerce Clause power. Set boundaries on federal authority — Congress cannot regulate anything it wants under the Commerce Clause.',
+    thinkQ: 'What clause did Congress use to justify this law? Why did the Court strike it down? What does this say about the limits of federal power?',
+  },
+  { type: 'case', name: 'Citizens United v. FEC', year: '2010', unit: 'Unit 5',
+    context: 'Citizens United, a nonprofit, wanted to air a film criticizing Hillary Clinton close to an election, violating campaign finance laws limiting corporate political spending.',
+    holding: 'Political spending by corporations, associations, and labor unions is a form of protected speech under the First Amendment. Limits on independent political expenditures are unconstitutional.',
+    impact: 'Opened the door to unlimited independent political spending. Led to the rise of Super PACs. Major shift in campaign finance law.',
+    thinkQ: 'What right did the Court say corporations have? What is the difference between a contribution and an independent expenditure? What is a Super PAC?',
+  },
+  { type: 'case', name: 'McDonald v. Chicago', year: '2010', unit: 'Unit 3',
+    context: 'Chicago banned handguns. McDonald argued the ban violated his Second Amendment right to keep a gun at home for self-defense.',
+    holding: 'The Second Amendment right to keep and bear arms applies to state and local governments through the 14th Amendment.',
+    impact: 'Incorporated the Second Amendment against the states. Classic example of selective incorporation. Built on D.C. v. Heller (2008).',
+    thinkQ: 'What doctrine does this case illustrate? What amendment was incorporated? What earlier case established the individual right this case extended?',
+  },
+  // DOCUMENTS
+  { type: 'doc', name: 'Declaration of Independence', year: '1776', unit: 'Unit 1',
+    context: 'Written by Jefferson as the colonies broke from Britain.',
+    holding: 'People have natural, unalienable rights (life, liberty, pursuit of happiness). Government derives legitimacy from the consent of the governed. When government fails to protect rights, the people have the right — even the duty — to alter or abolish it.',
+    impact: 'Established the philosophical foundation of American democracy: natural rights, social contract, popular sovereignty, and the right of revolution. Not a law, but a statement of principles.',
+    thinkQ: 'What are the three unalienable rights listed? What justifies revolution? What Enlightenment philosopher\'s ideas does it reflect?',
+  },
+  { type: 'doc', name: 'Articles of Confederation', year: '1781', unit: 'Unit 1',
+    context: 'The first governing document of the United States after independence.',
+    holding: 'Created a very weak national government — a "firm league of friendship" among sovereign states. No executive, no federal courts, Congress could not tax or regulate commerce, needed unanimous consent to amend.',
+    impact: 'Showed the dangers of too little central authority. Failures like Shays\' Rebellion and inability to pay war debts led directly to the Constitutional Convention of 1787.',
+    thinkQ: 'What were the key weaknesses? What specific problems resulted? Why was it replaced?',
+  },
+  { type: 'doc', name: 'Constitution / Bill of Rights', year: '1787 / 1791', unit: 'Unit 1',
+    context: 'The supreme law of the United States. The Bill of Rights (first 10 amendments) was added to protect individual liberties from the new federal government.',
+    holding: 'Established separated powers, checks and balances, federalism, bicameralism, and a system for amending the document. The Bill of Rights protects specific civil liberties — speech, religion, arms, due process, etc.',
+    impact: 'The framework of all American government. All laws, court decisions, and government actions must conform to it. The foundation of every FRQ argument.',
+    thinkQ: 'What are the three branches and their powers? What does the Bill of Rights protect? What does the 10th Amendment say?',
+  },
+  { type: 'doc', name: 'Federalist No. 10', year: 'Madison, 1787', unit: 'Unit 1',
+    context: 'Madison wrote this to argue for ratification of the Constitution.',
+    holding: 'Factions (interest groups) are dangerous but inevitable. The solution is a large republic — not a small direct democracy — where competing factions cancel each other out and no single faction can dominate.',
+    impact: 'Defends pluralism and the extended republic as a protection against tyranny. Basis for understanding political parties, interest groups, and the danger of concentrated power.',
+    thinkQ: 'What is a faction? Why are they dangerous? What solution does Madison propose? How does size of the republic help?',
+  },
+  { type: 'doc', name: 'Federalist No. 51', year: 'Madison, 1788', unit: 'Unit 1/2',
+    context: 'Madison explains the internal structure of the proposed government.',
+    holding: '"Ambition must be made to counteract ambition." Each branch must have the constitutional means and personal motivation to resist encroachment by the others. Separation of powers with checks and balances protects liberty.',
+    impact: 'Classic defense of separation of powers and checks and balances. The phrase "if men were angels, no government would be necessary" captures the need for institutional controls on human nature.',
+    thinkQ: 'What is the famous quote about ambition? Why does Madison say checks and balances are necessary? How does this connect to separation of powers?',
+  },
+  { type: 'doc', name: 'Federalist No. 70', year: 'Hamilton, 1788', unit: 'Unit 2',
+    context: 'Hamilton defends a single, energetic executive in the Constitution.',
+    holding: 'A unitary executive — one president — is essential for energy, decisiveness, accountability, and secrecy in times of emergency. A weak or plural executive would be dangerous.',
+    impact: 'Basis for a strong presidency. Relevant to debates about executive orders, the unitary executive theory, and presidential power in foreign policy and national security.',
+    thinkQ: 'What are Hamilton\'s arguments for a single executive? What does "energy in the executive" mean? How does this connect to presidential power debates today?',
+  },
+  { type: 'doc', name: 'Federalist No. 78', year: 'Hamilton, 1788', unit: 'Unit 2',
+    context: 'Hamilton argues for an independent federal judiciary.',
+    holding: 'The judiciary is the "least dangerous branch" — it has neither force nor will, only judgment. Judges need lifetime tenure to remain independent. The courts must be able to invalidate laws that contradict the Constitution.',
+    impact: 'Laid the theoretical groundwork for judicial review before Marbury v. Madison made it law. Defense of an independent, non-elected judiciary.',
+    thinkQ: 'Why does Hamilton call the judiciary the "least dangerous branch"? Why does he favor lifetime tenure for judges? How does this anticipate Marbury?',
+  },
+  { type: 'doc', name: 'Brutus No. 1', year: 'Anti-Federalist, 1787', unit: 'Unit 1',
+    context: 'Written by an anonymous Anti-Federalist opposing ratification of the Constitution.',
+    holding: 'A large republic cannot protect liberty — only small, homogeneous republics can. The proposed Constitution gives the national government too much power, especially through the Necessary and Proper and Supremacy Clauses, which would eventually swallow state authority.',
+    impact: 'The strongest Anti-Federalist argument against the Constitution. Counterpoint to Federalist No. 10. Relevant to debates about federal power and states\' rights.',
+    thinkQ: 'What is Brutus\'s main fear? Which clauses does he specifically worry about? How does his argument differ from Madison\'s in Federalist No. 10?',
+  },
+  { type: 'doc', name: 'Letter from Birmingham Jail', year: 'King, 1963', unit: 'Unit 3',
+    context: 'Written by Dr. Martin Luther King Jr. while jailed for participating in civil rights demonstrations in Birmingham, Alabama.',
+    holding: 'There is a moral obligation to disobey unjust laws. An unjust law is one that degrades human personality or is imposed on a minority by a majority that does not bind itself. Nonviolent direct action creates necessary tension to force negotiation.',
+    impact: 'Philosophical justification for civil disobedience rooted in natural law. Connects to the Declaration of Independence\'s natural rights tradition. Central to understanding civil rights movement and equal protection arguments.',
+    thinkQ: 'What is King\'s distinction between just and unjust laws? What does he say about timing ("wait")? How does this connect to the Declaration of Independence?',
+  },
+];
+
+let deck = [];
+let currentCardIdx = 0;
+let knowCount = 0;
+let reviewCount = 0;
+let reviewCards = [];
+let isFlipped = false;
+let currentFilter = 'all';
+let timerSecs = 20 * 60;
+let timerInterval = null;
+let timerRunning = false;
+
+function startDrill() {
+  deck = shuffle([...cards].filter(c => currentFilter === 'all' ? true : c.type === currentFilter));
+  currentCardIdx = 0;
+  knowCount = 0;
+  reviewCount = 0;
+  reviewCards = [];
+  showScreen('screen-drill');
+  loadCard();
+}
+
+function drillReviewOnly() {
+  if (reviewCards.length === 0) { alert('No cards in review pile — you know them all!'); return; }
+  deck = shuffle([...reviewCards]);
+  currentCardIdx = 0;
+  knowCount = 0;
+  reviewCount = 0;
+  reviewCards = [];
+  showScreen('screen-drill');
+  loadCard();
+}
+
+function restartDrill() {
+  startDrill();
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (document.getElementById('screen-drill').classList.contains('active')) {
+    startDrill();
+  }
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function loadCard() {
+  if (currentCardIdx >= deck.length) { showResults(); return; }
+  const c = deck[currentCardIdx];
+  isFlipped = false;
+  document.getElementById('card-flip').classList.remove('flipped');
+
+  const isCase = c.type === 'case';
+  document.getElementById('front-header').className = 'front-header ' + (isCase ? 'case-type' : 'doc-type');
+  document.getElementById('card-type-label').textContent = isCase ? 'REQUIRED SCOTUS CASE' : 'FOUNDATIONAL DOCUMENT';
+  document.getElementById('card-name').textContent = c.name;
+  document.getElementById('card-year').textContent = c.year + (c.unit ? '  ·  ' + c.unit : '');
+  document.getElementById('think-questions').textContent = c.thinkQ;
+
+  document.getElementById('back-header').className = 'back-header ' + (isCase ? 'case-type' : 'doc-type');
+  document.getElementById('back-label').textContent = isCase ? 'CASE ANSWER' : 'DOCUMENT ANSWER';
+  document.getElementById('back-name').textContent = c.name;
+
+  const contextLabel = document.getElementById('back-context-label');
+  const holdingLabel = document.getElementById('back-holding-label');
+  if (isCase) {
+    contextLabel.textContent = 'Context';
+    holdingLabel.textContent = 'Holding';
+    document.getElementById('back-context-wrap').style.display = 'block';
+  } else {
+    document.getElementById('back-context-wrap').style.display = 'none';
+    holdingLabel.textContent = 'Key Argument / Main Ideas';
+  }
+
+  document.getElementById('back-context').textContent = c.context;
+  document.getElementById('back-holding').textContent = c.holding;
+  document.getElementById('back-impact').textContent = c.impact;
+
+  document.getElementById('verdict-row').style.display = 'none';
+  document.getElementById('flip-hint-bottom').style.display = 'block';
+  updateProgress();
+}
+
+function flipCard() {
+  if (isFlipped) return;
+  isFlipped = true;
+  document.getElementById('card-flip').classList.add('flipped');
+  document.getElementById('verdict-row').style.display = 'flex';
+  document.getElementById('flip-hint-bottom').style.display = 'none';
+}
+
+function markCard(knew) {
+  const c = deck[currentCardIdx];
+  if (knew) { knowCount++; }
+  else { reviewCount++; reviewCards.push(c); }
+  currentCardIdx++;
+  loadCard();
+}
+
+function updateProgress() {
+  const total = deck.length;
+  const done = currentCardIdx;
+  document.getElementById('progress-text').textContent = 'Card ' + (done + 1) + ' of ' + total;
+  document.getElementById('progress-counts').textContent = '✓ ' + knowCount + '  ·  ✗ ' + reviewCount;
+  document.getElementById('progress-fill').style.width = (done / total * 100) + '%';
+}
+
+function showResults() {
+  document.getElementById('r-know').textContent = knowCount;
+  document.getElementById('r-review').textContent = reviewCount;
+  const list = document.getElementById('review-list');
+  if (reviewCards.length === 0) {
+    list.innerHTML = '<div style="color:var(--success); font-size:15px; font-weight:700; padding:10px 0;">🎉 You got every card! Great work.</div>';
+  } else {
+    list.innerHTML = reviewCards.map(c => `<div class="review-item"><div class="review-dot"></div><strong>${c.name}</strong> &nbsp;<span style="color:var(--muted); font-size:12px;">${c.type === 'case' ? 'Case' : 'Document'} · ${c.year}</span></div>`).join('');
+  }
+  showScreen('screen-results');
+}
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-toggle-btn').textContent = 'Resume';
+  } else {
+    timerRunning = true;
+    document.getElementById('timer-toggle-btn').textContent = 'Pause';
+    timerInterval = setInterval(() => {
+      timerSecs--;
+      updateTimerDisplay();
+      if (timerSecs <= 0) { clearInterval(timerInterval); timerRunning = false; }
+    }, 1000);
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerSecs = 20 * 60;
+  updateTimerDisplay();
+  document.getElementById('timer-toggle-btn').textContent = 'Start';
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSecs / 60);
+  const s = timerSecs % 60;
+  const el = document.getElementById('timer');
+  el.textContent = m + ':' + String(s).padStart(2, '0');
+  el.className = 'timer-display';
+  if (timerSecs <= 60) el.classList.add('danger');
+  else if (timerSecs <= 5 * 60) el.classList.add('warning');
+}
+</script>
+</body>
+</html>

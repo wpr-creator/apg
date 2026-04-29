@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Station 3 — Argument Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #2C3170;
+    --red: #B22234;
+    --gold: #C8960C;
+    --cream: #F8F3E8;
+    --text: #1C1C2E;
+    --muted: #6B6B7E;
+    --border: #D8D4C8;
+    --success: #1B6B3A;
+    --bg: #F2EDE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Serif 4', Georgia, serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  .site-header { background: var(--navy); color: white; display: flex; align-items: stretch; border-bottom: 4px solid var(--red); }
+  .header-stripe { width: 8px; background: var(--red); flex-shrink: 0; }
+  .header-content { padding: 16px 24px; flex: 1; }
+  .header-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #9BA3D4; margin-bottom: 2px; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; }
+  .header-sub { font-size: 13px; color: #B0B8E8; font-style: italic; margin-top: 2px; }
+  .header-timer { padding: 12px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid rgba(255,255,255,0.15); }
+  .timer-display { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; color: white; letter-spacing: 2px; line-height: 1; }
+  .timer-display.warning { color: #FFB347; }
+  .timer-display.danger { color: #FF6B6B; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.6} }
+  .timer-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #9BA3D4; margin-top: 2px; text-align: center; }
+  .timer-controls { display: flex; gap: 6px; margin-top: 8px; }
+  .timer-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; font-family: 'Source Serif 4', serif; transition: background 0.2s; }
+  .timer-btn:hover { background: rgba(255,255,255,0.22); }
+
+  .main { max-width: 920px; margin: 0 auto; padding: 28px 20px 48px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* INTRO */
+  .intro-hero { text-align: center; padding: 40px 20px 28px; }
+  .intro-icon { font-size: 52px; margin-bottom: 14px; }
+  .intro-hero h1 { font-family: 'Playfair Display', serif; font-size: 34px; color: var(--navy); margin-bottom: 8px; }
+  .intro-hero p { font-size: 16px; color: var(--muted); max-width: 520px; margin: 0 auto 24px; line-height: 1.65; }
+  .intro-rules { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 20px 24px; margin-bottom: 24px; text-align: left; }
+  .intro-rules h3 { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 12px; }
+  .rule { display: flex; gap: 10px; align-items: baseline; margin-bottom: 8px; font-size: 14.5px; line-height: 1.5; }
+  .rule-num { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--red); flex-shrink: 0; }
+
+  /* STEP TRACKER */
+  .step-track { display: flex; align-items: center; margin-bottom: 26px; gap: 0; }
+  .step-node {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    position: relative;
+  }
+  .step-node::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 6px;
+  }
+  .step-node:last-child::after { display: none; }
+  .step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+    border: 2px solid var(--border);
+    background: white;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .step-dot.done { background: var(--success); color: white; border-color: var(--success); }
+  .step-lbl { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+  .step-lbl.active { color: var(--navy); font-weight: 600; }
+
+  /* PROMPT CARD */
+  .prompt-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .prompt-header { background: var(--navy); padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .prompt-header-title { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.7); }
+  .prompt-new-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 14px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: 'Source Serif 4', serif; transition: background 0.2s; }
+  .prompt-new-btn:hover { background: rgba(255,255,255,0.25); }
+  .prompt-text { padding: 20px 24px; font-size: 17px; line-height: 1.75; font-style: italic; }
+  .prompt-meta { padding: 0 24px 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-style: normal; }
+  .tag-unit { background: #E8EAF6; color: var(--navy); }
+  .tag-hint { background: #FDF6E3; color: #7A5C0A; }
+
+  /* STEPS */
+  .step-section { display: none; }
+  .step-section.active { display: block; }
+
+  .discussion-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .disc-header {
+    padding: 12px 18px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: white;
+  }
+  .disc-header.navy { background: var(--navy); }
+  .disc-header.red  { background: var(--red); }
+  .disc-header.gold { background: var(--gold); }
+  .disc-header.green { background: var(--success); }
+  .disc-header.dark { background: #444; }
+  .disc-body { padding: 16px 20px; }
+
+  .talk-q {
+    background: var(--bg);
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14.5px;
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .talk-q:last-child { margin-bottom: 0; }
+  .talk-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+
+  textarea {
+    width: 100%;
+    border: none;
+    background: #FAFAFA;
+    border-radius: 6px;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--text);
+    resize: vertical;
+    outline: none;
+    padding: 10px 12px;
+    min-height: 65px;
+    border: 1px solid var(--border);
+  }
+  textarea:focus { border-color: var(--navy); }
+  textarea::placeholder { color: #AAAAAA; font-style: italic; }
+
+  /* EVIDENCE PICKER */
+  .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ev-section { }
+  .ev-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .ev-picker { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: white; }
+  .ev-item {
+    padding: 9px 13px;
+    font-size: 13px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ev-item:last-child { border-bottom: none; }
+  .ev-item:hover { background: #F0EDE6; }
+  .ev-item.selected { background: var(--navy); color: white; }
+  .ev-check { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; }
+
+  /* THESIS DISPLAY */
+  .thesis-box {
+    background: #E8EAF6;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 50px;
+    margin-top: 8px;
+    font-style: italic;
+  }
+  .thesis-box.empty { color: #AAAAAA; font-style: italic; border-style: dashed; }
+
+  /* POSITION CHOOSER */
+  .position-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .pos-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-family: 'Source Serif 4', serif;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .pos-btn:hover { border-color: var(--navy); }
+  .pos-btn.selected.support { background: var(--success); color: white; border-color: var(--success); }
+  .pos-btn.selected.modify  { background: var(--gold); color: white; border-color: var(--gold); }
+  .pos-btn.selected.refute  { background: var(--red); color: white; border-color: var(--red); }
+  .pos-title { font-weight: 700; display: block; margin-bottom: 2px; }
+  .pos-hint  { font-size: 11.5px; opacity: 0.8; }
+
+  /* NAV */
+  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 7px; font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: #3d43a0; }
+  .btn-red { background: var(--red); color: white; }
+  .btn-ghost { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
+  .btn-ghost:hover { background: var(--navy); color: white; }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-sm { padding: 7px 16px; font-size: 13px; }
+
+  .pair-badge { display: inline-block; background: var(--gold); color: white; font-size: 11px; padding: 3px 10px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+  @media (max-width: 600px) {
+    .evidence-grid { grid-template-columns: 1fr; }
+    .header-timer { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="header-stripe"></div>
+  <div class="header-content">
+    <div class="header-label">AP Gov & Politics — Station 3</div>
+    <div class="header-title">Argument Builder — FRQ 4 Essay</div>
+    <div class="header-sub">Talk first, write second &nbsp;·&nbsp; Work in pairs</div>
+  </div>
+  <div class="header-timer">
+    <div class="timer-display" id="timer">25:00</div>
+    <div class="timer-label">remaining</div>
+    <div class="timer-controls">
+      <button class="timer-btn" onclick="toggleTimer()" id="timer-toggle-btn">Start</button>
+      <button class="timer-btn" onclick="resetTimer()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="screen active" id="screen-intro">
+  <div class="main">
+    <div class="intro-hero">
+      <div class="intro-icon">🏛️</div>
+      <h1>Build Your Argument</h1>
+      <p>This station is about thinking and talking before writing. You'll build a complete essay argument step by step — position, evidence, reasoning, counterargument — then write just your thesis sentence.</p>
+    </div>
+    <div class="intro-rules">
+      <h3>How this station works</h3>
+      <div class="rule"><span class="rule-num">1</span><span>You get a randomized essay prompt. Read it together out loud.</span></div>
+      <div class="rule"><span class="rule-num">2</span><span>Walk through 4 guided steps together — position, evidence, reasoning, and counterargument. Talk it through before typing anything.</span></div>
+      <div class="rule"><span class="rule-num">3</span><span>At the end, each person writes their thesis sentence independently. Swap and give one piece of feedback: does it take a real position with a reason?</span></div>
+      <div class="rule"><span class="rule-num">4</span><span><strong>The goal is not to write the whole essay</strong> — it's to make all the decisions before the essay starts. That's the hardest part.</span></div>
+      <div class="rule"><span class="rule-num">5</span><span>If you finish early, hit "New Prompt" and run through a second argument.</span></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn btn-primary" onclick="startStation()" style="font-size:16px; padding:14px 32px;">Load My Prompt →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN STATION -->
+<div class="screen" id="screen-station">
+  <div class="main">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+      <span class="pair-badge">👥 Talk First — Then Write</span>
+      <span style="font-size:13px; color:var(--muted);">6 points on the exam &nbsp;·&nbsp; Use 1 document + 1 case minimum</span>
+    </div>
+
+    <!-- Prompt -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <span class="prompt-header-title">📋 Essay Prompt</span>
+        <button class="prompt-new-btn" onclick="loadNewPrompt()">↻ New Prompt</button>
+      </div>
+      <div class="prompt-text" id="prompt-text">Loading...</div>
+      <div class="prompt-meta">
+        <span class="tag tag-unit" id="prompt-unit"></span>
+        <span class="tag tag-hint" id="prompt-hint"></span>
+      </div>
+    </div>
+
+    <!-- Step tracker -->
+    <div class="step-track">
+      <div class="step-node">
+        <div class="step-dot active" id="sd1">1</div>
+        <span class="step-lbl active" id="sl1">Position</span>
+      </div>
+      <div class="step-node">
+        <div class="step-dot" id="sd2">2</div>
+        <span class="step-lbl" id="sl2">Evidence</span>
+      </div>
+      <div class="step-node">
+        <div class="step-dot" id="sd3">3</div>
+        <span class="step-lbl" id="sl3">Reasoning</span>
+      </div>
+      <div class="step-node">
+        <div class="step-dot" id="sd4">4</div>
+        <span class="step-lbl" id="sl4">Counter</span>
+      </div>
+      <div class="step-node">
+        <div class="step-dot" id="sd5">5</div>
+        <span class="step-lbl" id="sl5">Write It</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: POSITION -->
+    <div class="step-section active" id="step1">
+      <div class="discussion-card">
+        <div class="disc-header navy">Step 1 of 5 — Choose Your Position</div>
+        <div class="disc-body">
+          <div class="talk-q">
+            <div class="talk-label">🗣 Discuss with your partner first</div>
+            What's your gut reaction to the prompt? Support, modify, or refute? Which position do you think you can defend better with evidence you actually know?
+          </div>
+          <div class="divider"></div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:12px;">Pick a position — talk it through, then select:</div>
+          <div class="position-row">
+            <div class="pos-btn support" onclick="selectPosition('support', this)"><span class="pos-title">Support ✓</span><span class="pos-hint">The statement is correct as written</span></div>
+            <div class="pos-btn modify"  onclick="selectPosition('modify', this)"><span class="pos-title">Modify ◑</span><span class="pos-hint">True in some cases, but not all — best option for nuance</span></div>
+            <div class="pos-btn refute" onclick="selectPosition('refute', this)"><span class="pos-title">Refute ✗</span><span class="pos-hint">The statement is fundamentally wrong</span></div>
+          </div>
+          <div id="position-guidance" style="display:none; margin-top:14px; padding:12px 16px; background:var(--bg); border-radius:8px; font-size:14px; line-height:1.6;"></div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <div></div>
+        <button class="btn btn-primary" onclick="goStep(2)">Next: Choose Evidence →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: EVIDENCE -->
+    <div class="step-section" id="step2">
+      <div class="discussion-card">
+        <div class="disc-header red">Step 2 of 5 — Choose Your Evidence</div>
+        <div class="disc-body">
+          <div class="talk-q">
+            <div class="talk-label">🗣 Discuss with your partner first</div>
+            Which document and which case connect most naturally to your position? Don't pick the most famous one — pick the one whose <em>argument or reasoning</em> best supports what you want to say.
+          </div>
+          <div class="divider"></div>
+          <div class="evidence-grid">
+            <div class="ev-section">
+              <div class="ev-label">Foundational Document (pick 1)</div>
+              <div class="ev-picker" id="doc-picker">
+                <div class="ev-item" onclick="pickEvidence('doc', 'Declaration of Independence', this)"><div class="ev-check">✓</div>Declaration of Independence</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Articles of Confederation', this)"><div class="ev-check">✓</div>Articles of Confederation</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Constitution / Bill of Rights', this)"><div class="ev-check">✓</div>Constitution / Bill of Rights</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Federalist No. 10', this)"><div class="ev-check">✓</div>Federalist No. 10</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Federalist No. 51', this)"><div class="ev-check">✓</div>Federalist No. 51</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Federalist No. 70', this)"><div class="ev-check">✓</div>Federalist No. 70</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Federalist No. 78', this)"><div class="ev-check">✓</div>Federalist No. 78</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Brutus No. 1', this)"><div class="ev-check">✓</div>Brutus No. 1</div>
+                <div class="ev-item" onclick="pickEvidence('doc', 'Letter from Birmingham Jail', this)"><div class="ev-check">✓</div>Letter from Birmingham Jail</div>
+              </div>
+            </div>
+            <div class="ev-section">
+              <div class="ev-label">Required SCOTUS Case (pick 1)</div>
+              <div class="ev-picker" id="case-picker">
+                <div class="ev-item" onclick="pickEvidence('case', 'Marbury v. Madison (1803)', this)"><div class="ev-check">✓</div>Marbury v. Madison (1803)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'McCulloch v. Maryland (1819)', this)"><div class="ev-check">✓</div>McCulloch v. Maryland (1819)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Schenck v. United States (1919)', this)"><div class="ev-check">✓</div>Schenck v. US (1919)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Brown v. Board of Education (1954)', this)"><div class="ev-check">✓</div>Brown v. Board (1954)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Baker v. Carr (1962)', this)"><div class="ev-check">✓</div>Baker v. Carr (1962)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Engel v. Vitale (1962)', this)"><div class="ev-check">✓</div>Engel v. Vitale (1962)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Gideon v. Wainwright (1963)', this)"><div class="ev-check">✓</div>Gideon v. Wainwright (1963)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Tinker v. Des Moines (1969)', this)"><div class="ev-check">✓</div>Tinker v. Des Moines (1969)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'NY Times v. United States (1971)', this)"><div class="ev-check">✓</div>NY Times v. US (1971)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Wisconsin v. Yoder (1972)', this)"><div class="ev-check">✓</div>Wisconsin v. Yoder (1972)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Shaw v. Reno (1993)', this)"><div class="ev-check">✓</div>Shaw v. Reno (1993)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'United States v. Lopez (1995)', this)"><div class="ev-check">✓</div>US v. Lopez (1995)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'Citizens United v. FEC (2010)', this)"><div class="ev-check">✓</div>Citizens United v. FEC (2010)</div>
+                <div class="ev-item" onclick="pickEvidence('case', 'McDonald v. Chicago (2010)', this)"><div class="ev-check">✓</div>McDonald v. Chicago (2010)</div>
+              </div>
+            </div>
+          </div>
+          <div id="evidence-summary" style="display:none; margin-top:14px; padding:12px 16px; background:#E8F5E9; border-radius:8px; font-size:14px; line-height:1.6; border-left:4px solid var(--success);"></div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-ghost btn-sm" onclick="goStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="goStep(3)">Next: Build Reasoning →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: REASONING -->
+    <div class="step-section" id="step3">
+      <div class="discussion-card">
+        <div class="disc-header gold">Step 3 of 5 — Build Your Reasoning</div>
+        <div class="disc-body">
+          <div class="talk-q">
+            <div class="talk-label">🗣 Discuss with your partner</div>
+            For each piece of evidence you chose — explain out loud HOW it supports your position. Don't just say what the document/case says. Say why it matters for your argument.
+          </div>
+          <div class="divider"></div>
+          <div style="margin-bottom:14px;">
+            <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:6px;">How does your document support your position?</div>
+            <div style="font-size:12px; color:var(--muted); margin-bottom:8px; font-style:italic;">Selected: <span id="step3-doc">None selected</span></div>
+            <textarea id="reasoning-doc" rows="3" placeholder="e.g. Federalist No. 51 argues that 'ambition must counteract ambition' — this supports my position because..."></textarea>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:6px;">How does your case support your position?</div>
+            <div style="font-size:12px; color:var(--muted); margin-bottom:8px; font-style:italic;">Selected: <span id="step3-case">None selected</span></div>
+            <textarea id="reasoning-case" rows="3" placeholder="e.g. In Marbury v. Madison, the Court established judicial review — this supports my position because..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-ghost btn-sm" onclick="goStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="goStep(4)">Next: Plan Counterargument →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: COUNTERARGUMENT -->
+    <div class="step-section" id="step4">
+      <div class="discussion-card">
+        <div class="disc-header green">Step 4 of 5 — Plan the Counterargument</div>
+        <div class="disc-body">
+          <div class="talk-q">
+            <div class="talk-label">🗣 Discuss with your partner</div>
+            What's the <strong>best</strong> argument against your position? Not a weak one — the one that actually gives you pause. Then decide: will you refute it or concede it while holding your claim?
+          </div>
+          <div class="divider"></div>
+          <div style="margin-bottom:14px;">
+            <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:6px;">The strongest opposing argument is:</div>
+            <textarea id="counter-opposing" rows="3" placeholder="Someone who disagrees with me would argue that..."></textarea>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:6px;">My response to that argument:</div>
+            <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+              <button class="btn btn-sm" id="resp-refute" style="background:#E8EAF6; color:var(--navy); border:2px solid var(--border);" onclick="selectResponse('refute')">I will refute it</button>
+              <button class="btn btn-sm" id="resp-concede" style="background:#E8EAF6; color:var(--navy); border:2px solid var(--border);" onclick="selectResponse('concede')">I will concede it partially but hold my claim</button>
+            </div>
+            <textarea id="counter-response" rows="3" placeholder="However, this argument fails because... / While it is true that..., my position still holds because..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-ghost btn-sm" onclick="goStep(3)">← Back</button>
+        <button class="btn btn-primary" onclick="goStep(5)">Final Step: Write the Thesis →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: WRITE THESIS -->
+    <div class="step-section" id="step5">
+      <div class="discussion-card">
+        <div class="disc-header dark">Step 5 of 5 — Write Your Thesis</div>
+        <div class="disc-body">
+          <!-- Summary panel -->
+          <div style="background:var(--bg); border-radius:8px; padding:14px 18px; margin-bottom:18px;">
+            <div style="font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:10px;">Your Plan:</div>
+            <div style="font-size:14px; line-height:1.9;">
+              <strong>Position:</strong> <span id="sum-position" style="color:var(--navy);">—</span><br>
+              <strong>Document:</strong> <span id="sum-doc" style="color:var(--navy);">—</span><br>
+              <strong>Case:</strong> <span id="sum-case" style="color:var(--navy);">—</span><br>
+              <strong>Counter strategy:</strong> <span id="sum-counter" style="color:var(--navy);">—</span>
+            </div>
+          </div>
+
+          <div class="talk-q" style="margin-bottom:16px;">
+            <div class="talk-label">🎯 Now write independently</div>
+            Write ONE thesis sentence that: (1) states your position, (2) gives a reason why, and (3) hints at your line of reasoning. Don't name evidence yet — just the claim.
+          </div>
+
+          <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">A strong thesis sounds like: <em>"While [acknowledgment], [your claim] because [reason]..."</em></div>
+          <textarea id="thesis-input" rows="4" placeholder="Write your thesis sentence here..."></textarea>
+
+          <div class="divider"></div>
+
+          <div style="font-weight:700; font-size:14px; margin-bottom:10px;">Partner Feedback — After you both write, swap and answer:</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="background:#FFF8E8; border:1px solid #E8D88A; border-radius:8px; padding:12px; font-size:13.5px; line-height:1.6;">
+              ✅ <strong>Does it pass?</strong><br>Does the thesis take a real position (not just "I agree")? Does it give a reason?
+            </div>
+            <div style="background:#FFF0F0; border:1px solid var(--red); border-radius:8px; padding:12px; font-size:13.5px; line-height:1.6;">
+              🔄 <strong>How to improve?</strong><br>Is the reason vague? Does it just restate the prompt? What would make it stronger?
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-ghost btn-sm" onclick="goStep(4)">← Back</button>
+        <button class="btn btn-gold" onclick="loadNewPrompt()">↻ New Prompt — Go Again</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const prompts = [
+  {
+    text: '"The constitutional design of separated powers with checks and balances is effective at preventing any one branch of government from becoming too powerful."',
+    unit: 'Unit 2 — Separation of Powers',
+    hint: '💡 Strong pairs: Federalist 51 + Marbury v. Madison',
+  },
+  {
+    text: '"The federal government\'s power relative to the states has expanded significantly since the founding, and this expansion has come at the cost of the constitutional balance the Framers intended."',
+    unit: 'Unit 1 — Federalism',
+    hint: '💡 Strong pairs: Brutus No. 1 + McCulloch v. Maryland or US v. Lopez',
+  },
+  {
+    text: '"Political participation in the United States is limited more by structural barriers than by lack of citizen interest or motivation."',
+    unit: 'Unit 5 — Political Participation',
+    hint: '💡 Strong pairs: Declaration of Independence + Baker v. Carr or Citizens United',
+  },
+  {
+    text: '"The Supreme Court has been more effective at expanding civil liberties than at protecting civil rights for historically marginalized groups."',
+    unit: 'Unit 3 — Civil Liberties & Civil Rights',
+    hint: '💡 Strong pairs: Federalist 78 + Brown v. Board or Tinker v. Des Moines',
+  },
+  {
+    text: '"The Founders\' design of the legislative branch makes it better suited to represent special interests than the interests of ordinary citizens."',
+    unit: 'Unit 2 — Congress',
+    hint: '💡 Strong pairs: Federalist No. 10 + Citizens United v. FEC',
+  },
+];
+
+let currentPromptIdx = 0;
+let selectedPosition = '';
+let selectedDoc = '';
+let selectedCase = '';
+let selectedResponse = '';
+let timerSecs = 25 * 60;
+let timerInterval = null;
+let timerRunning = false;
+let currentStep = 1;
+
+function startStation() {
+  currentPromptIdx = Math.floor(Math.random() * prompts.length);
+  loadPrompt(currentPromptIdx);
+  document.getElementById('screen-intro').classList.remove('active');
+  document.getElementById('screen-station').classList.add('active');
+  startTimer();
+}
+
+function loadNewPrompt() {
+  currentPromptIdx = (currentPromptIdx + 1) % prompts.length;
+  loadPrompt(currentPromptIdx);
+  goStep(1);
+  selectedPosition = '';
+  selectedDoc = '';
+  selectedCase = '';
+  document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.ev-item').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('textarea').forEach(t => t.value = '');
+  document.getElementById('position-guidance').style.display = 'none';
+  document.getElementById('evidence-summary').style.display = 'none';
+}
+
+function loadPrompt(idx) {
+  const pr = prompts[idx];
+  document.getElementById('prompt-text').textContent = pr.text;
+  document.getElementById('prompt-unit').textContent = pr.unit;
+  document.getElementById('prompt-hint').textContent = pr.hint;
+}
+
+function goStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  updateStepTracker(n);
+  // Update summary in step 5
+  if (n === 5) {
+    document.getElementById('sum-position').textContent = selectedPosition || 'Not set';
+    document.getElementById('sum-doc').textContent = selectedDoc || 'Not selected';
+    document.getElementById('sum-case').textContent = selectedCase || 'Not selected';
+    document.getElementById('sum-counter').textContent = selectedResponse === 'refute' ? 'Refute it' : selectedResponse === 'concede' ? 'Concede partially, hold claim' : 'Not set';
+    document.getElementById('step3-doc').textContent = selectedDoc || 'None selected yet';
+    document.getElementById('step3-case').textContent = selectedCase || 'None selected yet';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateStepTracker(active) {
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById('sd' + i);
+    const lbl = document.getElementById('sl' + i);
+    dot.className = 'step-dot';
+    lbl.className = 'step-lbl';
+    if (i < active) { dot.classList.add('done'); }
+    if (i === active) { dot.classList.add('active'); lbl.classList.add('active'); }
+  }
+}
+
+function selectPosition(pos, btn) {
+  selectedPosition = pos;
+  document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected', pos);
+  const guidance = {
+    support: "Good choice if you have strong evidence that checks and balances consistently work as designed. Be careful — you'll need to acknowledge real-world limitations in your counterargument.",
+    modify: "Usually the strongest position. You can agree the system works in normal conditions while arguing it has real limitations. Makes the counterargument easy to write.",
+    refute: "Bold choice — requires strong evidence that the system regularly fails. Make sure your case and document clearly show institutional failure, not just historical exceptions.",
+  };
+  const el = document.getElementById('position-guidance');
+  el.textContent = guidance[pos];
+  el.style.display = 'block';
+}
+
+function pickEvidence(type, name, el) {
+  if (type === 'doc') {
+    document.querySelectorAll('#doc-picker .ev-item').forEach(i => i.classList.remove('selected'));
+    selectedDoc = name;
+  } else {
+    document.querySelectorAll('#case-picker .ev-item').forEach(i => i.classList.remove('selected'));
+    selectedCase = name;
+  }
+  el.classList.add('selected');
+  if (selectedDoc && selectedCase) {
+    const summary = document.getElementById('evidence-summary');
+    summary.innerHTML = `<strong>Your evidence plan:</strong><br>📄 Document: ${selectedDoc}<br>⚖️ Case: ${selectedCase}<br><br><em>Reminder: You must EXPLAIN how each supports your argument — naming them alone earns nothing.</em>`;
+    summary.style.display = 'block';
+    document.getElementById('step3-doc').textContent = selectedDoc;
+    document.getElementById('step3-case').textContent = selectedCase;
+  }
+}
+
+function selectResponse(type) {
+  selectedResponse = type;
+  document.getElementById('resp-refute').style.background = type === 'refute' ? 'var(--red)' : '#E8EAF6';
+  document.getElementById('resp-refute').style.color = type === 'refute' ? 'white' : 'var(--navy)';
+  document.getElementById('resp-concede').style.background = type === 'concede' ? 'var(--success)' : '#E8EAF6';
+  document.getElementById('resp-concede').style.color = type === 'concede' ? 'white' : 'var(--navy)';
+}
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-toggle-btn').textContent = 'Resume';
+  } else {
+    timerRunning = true;
+    document.getElementById('timer-toggle-btn').textContent = 'Pause';
+    timerInterval = setInterval(() => {
+      timerSecs--;
+      updateTimerDisplay();
+      if (timerSecs <= 0) { clearInterval(timerInterval); timerRunning = false; }
+    }, 1000);
+  }
+}
+
+function startTimer() {
+  timerRunning = true;
+  document.getElementById('timer-toggle-btn').textContent = 'Pause';
+  timerInterval = setInterval(() => {
+    timerSecs--;
+    updateTimerDisplay();
+    if (timerSecs <= 0) { clearInterval(timerInterval); timerRunning = false; }
+  }, 1000);
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerSecs = 25 * 60;
+  updateTimerDisplay();
+  document.getElementById('timer-toggle-btn').textContent = 'Start';
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSecs / 60);
+  const s = timerSecs % 60;
+  const el = document.getElementById('timer');
+  el.textContent = m + ':' + String(s).padStart(2, '0');
+  el.className = 'timer-display';
+  if (timerSecs <= 60) el.classList.add('danger');
+  else if (timerSecs <= 5 * 60) el.classList.add('warning');
+}
+</script>
+</body>
+</html>

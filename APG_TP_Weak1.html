@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weak Spot Cases — Deep Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#2C3170;--red:#B22234;--gold:#C8960C;--cream:#F8F3E8;--text:#1C1C2E;--muted:#6B6B7E;--border:#D8D4C8;--success:#1B6B3A;--bg:#F2EDE0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--cream);color:var(--text);min-height:100vh;}
+.hdr{background:var(--navy);border-bottom:4px solid var(--red);display:flex;align-items:stretch;}
+.hdr-stripe{width:8px;background:var(--red);flex-shrink:0;}
+.hdr-body{padding:14px 22px;flex:1;}
+.hdr-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#9BA3D4;margin-bottom:2px;}
+.hdr-title{font-family:'Playfair Display',serif;font-size:21px;font-weight:900;color:white;}
+.hdr-sub{font-size:12px;color:#B0B8E8;font-style:italic;margin-top:2px;}
+.hdr-r{padding:10px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.15);}
+.timer{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:white;letter-spacing:2px;line-height:1;}
+.timer.warn{color:#FFB347;}.timer.danger{color:#FF6B6B;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.tlbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#9BA3D4;margin-top:2px;text-align:center;}
+.tbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:white;padding:3px 9px;border-radius:4px;font-size:10px;cursor:pointer;margin-top:6px;font-family:inherit;}
+.tbtn:hover{background:rgba(255,255,255,.22);}
+.main{max-width:860px;margin:0 auto;padding:22px 18px 48px;}
+.screen{display:none;}.screen.active{display:block;}
+.prog-wrap{margin-bottom:14px;}
+.prog-info{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px;}
+.prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--red));border-radius:3px;transition:width .4s;}
+.phase-bar{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:14px;}
+.ps{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);background:white;border-right:1px solid var(--border);transition:all .2s;}
+.ps:last-child{border-right:none;}
+.ps.active{background:var(--navy);color:white;}
+.ps.done{background:var(--success);color:white;}
+.verdict{display:flex;gap:10px;margin-bottom:12px;}
+.vbtn{flex:1;padding:12px;border:none;border-radius:9px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.vbtn.know{background:var(--success);color:white;}.vbtn.know:hover{background:#145530;}
+.vbtn.shaky{background:var(--red);color:white;}.vbtn.shaky:hover{background:#8B1A28;}
+.card{background:white;border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.07);margin-bottom:12px;cursor:pointer;}
+.cf-top{padding:18px 22px 14px;color:white;}
+.cf-tag{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:5px;}
+.cf-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1.15;}
+.cf-year{font-size:13px;color:rgba(255,255,255,.7);margin-top:3px;font-style:italic;}
+.cf-body{padding:18px 22px;}
+.rcl-box{background:var(--bg);border-left:4px solid var(--gold);padding:11px 15px;border-radius:0 8px 8px 0;font-size:13.5px;line-height:1.65;}
+.rcl-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.cb-top{padding:12px 22px;background:var(--success);}
+.cb-top-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.75);}
+.cb-top-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:white;}
+.cb-body{padding:16px 22px;}
+.bb{margin-bottom:13px;}
+.bl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.bt{font-size:14.5px;line-height:1.7;}
+.mix{background:#FFF3CD;border:1px solid #E8C840;border-radius:8px;padding:11px 15px;margin-top:8px;}
+.mix-lbl{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#7A6000;margin-bottom:4px;}
+.mix-txt{font-size:13.5px;line-height:1.65;color:#3D3000;}
+.aq{background:white;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
+.aq-hdr{padding:12px 20px;}
+.aq-hdr.red{background:var(--red);}.aq-hdr.navy{background:var(--navy);}
+.aq-hdr h3{font-family:'Playfair Display',serif;font-size:15px;color:white;}
+.aq-hdr p{font-size:11.5px;color:rgba(255,255,255,.8);margin-top:2px;}
+.aq-body{padding:16px 20px;}
+.scn{background:var(--bg);border-left:4px solid var(--navy);padding:11px 15px;border-radius:0 8px 8px 0;font-size:14px;line-height:1.65;font-style:italic;margin-bottom:14px;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{padding:10px 15px;border:2px solid var(--border);border-radius:7px;font-size:13.5px;cursor:pointer;transition:all .2s;background:white;text-align:left;font-family:inherit;line-height:1.4;}
+.opt:hover{border-color:var(--navy);}
+.opt.correct{background:#E8F5E9;border-color:var(--success);color:var(--success);font-weight:700;}
+.opt.wrong{background:#FFF0F0;border-color:var(--red);color:var(--red);}
+.opt.reveal{background:#E8EAF6;border-color:var(--navy);}
+.exp{display:none;padding:11px 15px;background:#E8EAF6;border-radius:8px;font-size:14px;line-height:1.65;margin-top:8px;}
+.exp.show{display:block;}
+.exp strong{color:var(--navy);}
+textarea{width:100%;border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:inherit;font-size:14px;line-height:1.7;resize:vertical;outline:none;background:#FAFAFA;min-height:65px;}
+textarea:focus{border-color:var(--navy);}
+textarea::placeholder{color:#AAA;font-style:italic;}
+.mdl-btn{margin-top:8px;background:transparent;border:2px solid var(--navy);color:var(--navy);padding:7px 16px;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+.mdl-btn:hover{background:var(--navy);color:white;}
+.mdl-ans{display:none;margin-top:10px;padding:12px 16px;background:#E8F5E9;border-radius:8px;font-size:14px;line-height:1.7;border-left:4px solid var(--success);}
+.mdl-ans.show{display:block;}
+.mdl-ans strong{color:var(--success);}
+.sc-wrap{display:flex;gap:8px;flex-wrap:wrap;}
+.sc{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:12px;font-size:11.5px;font-weight:700;}
+.sc-r{background:#E8EAF6;color:var(--navy);}.sc-a{background:#FDF6E3;color:#7A5C0A;}
+.rg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px;}
+.rc{background:white;border-radius:10px;border:1px solid var(--border);padding:14px;text-align:center;}
+.rn{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;line-height:1;}
+.rn.g{color:var(--success);}.rn.r{color:var(--red);}.rn.b{color:var(--navy);}
+.rl{font-size:11px;color:var(--muted);margin-top:3px;}
+.rvl{background:white;border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:16px;}
+.rvl h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--red);margin-bottom:10px;}
+.ri{padding:7px 0;border-bottom:1px solid var(--border);font-size:13.5px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+.ri:last-child{border-bottom:none;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.btn-n{background:var(--navy);color:white;}.btn-n:hover{background:#3d43a0;}
+.btn-g{background:transparent;border:2px solid var(--navy);color:var(--navy);}.btn-g:hover{background:var(--navy);color:white;}
+.br{display:flex;gap:10px;flex-wrap:wrap;}
+.pb{display:inline-block;background:var(--gold);color:white;font-size:10px;padding:3px 9px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;font-weight:700;}
+.ih{text-align:center;font-size:13px;color:var(--muted);font-style:italic;margin-bottom:10px;}
+.why-b{background:white;border-radius:10px;border:1px solid var(--border);padding:18px 22px;margin-bottom:22px;}
+.why-b h3{font-family:'Playfair Display',serif;font-size:15px;color:var(--red);margin-bottom:10px;}
+.cb2{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:12px;margin:3px;}
+.cb2 .p{font-size:10px;font-weight:700;color:var(--red);}
+.hi{display:flex;gap:10px;align-items:baseline;margin-bottom:8px;font-size:14px;line-height:1.5;}
+.hn{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--red);flex-shrink:0;}
+.intro-hero{text-align:center;padding:36px 20px 24px;}
+.intro-hero .ic{font-size:52px;margin-bottom:12px;}
+.intro-hero h1{font-family:'Playfair Display',serif;font-size:32px;color:var(--navy);margin-bottom:8px;}
+.intro-hero p{font-size:15px;color:var(--muted);max-width:480px;margin:0 auto 20px;line-height:1.65;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-stripe"></div>
+  <div class="hdr-body">
+    <div class="hdr-label">AP Gov · Partner Check — Deep Drill</div>
+    <div class="hdr-title">The 8 Cases You Said You're Not Ready On</div>
+    <div class="hdr-sub">Recall → Apply to new scenario → Write an FRQ sentence — three reps per case</div>
+  </div>
+  <div class="hdr-r">
+    <div class="timer" id="timer">25:00</div>
+    <div class="tlbl">remaining</div>
+    <button class="tbtn" onclick="toggleTimer()" id="tbtn">Start</button>
+  </div>
+</div>
+
+<div class="screen active" id="s-intro">
+  <div class="main">
+    <div class="intro-hero">
+      <div class="ic">⚖️</div>
+      <h1>Deep Case Drill</h1>
+      <p>Three moves per case: recall it, apply it to a new scenario, then write one FRQ sentence using it. More reps, more angles — this is how you stop blanking on Tuesday.</p>
+    </div>
+    <div class="why-b">
+      <h3>Your class flagged these 8 as weakest:</h3>
+      <div>
+        <span class="cb2"><span class="p">68%</span>Citizens United v. FEC</span>
+        <span class="cb2"><span class="p">46%</span>McCulloch v. Maryland</span>
+        <span class="cb2"><span class="p">41%</span>Baker v. Carr</span>
+        <span class="cb2"><span class="p">38%</span>Gideon v. Wainwright</span>
+        <span class="cb2"><span class="p">38%</span>Schenck v. United States</span>
+        <span class="cb2"><span class="p">35%</span>Shaw v. Reno</span>
+        <span class="cb2"><span class="p">32%</span>Marbury v. Madison</span>
+        <span class="cb2"><span class="p">24%</span>US v. Lopez</span>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="hi"><span class="hn">1</span><span><strong>Recall:</strong> Read the case name. Try the holding and impact from memory. Then flip.</span></div>
+        <div class="hi"><span class="hn">2</span><span><strong>Apply:</strong> A new scenario appears. Pick which principle from this case applies — and how.</span></div>
+        <div class="hi"><span class="hn">3</span><span><strong>Write:</strong> One sentence using this case in a real FRQ argument. Compare with the model.</span></div>
+        <div class="hi"><span class="hn">4</span><span><strong>Results:</strong> Two scores — recall AND application. Both tracked separately.</span></div>
+      </div>
+    </div>
+    <div style="text-align:center;"><button class="btn btn-n" onclick="startDrill()" style="font-size:15px;padding:13px 30px;">Start the Drill →</button></div>
+  </div>
+</div>
+
+<div class="screen" id="s-drill">
+  <div class="main">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <span class="pb">⚖️ Solo or Pairs</span>
+      <div class="sc-wrap">
+        <span class="sc sc-r">Recall: <span id="rs">0/0</span></span>
+        <span class="sc sc-a">Apply: <span id="as">0/0</span></span>
+      </div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-info"><span id="pt">Case 1 of 8</span><span id="pp">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+    </div>
+    <div class="phase-bar">
+      <div class="ps active" id="ph1">① Recall</div>
+      <div class="ps" id="ph2">② Apply</div>
+      <div class="ps" id="ph3">③ Write</div>
+    </div>
+
+    <div class="verdict" id="verdict" style="display:none;">
+      <button class="vbtn know" onclick="markRecall(true)">✓ &nbsp;Got it</button>
+      <button class="vbtn shaky" onclick="markRecall(false)">✗ &nbsp;Missed something</button>
+    </div>
+    <div class="ih" id="fh">Click the card to reveal the answer</div>
+
+    <div id="p1">
+      <div class="card" onclick="flipCard()">
+        <div id="cf">
+          <div class="cf-top" id="ct"><div class="cf-tag">REQUIRED SCOTUS CASE — RECALL</div><div class="cf-name" id="cn">Loading...</div><div class="cf-year" id="cy"></div></div>
+          <div class="cf-body"><div class="rcl-box"><div class="rcl-lbl">Before you flip — try to recall:</div><div id="cp"></div></div></div>
+        </div>
+        <div id="cb" style="display:none;">
+          <div class="cb-top"><div class="cb-top-lbl">Answer</div><div class="cb-top-name" id="cbn"></div></div>
+          <div class="cb-body">
+            <div class="bb"><div class="bl">Context</div><div class="bt" id="ctx"></div></div>
+            <div class="bb"><div class="bl">Holding</div><div class="bt" id="hld"></div></div>
+            <div class="bb"><div class="bl">Constitutional Impact</div><div class="bt" id="imp"></div></div>
+            <div class="mix"><div class="mix-lbl">⚠️ Don't mix it up</div><div class="mix-txt" id="mxp"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p2" style="display:none;">
+      <div class="aq">
+        <div class="aq-hdr red"><h3>② Apply It — New Scenario</h3><p>Apply what you just reviewed to this situation</p></div>
+        <div class="aq-body">
+          <div class="scn" id="aq-scn"></div>
+          <div class="opts" id="aq-opts"></div>
+          <div class="exp" id="aq-exp"></div>
+          <div class="br" style="margin-top:12px;"><button class="btn btn-n" id="anb" style="display:none;" onclick="goP3()">Next: Write a Sentence →</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p3" style="display:none;">
+      <div class="aq">
+        <div class="aq-hdr navy"><h3>③ Write It — One FRQ Sentence</h3><p>Use this case in an essay argument</p></div>
+        <div class="aq-body">
+          <div class="scn" id="wp"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700;">Your sentence:</div>
+          <textarea id="wi" placeholder="In [case name], the Court held that... This supports the argument that..."></textarea>
+          <button class="mdl-btn" onclick="revModel()">Reveal Model Sentence</button>
+          <div class="mdl-ans" id="ma"></div>
+          <div class="br" style="margin-top:14px;"><button class="btn btn-n" onclick="nextCase()">Next Case →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-results">
+  <div class="main">
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="font-size:44px;margin-bottom:8px;">📊</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:5px;">Drill Complete</h2>
+      <p style="color:var(--muted);font-size:14px;">Two scores — recall and application. Both matter for Tuesday.</p>
+    </div>
+    <div class="rg">
+      <div class="rc"><div class="rn b" id="rr">0/8</div><div class="rl">Recalled correctly</div></div>
+      <div class="rc"><div class="rn g" id="ra">0/8</div><div class="rl">Applied correctly</div></div>
+      <div class="rc"><div class="rn r" id="rsh">0</div><div class="rl">Need more work</div></div>
+    </div>
+    <div class="rvl" id="rlw"><h3>🔴 Drill These Again Tonight</h3><div id="rl"></div></div>
+    <div class="br">
+      <button class="btn btn-n" onclick="restart()">Drill Again (Shuffled)</button>
+      <button class="btn btn-g" onclick="revOnly()">Missed Cases Only</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const cases=[
+  {col:"#2C3170",name:"Citizens United v. FEC",year:"2010 · Unit 5",
+   prompt:"What right did this case extend to corporations? What did it say about political spending? What system did it create?",
+   context:"Citizens United wanted to air a film criticizing Hillary Clinton near an election. Federal law restricted corporate political spending close to elections.",
+   holding:"Political spending by corporations, unions, and outside groups is protected First Amendment speech. Government cannot limit independent political expenditures.",
+   impact:"Created the legal foundation for Super PACs — outside groups that can spend unlimited amounts independently. Major shift in campaign finance and First Amendment law.",
+   mixup:"This is about INDEPENDENT expenditures, not direct donations. Corporations still cannot give directly to candidates. This is a 1st Amendment free speech case — not just campaign finance.",
+   appQ:"A billionaire's Super PAC spends $40 million on ads attacking a Senate candidate without coordinating with the campaign. Under Citizens United, this is:",
+   appOpts:["Illegal — corporations cannot spend on elections","Protected First Amendment speech because it is an independent expenditure, not a direct contribution","Only legal if spending is publicly disclosed","Illegal because Super PACs cannot criticize candidates"],
+   appCorrect:1,
+   appExp:"<strong>Citizens United held</strong> that independent political spending by corporations and outside groups is constitutionally protected speech. The key word is 'independent' — no coordination with the campaign. Super PACs can spend unlimited amounts as long as they don't coordinate.",
+   wp:"Essay prompt: 'The influence of money in elections undermines democratic equality.' Use Citizens United.",
+   model:"In Citizens United v. FEC (2010), the Supreme Court held that political spending by corporations and outside groups constitutes protected speech under the First Amendment, opening the door to unlimited independent expenditures and Super PACs that have dramatically increased the role of money in American elections."
+  },
+  {col:"#7A1523",name:"McCulloch v. Maryland",year:"1819 · Unit 1",
+   prompt:"What clause? What TWO things did the Court establish? How does it connect to federalism and implied powers?",
+   context:"Maryland tried to tax the Second Bank of the United States. McCulloch, the federal cashier, refused to pay.",
+   holding:"Congress has implied powers under the Necessary and Proper Clause. States cannot tax or obstruct federal institutions.",
+   impact:"Established implied powers doctrine AND affirmed federal supremacy over state interference with federal programs. Permanently expanded Congressional authority beyond enumerated powers.",
+   mixup:"The holding has TWO parts — the bank AND the no-taxation rule. McCulloch EXPANDS federal power; US v. Lopez LIMITS it. Know both directions.",
+   appQ:"Congress creates a national cybersecurity agency (not in the Constitution). A state passes a law undermining it. Which best applies McCulloch?",
+   appOpts:["Congress has no power — cybersecurity is not enumerated","Under McCulloch, Congress can create the agency via implied powers; the state law is preempted by the Supremacy Clause","States have equal authority under the 10th Amendment","McCulloch only applies to banking"],
+   appCorrect:1,
+   appExp:"<strong>McCulloch established two principles:</strong> (1) Congress has implied powers to use reasonable means for legitimate federal ends; (2) states cannot interfere with constitutionally valid federal institutions. Both apply here.",
+   wp:"Essay prompt: 'Federal power has expanded significantly beyond what the Founders intended.' Use McCulloch.",
+   model:"In McCulloch v. Maryland (1819), the Supreme Court ruled that Congress holds implied powers under the Necessary and Proper Clause to act beyond its enumerated powers when serving a legitimate federal end — establishing a precedent that has allowed federal authority to expand dramatically over time."
+  },
+  {col:"#1B4D8A",name:"Baker v. Carr",year:"1962 · Unit 2",
+   prompt:"What could courts now do that they previously couldn't? What did this lead to? What amendment?",
+   context:"Tennessee hadn't redrawn legislative districts in 60 years. Urban areas with huge populations had the same representation as tiny rural areas.",
+   holding:"Federal courts have jurisdiction over legislative apportionment cases — they are justiciable, not untouchable political questions.",
+   impact:"Opened federal courts to redistricting challenges. Led to the one person, one vote principle. Foundation of modern equal protection challenges to legislative maps.",
+   mixup:"Baker v. Carr said courts COULD hear these cases — Reynolds v. Sims (not required) established the one person, one vote rule. Baker opened the door; Reynolds set the standard.",
+   appQ:"A state's congressional districts range from 400,000 to 900,000 people. Urban voters argue this dilutes their votes. Under Baker v. Carr:",
+   appOpts:["Federal courts must refuse — redistricting is a nonjusticiable political question","Federal courts CAN hear this case — Baker established that apportionment challenges are justiciable","The Supreme Court immediately strikes down the districts","Only state courts can hear redistricting challenges"],
+   appCorrect:1,
+   appExp:"<strong>Before Baker v. Carr</strong>, courts dismissed redistricting cases as political questions. Baker changed that — courts can hear these cases. The next question is whether the districts violate equal protection, but Baker cleared the threshold.",
+   wp:"Essay prompt: 'The Equal Protection Clause has been essential to expanding democratic participation.' Use Baker v. Carr.",
+   model:"In Baker v. Carr (1962), the Supreme Court ruled that legislative apportionment cases are justiciable under the Equal Protection Clause, opening federal courts to redistricting challenges and laying the groundwork for the one person, one vote principle that requires roughly equal district populations."
+  },
+  {col:"#3D2B1F",name:"Gideon v. Wainwright",year:"1963 · Unit 3",
+   prompt:"Which amendment? What right was incorporated? What did this create in the real world? How does the 14th Amendment connect?",
+   context:"Clarence Earl Gideon was convicted of a felony in Florida without a lawyer because he couldn't afford one. Florida only provided lawyers in capital cases.",
+   holding:"The 6th Amendment right to counsel must be provided to all felony defendants who cannot afford an attorney. This applies to state courts through the 14th Amendment.",
+   impact:"Incorporated right to counsel against the states. Established the public defender system. Classic example of selective incorporation via the 14th Amendment's Due Process Clause.",
+   mixup:"This is fundamentally a SELECTIVE INCORPORATION case — it's about applying the 6th Amendment to states via the 14th Amendment. Always connect it to incorporation, not just the 6th Amendment alone.",
+   appQ:"Florida charges a man with felony theft. He says he cannot afford a lawyer. Under Gideon v. Wainwright:",
+   appOpts:["He must represent himself — states aren't required to provide lawyers in non-capital cases","The state must provide him a lawyer because Gideon incorporated the 6th Amendment right to counsel against states via the 14th Amendment","Only the federal government must provide lawyers","He can request a lawyer but the state can deny it if funds are limited"],
+   appCorrect:1,
+   appExp:"<strong>Gideon v. Wainwright</strong> incorporated the 6th Amendment right to counsel against the states via the 14th Amendment's Due Process Clause. ALL states must provide attorneys to defendants who cannot afford one in felony cases — no exceptions.",
+   wp:"Essay prompt: 'Selective incorporation has fundamentally changed the relationship between the Bill of Rights and state governments.' Use Gideon.",
+   model:"In Gideon v. Wainwright (1963), the Supreme Court used the Due Process Clause of the 14th Amendment to incorporate the 6th Amendment right to counsel against the states, establishing that no state can try a felony defendant without providing legal representation — a landmark example of selective incorporation transforming state criminal justice."
+  },
+  {col:"#1B6B3A",name:"Schenck v. United States",year:"1919 · Unit 3",
+   prompt:"What standard did this case create? Is it still the active standard today? What amendment?",
+   context:"Charles Schenck mailed leaflets during WWI urging draft resistance. He was convicted under the Espionage Act.",
+   holding:"Free speech can be limited when it presents a 'clear and present danger.' The famous example: falsely shouting fire in a crowded theater.",
+   impact:"Created the clear and present danger test. Later narrowed by Brandenburg v. Ohio (1969), which requires imminent lawless action — a higher bar.",
+   mixup:"Don't say Schenck is still the controlling standard — Brandenburg replaced it. 'Fire in a crowded theater' is Schenck, not Tinker. Tinker = student speech; Schenck = wartime speech.",
+   appQ:"A protester shouts anti-war slogans outside a military base. The government argues this creates a 'clear and present danger.' Under modern First Amendment law:",
+   appOpts:["Correct — Schenck allows restriction of speech that undermines the military","Weak — Schenck has been narrowed by Brandenburg, which requires imminent lawless action, not just theoretical harm to morale","Correct — all speech near military installations is unprotected","Incorrect — the 1st Amendment absolutely protects all anti-government speech"],
+   appCorrect:1,
+   appExp:"<strong>Schenck created</strong> the clear and present danger test, but Brandenburg v. Ohio (1969) narrowed it significantly — today the government needs to show speech is directed to producing imminent lawless action AND is likely to produce it. 'Undermining morale' is too speculative.",
+   wp:"Essay prompt: 'First Amendment protections have evolved and generally expanded over American history.' Use Schenck.",
+   model:"In Schenck v. United States (1919), the Supreme Court established the 'clear and present danger' test for restricting speech during wartime, but this standard was later narrowed by Brandenburg v. Ohio to require imminent lawless action — illustrating the gradual expansion of First Amendment protections over time."
+  },
+  {col:"#5C3D99",name:"Shaw v. Reno",year:"1993 · Units 2/5",
+   prompt:"What clause? What level of scrutiny? What's the difference between this and Baker v. Carr?",
+   context:"North Carolina created a majority-minority congressional district with an unusual snaking shape designed to elect a Black representative.",
+   holding:"Race-based congressional redistricting is subject to strict scrutiny under the Equal Protection Clause. States cannot use race as the predominant factor in drawing district lines.",
+   impact:"Set limits on racial gerrymandering. Required compelling government interest for race-based districts. Applied equal protection directly to legislative mapping.",
+   mixup:"Baker v. Carr = population equality in districts. Shaw v. Reno = racial composition of districts. Completely different. Shaw doesn't ban majority-minority districts — it requires strict scrutiny.",
+   appQ:"Texas draws a congressional district to create a majority-Latino district. A non-Latino voter challenges it under Shaw v. Reno. The court will:",
+   appOpts:["Dismiss it — voters can't challenge racial gerrymanders","Apply strict scrutiny — the state must show a compelling interest for using race as the predominant factor","Automatically strike down the district — race can never be used","Apply rational basis — the state just needs a legitimate purpose"],
+   appCorrect:1,
+   appExp:"<strong>Shaw v. Reno established</strong> that when race is the predominant factor in drawing a district, strict scrutiny applies under the Equal Protection Clause. The district isn't automatically invalid — it must survive strict scrutiny, which is a very high bar.",
+   wp:"Essay prompt: 'The Equal Protection Clause has been applied inconsistently in the area of political representation.' Use Shaw v. Reno.",
+   model:"In Shaw v. Reno (1993), the Supreme Court held that congressional districts drawn with race as the predominant factor are subject to strict scrutiny under the Equal Protection Clause, limiting states' ability to use racial composition as a primary redistricting criterion even when the goal is increasing minority representation."
+  },
+  {col:"#A0522D",name:"Marbury v. Madison",year:"1803 · Unit 2",
+   prompt:"What power did this case establish? Why is Marbury's outcome ironic? Why is this the most foundational case in American law?",
+   context:"Adams appointed Marbury as a justice on his last night in office. Jefferson's Secretary of State Madison refused to deliver the commission. Marbury sued directly to the Supreme Court.",
+   holding:"The Court couldn't force delivery of the commission — but declared part of the Judiciary Act of 1789 unconstitutional, establishing judicial review.",
+   impact:"Established judicial review — the power to strike down laws that violate the Constitution. The foundation of all constitutional law and the Court's role as a co-equal branch.",
+   mixup:"Students focus on 'Marbury didn't get his job' and miss the bigger moment. Marshall gave up a small battle to win enormous institutional power. Every time the Court strikes down a law, it's using the power Marbury created.",
+   appQ:"Congress passes a law granting the president power to suspend habeas corpus without congressional approval. The Supreme Court rules this violates Article I. This derives from:",
+   appOpts:["The Necessary and Proper Clause from McCulloch","Judicial review established in Marbury v. Madison","The Equal Protection Clause of the 14th Amendment","The Court's inherent power granted explicitly in Article III"],
+   appCorrect:1,
+   appExp:"<strong>Judicial review</strong> — the power to strike down laws that violate the Constitution — was established in Marbury v. Madison. Nothing in the Constitution explicitly grants this power; Marshall derived it from the logic that the Constitution is supreme law and courts must enforce that supremacy.",
+   wp:"Essay prompt: 'The Supreme Court serves as an effective check on the other branches.' Use Marbury v. Madison.",
+   model:"In Marbury v. Madison (1803), Chief Justice Marshall established the power of judicial review — the Supreme Court's authority to strike down laws that violate the Constitution — creating the foundational mechanism through which the judiciary serves as a check on both the legislative and executive branches."
+  },
+  {col:"#2E5D4B",name:"United States v. Lopez",year:"1995 · Unit 1",
+   prompt:"What clause did Congress use? Why did the Court strike it down? How does this CONTRAST with McCulloch?",
+   context:"Congress passed the Gun-Free School Zones Act under the Commerce Clause, making it a federal crime to carry a gun near a school.",
+   holding:"Possessing a gun near a school is not an economic activity substantially affecting interstate commerce. The law exceeded Congress's Commerce Clause authority.",
+   impact:"First case in 60 years to limit Commerce Clause power. Set a constitutional ceiling on Congress's ability to regulate non-economic local activity.",
+   mixup:"Lopez is entirely about FEDERALISM and the Commerce Clause — not about gun rights. McDonald v. Chicago is the 2nd Amendment case. Lopez LIMITS federal power; McCulloch EXPANDS it.",
+   appQ:"Congress passes a law making domestic violence a federal crime under the Commerce Clause, arguing it affects the economy. Under Lopez, the court would likely:",
+   appOpts:["Uphold it — Congress can regulate anything under the Commerce Clause after McCulloch","Strike it down — domestic violence is not an economic activity substantially affecting interstate commerce, like gun possession near schools","Uphold it — domestic violence has major healthcare economic effects","Send it to states — 10th Amendment gives states all law enforcement authority"],
+   appCorrect:1,
+   appExp:"<strong>Under Lopez</strong>, for Commerce Clause regulation to be valid, the activity must be economic and substantially affect interstate commerce. Domestic violence — like gun possession near schools — is non-economic local activity. The Court actually struck down the Violence Against Women Act on this same reasoning.",
+   wp:"Essay prompt: 'The expansion of federal power at the expense of the states has defined American political development.' Use US v. Lopez.",
+   model:"In United States v. Lopez (1995), the Supreme Court struck down the Gun-Free School Zones Act for exceeding Congress's Commerce Clause authority, ruling that carrying a gun near a school is not an economic activity substantially affecting interstate commerce — marking a significant constitutional limit on federal power after decades of expansion."
+  }
+];
+
+let deck=[],idx=0,recCt=0,appCt=0,revCards=[],flipped=false,answered=false;
+let timerSecs=25*60,timerInt=null,timerOn=false;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function sp(n){for(let i=1;i<=3;i++){const e=document.getElementById('ph'+i);e.className='ps'+(i<n?' done':i===n?' active':'');}}
+
+function startDrill(){deck=shuffle([...cases]);idx=0;recCt=0;appCt=0;revCards=[];show('s-drill');loadCard();startTimer();}
+function restart(){deck=shuffle([...cases]);idx=0;recCt=0;appCt=0;revCards=[];show('s-drill');loadCard();}
+function revOnly(){if(!revCards.length){alert('No missed cases!');return;}deck=shuffle([...revCards]);idx=0;recCt=0;appCt=0;revCards=[];show('s-drill');loadCard();}
+
+function loadCard(){
+  if(idx>=deck.length){showResults();return;}
+  const c=deck[idx];flipped=false;answered=false;sp(1);
+  document.getElementById('p1').style.display='block';
+  document.getElementById('p2').style.display='none';
+  document.getElementById('p3').style.display='none';
+  document.getElementById('cf').style.display='block';
+  document.getElementById('cb').style.display='none';
+  document.getElementById('ct').style.background=c.col;
+  document.getElementById('cn').textContent=c.name;
+  document.getElementById('cy').textContent=c.year;
+  document.getElementById('cp').textContent=c.prompt;
+  document.getElementById('cbn').textContent=c.name;
+  document.getElementById('ctx').textContent=c.context;
+  document.getElementById('hld').textContent=c.holding;
+  document.getElementById('imp').textContent=c.impact;
+  document.getElementById('mxp').textContent=c.mixup;
+  document.getElementById('verdict').style.display='none';
+  document.getElementById('fh').style.display='block';
+  updProg();updScores();
+}
+
+function flipCard(){
+  if(flipped)return;flipped=true;
+  document.getElementById('cf').style.display='none';
+  document.getElementById('cb').style.display='block';
+  document.getElementById('verdict').style.display='flex';
+  document.getElementById('fh').style.display='none';
+}
+
+function markRecall(knew){
+  if(knew)recCt++;else revCards.push(deck[idx]);
+  updScores();goP2();
+}
+
+function goP2(){
+  sp(2);document.getElementById('verdict').style.display='none';
+  document.getElementById('p1').style.display='none';
+  document.getElementById('p2').style.display='block';
+  const c=deck[idx];
+  document.getElementById('aq-scn').textContent=c.appQ;
+  document.getElementById('aq-opts').innerHTML=c.appOpts.map((o,i)=>
+    `<button class="opt" onclick="checkApp(this,${i},${c.appCorrect})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+  document.getElementById('aq-exp').className='exp';
+  document.getElementById('aq-exp').innerHTML='';
+  document.getElementById('anb').style.display='none';
+}
+
+function checkApp(btn,chosen,correct){
+  btn.parentElement.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  if(chosen===correct){btn.classList.add('correct');appCt++;}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt')[correct].classList.add('reveal');}
+  document.getElementById('aq-exp').innerHTML=deck[idx].appExp;
+  document.getElementById('aq-exp').classList.add('show');
+  document.getElementById('anb').style.display='flex';
+  updScores();
+}
+
+function goP3(){
+  sp(3);document.getElementById('p2').style.display='none';document.getElementById('p3').style.display='block';
+  const c=deck[idx];
+  document.getElementById('wp').textContent=c.wp;
+  document.getElementById('wi').value='';
+  document.getElementById('ma').className='mdl-ans';
+  document.getElementById('ma').innerHTML='';
+}
+
+function revModel(){
+  const c=deck[idx];
+  document.getElementById('ma').innerHTML=`<strong>Model sentence:</strong><br>${c.model}<br><br><em>Check: Did you name the case, state the holding, and connect it to the argument?</em>`;
+  document.getElementById('ma').classList.add('show');
+}
+
+function nextCase(){idx++;loadCard();}
+
+function updProg(){
+  const pct=Math.round(idx/deck.length*100);
+  document.getElementById('pt').textContent=`Case ${idx+1} of ${deck.length}`;
+  document.getElementById('pp').textContent=pct+'%';
+  document.getElementById('pf').style.width=pct+'%';
+}
+
+function updScores(){
+  const done=Math.min(idx+1,deck.length);
+  document.getElementById('rs').textContent=recCt+'/'+done;
+  document.getElementById('as').textContent=appCt+'/'+done;
+}
+
+function showResults(){
+  document.getElementById('rr').textContent=recCt+'/'+deck.length;
+  document.getElementById('ra').textContent=appCt+'/'+deck.length;
+  document.getElementById('rsh').textContent=revCards.length;
+  document.getElementById('rl').innerHTML=revCards.length
+    ?revCards.map(c=>`<div class="ri"><strong>${c.name}</strong><span style="font-size:12px;color:var(--muted);">${c.year}</span></div>`).join('')
+    :'<div style="color:var(--success);font-weight:700;padding:8px 0;">🎉 Perfect drill — no cases missed.</div>';
+  show('s-results');
+}
+
+function toggleTimer(){
+  if(timerOn){clearInterval(timerInt);timerOn=false;document.getElementById('tbtn').textContent='Resume';}
+  else startTimer();
+}
+function startTimer(){
+  timerOn=true;document.getElementById('tbtn').textContent='Pause';
+  timerInt=setInterval(()=>{timerSecs--;updTimer();if(timerSecs<=0){clearInterval(timerInt);timerOn=false;}},1000);
+}
+function updTimer(){
+  const m=Math.floor(timerSecs/60),s=timerSecs%60;
+  const el=document.getElementById('timer');
+  el.textContent=m+':'+String(s).padStart(2,'0');
+  el.className='timer'+(timerSecs<=60?' danger':timerSecs<=5*60?' warn':'');
+}
+</script>
+</body>
+</html>
