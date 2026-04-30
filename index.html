@@ -1,68 +1,670 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mr. Rogers' AP Government & Politics Class</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--navy-deep:#101739;--navy:#202A63;--navy-bright:#2C3170;--red:#B22234;--red-bright:#D6424A;--gold:#C8960C;--gold-bright:#E4B93C;--cream:#F8F3E8;--parchment:#EFE5CE;--ink:#17172A;--white:#FFFFFF;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{min-height:100vh;background:radial-gradient(circle at 50% -10%,rgba(200,150,12,.24),transparent 32%),linear-gradient(135deg,#101739 0%,#18204C 48%,#0A102A 100%);color:var(--cream);font-family:'Source Serif 4',Georgia,serif;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(248,243,232,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(248,243,232,.035) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle at 12% 25%,rgba(178,34,52,.20),transparent 30%),radial-gradient(circle at 88% 20%,rgba(44,49,112,.34),transparent 32%),radial-gradient(circle at 50% 100%,rgba(200,150,12,.12),transparent 35%);pointer-events:none;z-index:0;}
-#stars-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.20;}
-.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 2rem 6rem;}
-header{padding-top:3.3rem;text-align:center;}
-.seal{display:inline-flex;align-items:center;justify-content:center;width:78px;height:78px;border-radius:50%;background:linear-gradient(145deg,var(--gold-bright),var(--gold));border:3px solid rgba(248,243,232,.85);color:var(--navy-deep);font-size:2.2rem;margin-bottom:1.35rem;box-shadow:0 0 0 7px rgba(200,150,12,.16),0 0 52px rgba(200,150,12,.34);}
-.eyebrow{font-family:'Barlow Condensed',sans-serif;color:var(--gold-bright);text-transform:uppercase;letter-spacing:.34em;font-size:.78rem;font-weight:700;margin-bottom:.7rem;}
-.main-title{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,7vw,5.25rem);line-height:.93;font-weight:900;color:var(--white);text-shadow:0 5px 34px rgba(0,0,0,.45);}
-.main-title .red-word{color:var(--red-bright);}.main-title .gold-word{color:var(--gold-bright);}
-.tagline{margin-top:1rem;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.13em;font-weight:600;font-size:clamp(1rem,2.3vw,1.32rem);color:rgba(248,243,232,.55);}
-.divider{display:flex;align-items:center;gap:1rem;margin:2.5rem 0 3rem;}.divider .line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-bright),transparent);}.divider .inner{font-family:'Barlow Condensed',sans-serif;color:var(--gold-bright);font-size:.72rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;}
-.section-heading{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.32em;font-size:.72rem;font-weight:800;color:rgba(228,185,60,.72);display:flex;align-items:center;gap:.8rem;margin-bottom:1.25rem;}.section-heading::after{content:'';flex:1;height:1px;background:rgba(228,185,60,.16);}
-.unit-shell{background:rgba(16,23,57,.78);border:1px solid rgba(228,185,60,.32);border-radius:18px;overflow:hidden;box-shadow:0 18px 55px rgba(0,0,0,.35),inset 0 1px 0 rgba(248,243,232,.08);position:relative;}
-.unit-shell::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--red),var(--gold-bright),var(--navy-bright),var(--gold-bright),var(--red));}
-.unit-hero{padding:2rem 1.8rem 1.45rem;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start;}
-.unit-kicker{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.3em;font-size:.68rem;font-weight:800;color:var(--gold-bright);margin-bottom:.55rem;}
-.unit-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.15rem);line-height:1;color:var(--white);font-weight:900;}
-.unit-desc{max-width:720px;margin-top:.8rem;font-size:.98rem;line-height:1.7;color:rgba(248,243,232,.66);}
-.unit-badge{font-family:'Playfair Display',serif;width:92px;height:92px;border-radius:50%;background:var(--parchment);color:var(--navy);border:3px solid var(--gold-bright);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;box-shadow:0 0 0 7px rgba(200,150,12,.10);}
-.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.1rem;}.tag{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:rgba(248,243,232,.08);border:1px solid rgba(228,185,60,.22);color:rgba(248,243,232,.78);padding:.24rem .55rem;border-radius:5px;}
-.review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;padding:0 1.4rem 1.4rem;}
-.review-card{position:relative;display:block;text-decoration:none;color:inherit;background:linear-gradient(180deg,rgba(248,243,232,.095),rgba(248,243,232,.04));border:1px solid rgba(248,243,232,.14);border-radius:14px;padding:1.35rem 1.25rem 1.25rem;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s,background .2s;}
-.review-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red-bright));opacity:.55;}
-.review-card:hover{transform:translateY(-4px);border-color:rgba(228,185,60,.68);box-shadow:0 12px 36px rgba(0,0,0,.35);background:linear-gradient(180deg,rgba(248,243,232,.13),rgba(248,243,232,.055));}
-.review-label{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.25em;color:var(--gold-bright);font-size:.62rem;font-weight:800;margin-bottom:.55rem;}
-.review-icon{font-size:2rem;line-height:1;margin-bottom:.75rem;}.review-title{font-family:'Barlow Condensed',sans-serif;color:var(--white);text-transform:uppercase;letter-spacing:.035em;font-size:1.35rem;font-weight:800;line-height:1.1;margin-bottom:.45rem;}.review-desc{color:rgba(248,243,232,.58);font-size:.84rem;line-height:1.55;margin-bottom:1rem;}.review-cta{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;color:var(--gold-bright);font-size:.78rem;font-weight:800;}
-.ticker-wrap{background:var(--parchment);overflow:hidden;white-space:nowrap;padding:.58rem 0;border-radius:10px;margin-top:1.6rem;border:1px solid rgba(228,185,60,.28);}.ticker-inner{display:inline-block;animation:ticker 34s linear infinite;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-deep);}.ticker-inner span{margin:0 2rem;}.ticker-inner .red{color:var(--red);}.ticker-inner .gold{color:#8A6500;}.ticker-inner .sym{opacity:.35;margin:0;}@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-footer{text-align:center;margin-top:4rem;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:.72rem;color:rgba(228,185,60,.36);}
-@keyframes fadeSlideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}.anim{opacity:0;animation:fadeSlideUp .65s ease forwards;}.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}.d7{animation-delay:.7s}
-@media(max-width:650px){.wrap{padding:0 1rem 4rem;}.unit-hero{grid-template-columns:1fr;}.unit-badge{width:74px;height:74px;font-size:2rem;}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Rogers' AP Government & Politics Class</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --navy-deep: #101739;
+        --navy: #202A63;
+        --navy-bright: #2C3170;
+        --red: #B22234;
+        --red-bright: #D6424A;
+        --gold: #C8960C;
+        --gold-bright: #E4B93C;
+        --cream: #F8F3E8;
+        --parchment: #EFE5CE;
+        --ink: #17172A;
+        --white: #FFFFFF;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        min-height: 100vh;
+        background: radial-gradient(circle at 50% -10%, rgba(200, 150, 12, .24), transparent 32%), linear-gradient(135deg, #101739 0%, #18204C 48%, #0A102A 100%);
+        color: var(--cream);
+        font-family: 'Source Serif 4', Georgia, serif;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(rgba(248, 243, 232, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(248, 243, 232, .035) 1px, transparent 1px);
+        background-size: 64px 64px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at 12% 25%, rgba(178, 34, 52, .20), transparent 30%), radial-gradient(circle at 88% 20%, rgba(44, 49, 112, .34), transparent 32%), radial-gradient(circle at 50% 100%, rgba(200, 150, 12, .12), transparent 35%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    #stars-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: .20;
+    }
+
+    .wrap {
+        position: relative;
+        z-index: 1;
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 2rem 6rem;
+    }
+
+    header {
+        padding-top: 3.3rem;
+        text-align: center;
+    }
+
+    .seal {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, var(--gold-bright), var(--gold));
+        border: 3px solid rgba(248, 243, 232, .85);
+        color: var(--navy-deep);
+        font-size: 2.2rem;
+        margin-bottom: 1.35rem;
+        box-shadow: 0 0 0 7px rgba(200, 150, 12, .16), 0 0 52px rgba(200, 150, 12, .34);
+    }
+
+    .eyebrow {
+        font-family: 'Barlow Condensed', sans-serif;
+        color: var(--gold-bright);
+        text-transform: uppercase;
+        letter-spacing: .34em;
+        font-size: .78rem;
+        font-weight: 700;
+        margin-bottom: .7rem;
+    }
+
+    .main-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.6rem, 7vw, 5.25rem);
+        line-height: .93;
+        font-weight: 900;
+        color: var(--white);
+        text-shadow: 0 5px 34px rgba(0, 0, 0, .45);
+    }
+
+    .main-title .red-word {
+        color: var(--red-bright);
+    }
+
+    .main-title .gold-word {
+        color: var(--gold-bright);
+    }
+
+    .tagline {
+        margin-top: 1rem;
+        font-family: 'Barlow Condensed', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: .13em;
+        font-weight: 600;
+        font-size: clamp(1rem, 2.3vw, 1.32rem);
+        color: rgba(248, 243, 232, .55);
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 2.5rem 0 3rem;
+    }
+
+    .divider .line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+    }
+
+    .divider .inner {
+        font-family: 'Barlow Condensed', sans-serif;
+        color: var(--gold-bright);
+        font-size: .72rem;
+        font-weight: 800;
+        letter-spacing: .3em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .section-heading {
+        font-family: 'Barlow Condensed', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: .32em;
+        font-size: .72rem;
+        font-weight: 800;
+        color: rgba(228, 185, 60, .72);
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .section-heading::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(228, 185, 60, .16);
+    }
+
+    .unit-shell {
+        background: rgba(16, 23, 57, .78);
+        border: 1px solid rgba(228, 185, 60, .32);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 18px 55px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(248, 243, 232, .08);
+        position: relative;
+    }
+
+    .unit-shell::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--red), var(--gold-bright), var(--navy-bright), var(--gold-bright), var(--red));
+    }
+
+    .unit-hero {
+        padding: 2rem 1.8rem 1.45rem;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .unit-kicker {
+        font-family: 'Barlow Condensed', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: .3em;
+        font-size: .68rem;
+        font-weight: 800;
+        color: var(--gold-bright);
+        margin-bottom: .55rem;
+    }
+
+    .unit-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2rem, 4.5vw, 3.15rem);
+        line-height: 1;
+        color: var(--white);
+        font-weight: 900;
+    }
+
+    .unit-desc {
+        max-width: 720px;
+        margin-top: .8rem;
+        font-size: .98rem;
+        line-height: 1.7;
+        color: rgba(248, 243, 232, .66);
+    }
+
+    .unit-badge {
+        font-family: 'Playfair Display', serif;
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: var(--parchment);
+        color: var(--navy);
+        border: 3px solid var(--gold-bright);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: 900;
+        box-shadow: 0 0 0 7px rgba(200, 150, 12, .10);
+    }
+
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .4rem;
+        margin-top: 1.1rem;
+    }
+
+    .tag {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        background: rgba(248, 243, 232, .08);
+        border: 1px solid rgba(228, 185, 60, .22);
+        color: rgba(248, 243, 232, .78);
+        padding: .24rem .55rem;
+        border-radius: 5px;
+    }
+
+    .review-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+        padding: 0 1.4rem 1.4rem;
+    }
+
+    .review-card {
+        position: relative;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: linear-gradient(180deg, rgba(248, 243, 232, .095), rgba(248, 243, 232, .04));
+        border: 1px solid rgba(248, 243, 232, .14);
+        border-radius: 14px;
+        padding: 1.35rem 1.25rem 1.25rem;
+        overflow: hidden;
+        transition: transform .2s, border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    .review-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--red-bright));
+        opacity: .55;
+    }
+
+    .review-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(228, 185, 60, .68);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, .35);
+        background: linear-gradient(180deg, rgba(248, 243, 232, .13), rgba(248, 243, 232, .055));
+    }
+
+    .review-label {
+        font-family: 'Barlow Condensed', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: .25em;
+        color: var(--gold-bright);
+        font-size: .62rem;
+        font-weight: 800;
+        margin-bottom: .55rem;
+    }
+
+    .review-icon {
+        font-size: 2rem;
+        line-height: 1;
+        margin-bottom: .75rem;
+    }
+
+    .review-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        color: var(--white);
+        text-transform: uppercase;
+        letter-spacing: .035em;
+        font-size: 1.35rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: .45rem;
+    }
+
+    .review-desc {
+        color: rgba(248, 243, 232, .58);
+        font-size: .84rem;
+        line-height: 1.55;
+        margin-bottom: 1rem;
+    }
+
+    .review-cta {
+        font-family: 'Barlow Condensed', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: .16em;
+        color: var(--gold-bright);
+        font-size: .78rem;
+        font-weight: 800;
+    }
+
+    .ticker-wrap {
+        background: var(--parchment);
+        overflow: hidden;
+        white-space: nowrap;
+        padding: .58rem 0;
+        border-radius: 10px;
+        margin-top: 1.6rem;
+        border: 1px solid rgba(228, 185, 60, .28);
+    }
+
+    .ticker-inner {
+        display: inline-block;
+        animation: ticker 34s linear infinite;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: .82rem;
+        font-weight: 800;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--navy-deep);
+    }
+
+    .ticker-inner span {
+        margin: 0 2rem;
+    }
+
+    .ticker-inner .red {
+        color: var(--red);
+    }
+
+    .ticker-inner .gold {
+        color: #8A6500;
+    }
+
+    .ticker-inner .sym {
+        opacity: .35;
+        margin: 0;
+    }
+
+    @keyframes ticker {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    footer {
+        text-align: center;
+        margin-top: 4rem;
+        font-family: 'Barlow Condensed', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: .2em;
+        font-size: .72rem;
+        color: rgba(228, 185, 60, .36);
+    }
+
+    @keyframes fadeSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .anim {
+        opacity: 0;
+        animation: fadeSlideUp .65s ease forwards;
+    }
+
+    .d1 {
+        animation-delay:.1s
+    }
+
+    .d2 {
+        animation-delay:.2s
+    }
+
+    .d3 {
+        animation-delay:.3s
+    }
+
+    .d4 {
+        animation-delay:.4s
+    }
+
+    .d5 {
+        animation-delay:.5s
+    }
+
+    .d6 {
+        animation-delay:.6s
+    }
+
+    .d7 {
+        animation-delay: .7s
+    }
+
+    @media (max-width: 650px) {
+        .wrap {
+            padding: 0 1rem 4rem;
+        }
+
+        .unit-hero {
+            grid-template-columns: 1fr;
+        }
+
+        .unit-badge {
+            width: 74px;
+            height: 74px;
+            font-size: 2rem;
+        }
+    }
+    </style>
 </head>
 <body>
-<canvas id="stars-canvas"></canvas>
-<div class="wrap">
-<header><div class="seal anim d1">⚖️</div><div class="eyebrow anim d2">San Diego · AP Government &amp; Politics</div><h1 class="main-title anim d3">Mr. Rogers'<br><span class="red-word">AP Government</span><br><span class="gold-word">&amp; Politics</span> Class</h1><p class="tagline anim d4">Review Games · AP Test Prep · Civic Power</p></header>
-<div class="divider anim d5"><div class="line"></div><div class="inner">§ · Select Your Review · §</div><div class="line"></div></div>
-<div class="section-heading anim d5">AP Test Prep Unit</div>
-<section class="unit-shell anim d6"><div class="unit-hero"><div><div class="unit-kicker">AP Test Prep</div><h2 class="unit-title">The Review Docket</h2><p class="unit-desc">Choose a focused review station. Each option targets a different AP Government skill: FRQ writing, foundational documents, Supreme Court cases, argument building, weak-spot practice, and the master answer key.</p><div class="tags"><span class="tag">FRQ Skills</span><span class="tag">Foundational Docs</span><span class="tag">SCOTUS Cases</span><span class="tag">Argument Writing</span><span class="tag">Answer Key</span></div></div><div class="unit-badge">AP</div></div>
-<div class="review-grid">
-<a class="review-card" href="APG_TP_S1_FRQ.html"><div class="review-label">Station 1</div><div class="review-icon">📝</div><div class="review-title">Concept Application FRQ</div><div class="review-desc">Practice reading a scenario, applying the correct concept, and building a clear FRQ response.</div><div class="review-cta">Open Review →</div></a>
-<a class="review-card" href="APG_TP_S2_FD-SCOTUS.html"><div class="review-label">Station 2</div><div class="review-icon">⚖️</div><div class="review-title">Cases &amp; Documents Speed Drill</div><div class="review-desc">Flip through required Supreme Court cases and foundational documents with quick recall checks.</div><div class="review-cta">Open Review →</div></a>
-<a class="review-card" href="APG_TP_S3_Argue.html"><div class="review-label">Station 3</div><div class="review-icon">🏛️</div><div class="review-title">Argument Builder</div><div class="review-desc">Build claims, evidence, reasoning, and document connections for the argumentative essay.</div><div class="review-cta">Open Review →</div></a>
-<a class="review-card" href="APG_TP_Weak1.html"><div class="review-label">Weak Spot 1</div><div class="review-icon">📚</div><div class="review-title">Weak Spot Cases — Deep Drill</div><div class="review-desc">Review required cases students most often confuse, then practice recall and application.</div><div class="review-cta">Open Review →</div></a>
-<a class="review-card" href="APG_TP_Weak2.html"><div class="review-label">Weak Spot 2</div><div class="review-icon">📄</div><div class="review-title">Foundational Documents — Argument Toolkit</div><div class="review-desc">Strengthen document recall and use key documents as evidence in AP-style arguments.</div><div class="review-cta">Open Review →</div></a>
-<a class="review-card" href="APG_TP_Weak3.html"><div class="review-label">Weak Spot 3</div><div class="review-icon">🔗</div><div class="review-title">Concept Clusters — The Three Big Gaps</div><div class="review-desc">Review bureaucracy, due process, incorporation, and linkage institutions through clustered practice.</div><div class="review-cta">Open Review →</div></a>
-<a class="review-card" href="APG_TP_KEY.html"><div class="review-label">Master Key</div><div class="review-icon">📜</div><div class="review-title">AP Gov Master Answer Key</div><div class="review-desc">Organized models for FRQs, foundational documents, required SCOTUS cases, and due process review.</div><div class="review-cta">Open Key →</div></a>
-</div></section>
-<div class="ticker-wrap anim d7"><div class="ticker-inner"><span>📜 Federalist 10</span><span class="sym">·</span><span class="red">⚖️ Judicial Review</span><span class="sym">·</span><span>🏛️ Separation of Powers</span><span class="sym">·</span><span class="gold">🗳️ Linkage Institutions</span><span class="sym">·</span><span>📄 Brutus No. 1</span><span class="sym">·</span><span class="red">📝 FRQ Evidence</span><span class="sym">·</span><span>⚖️ Due Process</span><span class="sym">·</span><span class="gold">🏢 Bureaucracy</span><span class="sym">·</span><span>📜 Federalist 10</span><span class="sym">·</span><span class="red">⚖️ Judicial Review</span><span class="sym">·</span><span>🏛️ Separation of Powers</span><span class="sym">·</span><span class="gold">🗳️ Linkage Institutions</span><span class="sym">·</span><span>📄 Brutus No. 1</span><span class="sym">·</span><span class="red">📝 FRQ Evidence</span><span class="sym">·</span><span>⚖️ Due Process</span><span class="sym">·</span><span class="gold">🏢 Bureaucracy</span></div></div>
-<footer>&copy; Mr. Rogers · AP Government &amp; Politics · Review Docket</footer>
-</div>
-<script>
-var canvas=document.getElementById('stars-canvas'),ctx=canvas.getContext('2d'),W,H,stars=[];function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}resize();window.addEventListener('resize',resize);var symbols=['★','✦','§','•','★','✧','⚖','•'];function Star(){this.reset=function(){this.x=Math.random()*W;this.y=-40-Math.random()*H;this.speed=.18+Math.random()*.62;this.size=8+Math.random()*14;this.sym=symbols[Math.floor(Math.random()*symbols.length)];this.alpha=.22+Math.random()*.58;this.drift=(Math.random()-.5)*.18;this.angle=0;this.spin=(Math.random()-.5)*.006;};this.reset();this.y=Math.random()*H;}for(var i=0;i<80;i++)stars.push(new Star());function animate(){ctx.clearRect(0,0,W,H);stars.forEach(function(s){ctx.save();ctx.globalAlpha=s.alpha;ctx.translate(s.x,s.y);ctx.rotate(s.angle);ctx.font='bold '+s.size+'px serif';ctx.fillStyle='#E4B93C';ctx.fillText(s.sym,0,0);ctx.restore();s.y+=s.speed;s.x+=s.drift;s.angle+=s.spin;if(s.y>H+60)s.reset();});requestAnimationFrame(animate);}animate();
-</script>
+    <canvas id="stars-canvas">
+    </canvas>
+    <div class="wrap">
+        <header>
+            <div class="seal anim d1">⚖️</div>
+            <div class="eyebrow anim d2">San Diego · AP Government &amp; Politics</div>
+            <h1 class="main-title anim d3">
+                Mr. Rogers'
+                <br>
+                <span class="red-word">AP Government</span>
+                <br>
+                <span class="gold-word">&amp; Politics</span>
+                 Class
+            </h1>
+            <p class="tagline anim d4">Review Games · AP Test Prep · Civic Power</p>
+        </header>
+        <div class="divider anim d5">
+            <div class="line"></div>
+            <div class="inner">§ · Select Your Review · §</div>
+            <div class="line"></div>
+        </div>
+        <div class="section-heading anim d5">Score Tools</div>
+        <section class="unit-shell anim d6">
+            <div class="unit-hero">
+                <div>
+                    <div class="unit-kicker">AP Exam Tool</div>
+                    <h2 class="unit-title">Score Calculator</h2>
+                    <p class="unit-desc">Estimate your AP Government exam score by adjusting your MCQ and FRQ performance. See how different combinations impact your final 1–5 score.</p>
+                    <div class="tags">
+                        <span class="tag">MCQ</span>
+                        <span class="tag">FRQ</span>
+                        <span class="tag">Composite</span>
+                        <span class="tag">AP Score</span>
+                    </div>
+                </div>
+                <div class="unit-badge">🧮</div>
+            </div>
+            <div class="review-grid">
+                <a class="review-card" href="APG_Exam_Calculator.html">
+                    <div class="review-label">Tool</div>
+                    <div class="review-icon">📊</div>
+                    <div class="review-title">AP Score Calculator</div>
+                    <div class="review-desc">Adjust MCQ and FRQ sliders to estimate your likely AP score based on exam weighting.</div>
+                    <div class="review-cta">Open Calculator →</div>
+                </a>
+            </div>
+        </section>
+        <div class="section-heading anim d5">AP Test Prep Unit</div>
+        <section class="unit-shell anim d6">
+            <div class="unit-hero">
+                <div>
+                    <div class="unit-kicker">AP Test Prep</div>
+                    <h2 class="unit-title">The Review Docket</h2>
+                    <p class="unit-desc">Choose a focused review station. Each option targets a different AP Government skill: FRQ writing, foundational documents, Supreme Court cases, argument building, weak-spot practice, and the master answer key.</p>
+                    <div class="tags">
+                        <span class="tag">FRQ Skills</span>
+                        <span class="tag">Foundational Docs</span>
+                        <span class="tag">SCOTUS Cases</span>
+                        <span class="tag">Argument Writing</span>
+                        <span class="tag">Answer Key</span>
+                    </div>
+                </div>
+                <div class="unit-badge">AP</div>
+            </div>
+            <div class="review-grid">
+                <a class="review-card" href="APG_TP_S1_FRQ.html">
+                    <div class="review-label">Station 1</div>
+                    <div class="review-icon">📝</div>
+                    <div class="review-title">Concept Application FRQ</div>
+                    <div class="review-desc">Practice reading a scenario, applying the correct concept, and building a clear FRQ response.</div>
+                    <div class="review-cta">Open Review →</div>
+                </a>
+                <a class="review-card" href="APG_TP_S2_FD-SCOTUS.html">
+                    <div class="review-label">Station 2</div>
+                    <div class="review-icon">⚖️</div>
+                    <div class="review-title">Cases &amp; Documents Speed Drill</div>
+                    <div class="review-desc">Flip through required Supreme Court cases and foundational documents with quick recall checks.</div>
+                    <div class="review-cta">Open Review →</div>
+                </a>
+                <a class="review-card" href="APG_TP_S3_Argue.html">
+                    <div class="review-label">Station 3</div>
+                    <div class="review-icon">🏛️</div>
+                    <div class="review-title">Argument Builder</div>
+                    <div class="review-desc">Build claims, evidence, reasoning, and document connections for the argumentative essay.</div>
+                    <div class="review-cta">Open Review →</div>
+                </a>
+                <a class="review-card" href="APG_TP_Weak1.html">
+                    <div class="review-label">Weak Spot 1</div>
+                    <div class="review-icon">📚</div>
+                    <div class="review-title">Weak Spot Cases — Deep Drill</div>
+                    <div class="review-desc">Review required cases students most often confuse, then practice recall and application.</div>
+                    <div class="review-cta">Open Review →</div>
+                </a>
+                <a class="review-card" href="APG_TP_Weak2.html">
+                    <div class="review-label">Weak Spot 2</div>
+                    <div class="review-icon">📄</div>
+                    <div class="review-title">Foundational Documents — Argument Toolkit</div>
+                    <div class="review-desc">Strengthen document recall and use key documents as evidence in AP-style arguments.</div>
+                    <div class="review-cta">Open Review →</div>
+                </a>
+                <a class="review-card" href="APG_TP_Weak3.html">
+                    <div class="review-label">Weak Spot 3</div>
+                    <div class="review-icon">🔗</div>
+                    <div class="review-title">Concept Clusters — The Three Big Gaps</div>
+                    <div class="review-desc">Review bureaucracy, due process, incorporation, and linkage institutions through clustered practice.</div>
+                    <div class="review-cta">Open Review →</div>
+                </a>
+                <a class="review-card" href="APG_TP_KEY.html">
+                    <div class="review-label">Master Key</div>
+                    <div class="review-icon">📜</div>
+                    <div class="review-title">AP Gov Master Answer Key</div>
+                    <div class="review-desc">Organized models for FRQs, foundational documents, required SCOTUS cases, and due process review.</div>
+                    <div class="review-cta">Open Key →</div>
+                </a>
+            </div>
+        </section>
+        <div class="ticker-wrap anim d7">
+            <div class="ticker-inner">
+                <span>📜 Federalist 10</span>
+                <span class="sym">·</span>
+                <span class="red">⚖️ Judicial Review</span>
+                <span class="sym">·</span>
+                <span>🏛️ Separation of Powers</span>
+                <span class="sym">·</span>
+                <span class="gold">🗳️ Linkage Institutions</span>
+                <span class="sym">·</span>
+                <span>📄 Brutus No. 1</span>
+                <span class="sym">·</span>
+                <span class="red">📝 FRQ Evidence</span>
+                <span class="sym">·</span>
+                <span>⚖️ Due Process</span>
+                <span class="sym">·</span>
+                <span class="gold">🏢 Bureaucracy</span>
+                <span class="sym">·</span>
+                <span>📜 Federalist 10</span>
+                <span class="sym">·</span>
+                <span class="red">⚖️ Judicial Review</span>
+                <span class="sym">·</span>
+                <span>🏛️ Separation of Powers</span>
+                <span class="sym">·</span>
+                <span class="gold">🗳️ Linkage Institutions</span>
+                <span class="sym">·</span>
+                <span>📄 Brutus No. 1</span>
+                <span class="sym">·</span>
+                <span class="red">📝 FRQ Evidence</span>
+                <span class="sym">·</span>
+                <span>⚖️ Due Process</span>
+                <span class="sym">·</span>
+                <span class="gold">🏢 Bureaucracy</span>
+            </div>
+        </div>
+        <footer>&copy; Mr. Rogers · AP Government &amp; Politics · Review Docket</footer>
+    </div>
+    <script>
+    var canvas = document.getElementById('stars-canvas'),
+        ctx = canvas.getContext('2d'),
+        W,
+        H,
+        stars = [];
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    var symbols = ['★', '✦', '§', '•', '★', '✧', '⚖', '•'];
+    function Star() {
+        this.reset = function() {
+            this.x = Math.random() * W;
+            this.y = -40 - Math.random() * H;
+            this.speed = .18 + Math.random() * .62;
+            this.size = 8 + Math.random() * 14;
+            this.sym = symbols[Math.floor(Math.random() * symbols.length)];
+            this.alpha = .22 + Math.random() * .58;
+            this.drift = (Math.random() - .5) * .18;
+            this.angle = 0;
+            this.spin = (Math.random() - .5) * .006;
+        };
+        this.reset();
+        this.y = Math.random() * H;
+    }
+    for (var i = 0; i < 80; i++)
+        stars.push(new Star());
+    function animate() {
+        ctx.clearRect(0, 0, W, H);
+        stars.forEach(function(s) {
+            ctx.save();
+            ctx.globalAlpha = s.alpha;
+            ctx.translate(s.x, s.y);
+            ctx.rotate(s.angle);
+            ctx.font = 'bold ' + s.size + 'px serif';
+            ctx.fillStyle = '#E4B93C';
+            ctx.fillText(s.sym, 0, 0);
+            ctx.restore();
+            s.y += s.speed;
+            s.x += s.drift;
+            s.angle += s.spin;
+            if (s.y > H + 60)
+                s.reset();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+    </script>
 </body>
 </html>
