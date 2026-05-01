@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missing Pieces — AP Gov Final Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#2C3170;--red:#B22234;--gold:#C8960C;--cream:#F8F3E8;--text:#1C1C2E;--muted:#6B6B7E;--border:#D8D4C8;--success:#1B6B3A;--bg:#F2EDE0;--purple:#5C3D99;--teal:#1B6B6B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+/* HEADER */
+.hdr{background:var(--navy);border-bottom:4px solid var(--red);display:flex;align-items:stretch;}
+.hs{width:8px;background:var(--red);flex-shrink:0;}
+.hb{padding:14px 22px;flex:1;}
+.hl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#9BA3D4;margin-bottom:2px;}
+.ht{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:white;}
+.hst{font-size:12px;color:#B0B8E8;font-style:italic;margin-top:2px;}
+.hright{padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:10px;border-left:1px solid rgba(255,255,255,.15);flex-wrap:wrap;}
+.mode-badge{font-size:11px;padding:4px 12px;border-radius:20px;font-weight:700;letter-spacing:.5px;color:white;display:none;}
+
+/* SCREENS */
+.screen{display:none;}.screen.active{display:block;}
+.main{max-width:920px;margin:0 auto;padding:24px 18px 60px;}
+
+/* LANDING */
+.landing-hero{text-align:center;padding:40px 20px 28px;}
+.landing-hero .icon{font-size:56px;margin-bottom:14px;}
+.landing-hero h1{font-family:'Playfair Display',serif;font-size:38px;color:var(--navy);margin-bottom:8px;}
+.landing-hero p{font-size:16px;color:var(--muted);max-width:540px;margin:0 auto 28px;line-height:1.7;}
+.data-callout{background:white;border-radius:12px;border:1px solid var(--border);padding:18px 22px;margin-bottom:28px;text-align:left;}
+.data-callout h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--red);margin-bottom:12px;}
+.data-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:14px;}
+.data-bar{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;max-width:200px;}
+.data-bar-fill{height:100%;border-radius:4px;}
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:600px){.mode-cards{grid-template-columns:1fr;}}
+.mode-card{background:white;border-radius:12px;border:2px solid var(--border);padding:20px;cursor:pointer;transition:all .2s;text-align:left;}
+.mode-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1);}
+.mode-card .mc-icon{font-size:32px;margin-bottom:10px;}
+.mode-card h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:5px;}
+.mode-card p{font-size:13px;color:var(--muted);line-height:1.55;}
+.mode-card .mc-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;margin-top:8px;color:white;}
+.mc-diag{border-color:var(--purple);}.mc-diag:hover{border-color:var(--purple);}
+.mc-diag h3{color:var(--purple);}
+.mc-pattern{border-color:var(--red);}.mc-pattern:hover{border-color:var(--red);}
+.mc-pattern h3{color:var(--red);}
+.mc-diff{border-color:var(--navy);}.mc-diff:hover{border-color:var(--navy);}
+.mc-diff h3{color:var(--navy);}
+.mc-stim{border-color:var(--teal);}.mc-stim:hover{border-color:var(--teal);}
+.mc-stim h3{color:var(--teal);}
+
+/* SHARED COMPONENTS */
+.section-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.back-btn{background:transparent;border:2px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:6px;font-family:inherit;font-size:12.5px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.back-btn:hover{border-color:var(--navy);color:var(--navy);}
+.prog-wrap{margin-bottom:14px;}
+.prog-info{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px;}
+.prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s;}
+.card{background:white;border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:14px;}
+.card-hdr{padding:13px 20px;color:white;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;}
+.card-body{padding:16px 20px;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{padding:11px 15px;border:2px solid var(--border);border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;background:white;text-align:left;font-family:inherit;line-height:1.5;}
+.opt:hover{border-color:var(--navy);}
+.opt.correct{background:#E8F5E9;border-color:var(--success);color:var(--success);font-weight:700;}
+.opt.wrong{background:#FFF0F0;border-color:var(--red);color:var(--red);}
+.opt.reveal{background:#E8EAF6;border-color:var(--navy);}
+.opt:disabled{cursor:default;}
+.exp{display:none;padding:12px 16px;background:#E8EAF6;border-radius:8px;font-size:14px;line-height:1.7;margin-top:8px;}
+.exp.show{display:block;}.exp strong{color:var(--navy);}
+.concept-tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:10px;font-weight:700;margin-bottom:10px;color:white;}
+.snippet-text{font-size:16px;line-height:1.8;font-style:italic;padding:14px 18px;background:var(--bg);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;margin-bottom:14px;}
+.score-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:700;}
+.chip-g{background:#E8F5E9;color:var(--success);}
+.chip-r{background:#FFF0F0;color:var(--red);}
+.chip-b{background:#E8EAF6;color:var(--navy);}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.btn-n{background:var(--navy);color:white;}.btn-n:hover{background:#3d43a0;}
+.btn-r{background:var(--red);color:white;}.btn-r:hover{background:#8B1A28;}
+.btn-g{background:transparent;border:2px solid var(--navy);color:var(--navy);}.btn-g:hover{background:var(--navy);color:white;}
+.btn-p{background:var(--purple);color:white;}
+.btn-t{background:var(--teal);color:white;}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.rc{background:white;border-radius:10px;border:1px solid var(--border);padding:14px;text-align:center;}
+.rn{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;line-height:1;}
+.rn.g{color:var(--success);}.rn.r{color:var(--red);}.rn.b{color:var(--navy);}
+.rl{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* DIAGNOSIS */
+.diag-q{font-size:16px;line-height:1.75;margin-bottom:14px;}
+.diag-result{background:white;border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:14px;}
+.diag-result h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;}
+.diag-rec{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:14px;}
+.diag-rec .icon{font-size:22px;flex-shrink:0;}
+
+/* PATTERN MODE */
+.concept-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.concept-btn{padding:8px 14px;border:2px solid var(--border);border-radius:20px;font-family:inherit;font-size:13px;cursor:pointer;background:white;transition:all .2s;font-weight:600;}
+.concept-btn:hover{border-color:var(--navy);}
+.concept-btn.selected{border-color:var(--navy);background:var(--navy);color:white;}
+.concept-btn.correct-pick{border-color:var(--success);background:var(--success);color:white;}
+.concept-btn.wrong-pick{border-color:var(--red);background:var(--red);color:white;}
+.concept-btn.should-pick{border-color:var(--success);background:#E8F5E9;color:var(--success);}
+
+/* DIFFERENCE MODE */
+.pair-header{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.pair-col{border-radius:10px;overflow:hidden;}
+.pair-col-hdr{padding:12px 16px;font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:white;}
+.pair-col-body{padding:14px 16px;font-size:14px;line-height:1.7;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;background:white;}
+.diff-scenario{background:var(--bg);border-left:4px solid var(--gold);padding:12px 16px;border-radius:0 8px 8px 0;font-size:15px;line-height:1.7;font-style:italic;margin-bottom:14px;}
+.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.choice-btn{padding:13px;border:2px solid var(--border);border-radius:9px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;background:white;transition:all .2s;text-align:center;}
+.choice-btn:hover{border-color:var(--navy);}
+.choice-btn.correct{background:var(--success);color:white;border-color:var(--success);}
+.choice-btn.wrong{background:var(--red);color:white;border-color:var(--red);}
+.type-box{margin-top:10px;}
+.type-box label{font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:5px;letter-spacing:.5px;}
+textarea{width:100%;border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:inherit;font-size:14px;line-height:1.7;resize:vertical;outline:none;background:#FAFAFA;min-height:55px;}
+textarea:focus{border-color:var(--navy);}
+textarea::placeholder{color:#AAA;font-style:italic;}
+.reveal-btn{background:transparent;border:2px solid var(--navy);color:var(--navy);padding:6px 14px;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:6px;}
+.reveal-btn:hover{background:var(--navy);color:white;}
+.model-ans{display:none;padding:12px 16px;background:#E8F5E9;border-radius:8px;font-size:14px;line-height:1.7;border-left:4px solid var(--success);margin-top:8px;}
+.model-ans.show{display:block;}
+
+/* STIMULUS MODE */
+.stim-method{background:white;border-radius:12px;border:2px solid var(--teal);overflow:hidden;margin-bottom:18px;}
+.stim-method-hdr{background:var(--teal);padding:12px 20px;}
+.stim-method-hdr h3{font-family:'Playfair Display',serif;font-size:16px;color:white;}
+.stim-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 20px;}
+@media(max-width:600px){.stim-steps{grid-template-columns:1fr;}}
+.stim-step{text-align:center;padding:12px;}
+.stim-step-num{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;margin-bottom:6px;}
+.stim-step h4{font-size:14px;font-weight:700;margin-bottom:4px;}
+.stim-step p{font-size:12.5px;color:var(--muted);line-height:1.55;}
+.stimulus-box{background:var(--bg);border:2px dashed var(--teal);border-radius:10px;padding:18px 20px;margin-bottom:14px;}
+.stim-type-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+.stim-content{font-size:14.5px;line-height:1.8;}
+.stim-content strong{color:var(--navy);}
+.step-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;color:white;background:var(--teal);margin-bottom:5px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hs"></div>
+  <div class="hb">
+    <div class="hl">AP Gov & Politics — Final Review</div>
+    <div class="ht">Missing Pieces</div>
+    <div class="hst">Four targeted tools built from your class's actual exam data</div>
+  </div>
+  <div class="hright">
+    <div class="mode-badge" id="mode-label" style="background:#888;">Loading</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- LANDING                                                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="screen active" id="s-landing">
+  <div class="main">
+    <div class="landing-hero">
+      <div class="icon">🧩</div>
+      <h1>Missing Pieces</h1>
+      <p>This isn't a full review. It's built from the exact questions your class missed on the practice exam — the specific concepts, the specific skills, the specific confusions. Four tools. Start with the diagnosis or jump straight to what you need.</p>
+    </div>
+
+    <div class="data-callout">
+      <h3>📊 What the practice exam data showed</h3>
+      <div class="data-row"><span style="width:240px;font-size:13.5px;">Rational choice / retrospective voting</span><div class="data-bar"><div class="data-bar-fill" style="width:75%;background:var(--red);"></div></div><span style="font-size:12px;color:var(--red);font-weight:700;">~70% missed</span></div>
+      <div class="data-row"><span style="width:240px;font-size:13.5px;">Parties vs. interest groups</span><div class="data-bar"><div class="data-bar-fill" style="width:75%;background:var(--red);"></div></div><span style="font-size:12px;color:var(--red);font-weight:700;">75% missed</span></div>
+      <div class="data-row"><span style="width:240px;font-size:13.5px;">Formal vs. informal presidential powers</span><div class="data-bar"><div class="data-bar-fill" style="width:75%;background:var(--red);"></div></div><span style="font-size:12px;color:var(--red);font-weight:700;">75% missed</span></div>
+      <div class="data-row"><span style="width:240px;font-size:13.5px;">Time/place/manner vs. prior restraint</span><div class="data-bar"><div class="data-bar-fill" style="width:85%;background:var(--red);"></div></div><span style="font-size:12px;color:var(--red);font-weight:700;">85% missed</span></div>
+      <div class="data-row"><span style="width:240px;font-size:13.5px;">Concurrent / delegated / reserved powers</span><div class="data-bar"><div class="data-bar-fill" style="width:53%;background:var(--gold);"></div></div><span style="font-size:12px;color:var(--gold);font-weight:700;">~53% missed</span></div>
+      <div class="data-row"><span style="width:240px;font-size:13.5px;">Stimulus questions (cartoons, graphs)</span><div class="data-bar"><div class="data-bar-fill" style="width:62%;background:var(--red);"></div></div><span style="font-size:12px;color:var(--red);font-weight:700;">~62% missed</span></div>
+    </div>
+
+    <div class="mode-cards">
+      <div class="mode-card mc-diag" onclick="goMode('diag')">
+        <div class="mc-icon">🎯</div>
+        <h3>Quick Diagnosis</h3>
+        <p>10 targeted questions across all gaps. Find out which tools you need most before spending time on things you already know.</p>
+        <span class="mc-tag" style="background:var(--purple);">Start here · 5 min</span>
+      </div>
+      <div class="mode-card mc-pattern" onclick="goMode('pattern')">
+        <div class="mc-icon">👁️</div>
+        <h3>See the Pattern</h3>
+        <p>Short real-world snippets. Tag which concept each one illustrates. The goal is instant recognition — seeing the fingerprint of a concept in any context.</p>
+        <span class="mc-tag" style="background:var(--red);">Pattern recognition · 10 min</span>
+      </div>
+      <div class="mode-card mc-diff" onclick="goMode('diff')">
+        <div class="mc-icon">⚡</div>
+        <h3>What's the Difference</h3>
+        <p>Concepts that look alike but aren't. Read a scenario, decide which concept it is, then write the one-sentence distinction before seeing the explanation.</p>
+        <span class="mc-tag" style="background:var(--navy);">Confusion pairs · 12 min</span>
+      </div>
+      <div class="mode-card mc-stim" onclick="goMode('stim')">
+        <div class="mc-icon">📰</div>
+        <h3>Read the Room</h3>
+        <p>Stimulus-based questions are a skill, not just content. Learn and drill a 3-step attack method for cartoons, graphs, and tables — the exact question type your class missed most.</p>
+        <span class="mc-tag" style="background:var(--teal);">Stimulus skill · 12 min</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- DIAGNOSIS                                                   -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-diag">
+  <div class="main">
+    <div class="section-hdr">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--purple);">🎯 Quick Diagnosis</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px;">10 questions · answer honestly · results tell you where to focus</div>
+      </div>
+      <button class="back-btn" onclick="goLanding()">← Back</button>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-info"><span id="dq-prog-txt">Question 1 of 10</span><span id="dq-score-txt">0 correct</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="dq-fill" style="width:0%;background:var(--purple);"></div></div>
+    </div>
+    <div class="card" id="dq-card">
+      <div class="card-hdr" id="dq-hdr" style="background:var(--purple);">Diagnosis Question</div>
+      <div class="card-body">
+        <div class="concept-tag" id="dq-tag" style="background:var(--purple);">Topic</div>
+        <div class="diag-q" id="dq-q">Loading...</div>
+        <div class="opts" id="dq-opts"></div>
+        <div class="exp" id="dq-exp"></div>
+        <div class="btn-row"><button class="btn btn-p" id="dq-next" style="display:none;" onclick="nextDiagQ()">Next →</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGNOSIS RESULTS -->
+<div class="screen" id="s-diag-results">
+  <div class="main">
+    <div style="text-align:center;margin-bottom:24px;padding-top:20px;">
+      <div style="font-size:48px;margin-bottom:10px;">🎯</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:30px;color:var(--purple);margin-bottom:6px;">Your Diagnosis</h2>
+      <p style="color:var(--muted);font-size:15px;">Based on your answers, here's where to focus your time.</p>
+    </div>
+    <div class="results-grid">
+      <div class="rc"><div class="rn g" id="dr-right">0</div><div class="rl">Correct</div></div>
+      <div class="rc"><div class="rn r" id="dr-wrong">0</div><div class="rl">Incorrect</div></div>
+      <div class="rc"><div class="rn b" id="dr-pct">0%</div><div class="rl">Score</div></div>
+    </div>
+    <div class="diag-result">
+      <h3>Your Recommended Path</h3>
+      <div id="dr-recs"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-r" onclick="goMode('pattern')">👁️ See the Pattern</button>
+      <button class="btn btn-n" onclick="goMode('diff')">⚡ What's the Difference</button>
+      <button class="btn btn-t" onclick="goMode('stim')">📰 Read the Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PATTERN MODE                                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-pattern">
+  <div class="main">
+    <div class="section-hdr">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--red);">👁️ See the Pattern</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px;">Read the snippet · tag the concept · build instant recognition</div>
+      </div>
+      <button class="back-btn" onclick="goLanding()">← Back</button>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-info"><span id="pp-txt">Snippet 1 of 25</span><span id="pp-score">✓ 0 · ✗ 0</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="pp-fill" style="width:0%;background:var(--red);"></div></div>
+    </div>
+    <div class="score-row" style="margin-bottom:12px;">
+      <span class="chip chip-b" id="pp-streak">Streak: 0</span>
+      <span style="font-size:12.5px;color:var(--muted);">Pick the concept this snippet illustrates — then read why before moving on</span>
+    </div>
+    <div class="snippet-text" id="pp-snippet">Loading...</div>
+    <div class="concept-list" id="pp-concepts"></div>
+    <div class="exp" id="pp-exp"></div>
+    <div class="btn-row">
+      <button class="btn btn-r" id="pp-next" style="display:none;" onclick="nextSnippet()">Next Snippet →</button>
+      <button class="btn btn-g" id="pp-restart" style="display:none;" onclick="startPattern()">Start Over (Reshuffled)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- DIFFERENCE MODE                                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-diff">
+  <div class="main">
+    <div class="section-hdr">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--navy);">⚡ What's the Difference</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px;">Confusion pairs · Is this A or B · Articulate the distinction</div>
+      </div>
+      <button class="back-btn" onclick="goLanding()">← Back</button>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-info"><span id="df-txt">Pair 1 of 5</span><span id="df-score">✓ 0 · ✗ 0</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="df-fill" style="width:0%;background:var(--navy);"></div></div>
+    </div>
+
+    <!-- Pair definitions always visible -->
+    <div class="pair-header" id="df-pair-header"></div>
+
+    <div id="df-scenarios-wrap"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-n" id="df-next-pair" style="display:none;" onclick="nextDiffPair()">Next Confusion Pair →</button>
+      <button class="btn btn-g" id="df-restart" style="display:none;" onclick="startDiff()">Start Over</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- STIMULUS MODE                                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-stim">
+  <div class="main">
+    <div class="section-hdr">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--teal);">📰 Read the Room</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px;">Stimulus decoding · 3-step method · cartoons, graphs, tables</div>
+      </div>
+      <button class="back-btn" onclick="goLanding()">← Back</button>
+    </div>
+
+    <!-- 3-STEP METHOD — always shown -->
+    <div class="stim-method">
+      <div class="stim-method-hdr"><h3>⚙️ The 3-Step Attack Method — Always Do These Before Reading the Question</h3></div>
+      <div class="stim-steps">
+        <div class="stim-step">
+          <div class="stim-step-num" style="color:var(--red);">1</div>
+          <h4>What does this show?</h4>
+          <p>Read/look at the source. Ignore the question. What is actually being shown or argued? Who are the actors? What's the direction of change or the relationship being depicted?</p>
+        </div>
+        <div class="stim-step">
+          <div class="stim-step-num" style="color:var(--navy);">2</div>
+          <h4>What's the argument?</h4>
+          <p>Is this source critical of something? Celebrating something? Comparing two things? Showing a trend? What conclusion does the author/creator want you to draw?</p>
+        </div>
+        <div class="stim-step">
+          <div class="stim-step-num" style="color:var(--teal);">3</div>
+          <h4>What concept does this connect to?</h4>
+          <p>NOW read the question. Which AP Gov concept does the stimulus illustrate, challenge, or extend? Most stimulus questions test whether you can bridge the source to the course vocabulary.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-info"><span id="st-txt">Stimulus 1 of 10</span><span id="st-score">✓ 0 · ✗ 0</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="st-fill" style="width:0%;background:var(--teal);"></div></div>
+    </div>
+
+    <div class="stimulus-box" id="st-box">
+      <div class="stim-type-label" id="st-type">POLITICAL CARTOON</div>
+      <div class="stim-content" id="st-content">Loading...</div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr" id="st-q-hdr" style="background:var(--teal);">Step 3 — Now answer the question</div>
+      <div class="card-body">
+        <div style="margin-bottom:12px;">
+          <div class="step-badge">Step 1 — What does this show?</div>
+          <div class="diff-scenario" id="st-step1" style="border-color:var(--red);"></div>
+          <div class="step-badge">Step 2 — What's the argument?</div>
+          <div class="diff-scenario" id="st-step2" style="border-color:var(--navy);"></div>
+          <div class="step-badge">Step 3 — What's the question asking?</div>
+          <div class="diag-q" id="st-question" style="margin-bottom:10px;"></div>
+        </div>
+        <div class="opts" id="st-opts"></div>
+        <div class="exp" id="st-exp"></div>
+        <div class="btn-row">
+          <button class="btn btn-t" id="st-next" style="display:none;" onclick="nextStim()">Next Stimulus →</button>
+          <button class="btn btn-g" id="st-restart" style="display:none;" onclick="startStim()">Start Over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+
+const diagQs = [
+  {topic:"Voting Behavior",tag:"Unit 5",q:"A voter decides not to vote because she believes that with millions of votes cast, her single vote will not change the outcome of the election. This best illustrates:",opts:["Retrospective voting","Rational abstention / rational choice not to vote","Party identification","Voter suppression"],correct:1,exp:"<strong>Rational abstention</strong> — the voter has calculated that the cost of voting (time, effort) outweighs the expected benefit (probability of affecting the outcome). This is rational choice theory applied to voting behavior. Distinguishable from retrospective voting, which is about WHAT you vote based on, not WHETHER you vote."},
+  {topic:"Presidential Powers",tag:"Unit 2",q:"The president holds a press conference and uses the media to build public support for a piece of legislation, pressuring Congress to pass it. This is an example of:",opts:["An executive order — a formal presidential power","Going public — an informal presidential power","The veto — a constitutional check on Congress","Commander-in-chief authority"],correct:1,exp:"<strong>Going public</strong> is an informal presidential power — using media access and the bully pulpit to apply pressure on Congress by mobilizing public opinion. Formal powers are those written in the Constitution (veto, appointments, commander-in-chief). Informal powers emerge from practice and are not explicitly listed."},
+  {topic:"1st Amendment",tag:"Unit 3",q:"A city ordinance prohibits protesters from demonstrating within 100 feet of a hospital entrance between 6am and 10pm. A court upholds it. This is best described as:",opts:["Prior restraint — unconstitutional censorship of speech","A time, place, and manner restriction — a constitutional limit on how speech occurs","A violation of the Establishment Clause","A violation of the Free Exercise Clause"],correct:1,exp:"<strong>Time, place, and manner restrictions</strong> are constitutional — the government cannot restrict WHAT you say based on content, but CAN restrict WHEN, WHERE, and HOW you say it, as long as the restriction is content-neutral, narrowly tailored, and leaves open alternative channels. Prior restraint = stopping speech BEFORE it happens based on content. These are completely different."},
+  {topic:"Federalism",tag:"Unit 1",q:"Both federal and state governments can levy taxes, borrow money, and establish courts. These shared powers are called:",opts:["Delegated powers","Reserved powers","Concurrent powers","Implied powers"],correct:2,exp:"<strong>Concurrent powers</strong> are powers shared by both the federal and state governments — taxing, borrowing, establishing courts, chartering banks. Delegated (enumerated) powers belong to the federal government only. Reserved powers belong to states only. Implied powers are federal powers derived from the Necessary and Proper Clause."},
+  {topic:"Congress",tag:"Unit 2",q:"A senator from Kansas adds a provision to a highway bill that funds a new interchange near her hometown, unrelated to the bill's main purpose. This is:",opts:["Logrolling","Pork barrel legislation / earmark","The trustee model of representation","Bicameralism in action"],correct:1,exp:"<strong>Pork barrel legislation / earmark</strong> — adding provisions to a bill that direct money to a specific district or state, usually to benefit a member's constituents and improve reelection chances. Logrolling is when members trade votes ('I'll vote for your earmark if you vote for mine'). Both are related but different."},
+  {topic:"Political Parties vs. Interest Groups",tag:"Unit 5",q:"The NAACP lobbies Congress for civil rights legislation, files lawsuits, and mobilizes its members to vote — but does not run candidates for office. This describes:",opts:["A political party — it connects citizens to government","An interest group — it advocates for a specific cause without running candidates","A third party — it operates outside the two-party system","A PAC — it raises money for political campaigns"],correct:1,exp:"<strong>Interest group</strong> — The key distinction: interest groups advocate for specific policy goals but do NOT run candidates for office under their own label. Political parties DO run candidates and seek to control government. The NAACP influences politics through lobbying, litigation, and mobilization — not by nominating candidates."},
+  {topic:"Voting Behavior",tag:"Unit 5",q:"After four years of economic recession, voters in large numbers vote against the incumbent president's party. This best illustrates:",opts:["Rational abstention","Prospective voting — voting based on candidates' future promises","Retrospective voting — holding the incumbent accountable for past performance","Party identification"],correct:2,exp:"<strong>Retrospective voting</strong> — voters assess the past performance of the incumbent and vote accordingly. 'Throw the bums out' during bad economic times is classic retrospective voting. Prospective voting is about future promises. Rational abstention is about NOT voting. These three are frequently confused."},
+  {topic:"Checks on Bureaucracy",tag:"Unit 2",q:"Congress passes a law reducing the EPA's budget by 40% after the agency issues regulations Congress disagrees with. This demonstrates:",opts:["Judicial review of agency actions","Congressional oversight through the power of the purse","An iron triangle protecting the EPA","Executive control of the bureaucracy"],correct:1,exp:"<strong>Congressional oversight through the power of the purse</strong> — Congress controls agency budgets and can use funding cuts to check bureaucratic power. Other oversight tools: hearings, investigations, confirming agency heads. The power of the purse is Congress's most powerful check on the executive branch and bureaucracy."},
+  {topic:"Candidate-Centered Campaigns",tag:"Unit 5",q:"A Senate candidate builds her own fundraising network, hires her own campaign staff, and runs ads focused on her personal biography rather than her party's platform. This reflects:",opts:["Party-centered campaigns — parties control candidate messaging","Candidate-centered campaigns — candidates build personal organizations independent of parties","Interest group dominance of elections","The electoral college system"],correct:1,exp:"<strong>Candidate-centered campaigns</strong> — a shift away from party-run campaigns toward campaigns organized around individual candidates. Candidates raise their own money (PACs, small donors), hire their own staff, and craft personal messages. This has weakened party organizations and increased the importance of name recognition and personal brand."},
+  {topic:"Stimulus Skill",tag:"Skill",q:"A political cartoon shows a large figure labeled 'Federal Government' sitting on a small figure labeled 'States' while holding a bag of money. The cartoon is most likely making the argument that:",opts:["The federal government efficiently distributes resources to states","Federal financial power has allowed the national government to dominate state authority","States are stronger than the federal government","The federal government protects states from outside threats"],correct:1,exp:"<strong>Read the image: the federal government is physically on top of and larger than the states, and holding the money.</strong> This is a critical/negative cartoon about federal dominance — the size and position signal power imbalance, the money bag signals financial leverage. The argument: federal fiscal power (grants, matching funds) lets Washington control state policy. This connects to creative federalism / fiscal federalism and Brutus No. 1's warning."},
+];
+
+const snippets = [
+  {concept:"Rational Choice / Rational Abstention",color:"#B22234",text:"'Why would I drive 20 minutes, wait in line, and miss work for something that won't change the outcome? Millions of people vote and mine's just one.'",exp:"<strong>Rational abstention</strong> — the speaker is doing a cost-benefit calculation and concluding the costs (time, effort) outweigh the likely impact. This is rational choice theory applied to voting: non-participation is a rational decision, not apathy."},
+  {concept:"Retrospective Voting",color:"#2C3170",text:"Unemployment hits 9%. Voters flood polling stations and throw out every incumbent senator they can, regardless of party.",exp:"<strong>Retrospective voting</strong> — voters are judging past performance and holding incumbents accountable for bad economic conditions. The key signal: they're looking BACKWARD at results, not FORWARD at promises. Classic 'throw the bums out.'"},
+  {concept:"Prospective Voting",color:"#1B4D8A",text:"'I don't really like either candidate but I'm voting for the one whose healthcare plan will actually help my family over the next four years.'",exp:"<strong>Prospective voting</strong> — the voter is evaluating future policy promises and choosing based on what candidates say they WILL do. Looking forward, not backward. Contrast with retrospective voting, which looks at past performance."},
+  {concept:"Formal Presidential Power",color:"#3D2B1F",text:"The president refuses to sign the tax bill passed by both chambers of Congress, sending it back with objections.",exp:"<strong>Formal presidential power — the veto.</strong> Formal powers are explicitly granted by the Constitution: veto, appointments, treaties (with Senate approval), commander-in-chief, pardons. When you see the president doing something written in Article II, it's formal."},
+  {concept:"Informal Presidential Power",color:"#1B6B3A",text:"The president calls a prime-time address to the nation, describing the immigration crisis in vivid terms and urging citizens to call their representatives.",exp:"<strong>Informal presidential power — going public / the bully pulpit.</strong> Informal powers aren't in the Constitution — they've developed through practice. Using media to mobilize public pressure on Congress is 'going public.' Other informal powers: executive agreements (vs. formal treaties), impoundment, signing statements."},
+  {concept:"Time, Place, and Manner Restriction",color:"#5C3D99",text:"A city allows protesters to demonstrate outside City Hall but requires them to use designated areas, keep noise below 85 decibels, and clear the area by 10pm.",exp:"<strong>Time, place, and manner restriction</strong> — the government isn't restricting WHAT protesters say (content) but HOW and WHEN they say it. These restrictions are constitutional if they are content-neutral, serve a significant government interest, and leave open alternative channels of communication."},
+  {concept:"Prior Restraint",color:"#7A1523",text:"A federal judge issues an injunction blocking a newspaper from publishing a story about military operations, ruling the information would endanger troops.",exp:"<strong>Prior restraint</strong> — the government stopping speech or publication BEFORE it occurs. This is presumptively unconstitutional under the First Amendment (NY Times v. US). Very different from punishing speech after the fact. The government faces an extremely heavy burden to justify prior restraint."},
+  {concept:"Concurrent Powers",color:"#C8960C",text:"Maria pays both federal income tax and state income tax. Her town also collects a local property tax.",exp:"<strong>Concurrent powers</strong> — the power to tax is held by both federal and state governments simultaneously. Other concurrent powers: borrow money, establish courts, enforce laws. These powers aren't exclusive to either level — both can exercise them."},
+  {concept:"Delegated / Enumerated Powers",color:"#2C3170",text:"Congress declares war on a foreign nation after a surprise attack.",exp:"<strong>Delegated (enumerated) powers</strong> — powers specifically listed in Article I, Section 8 of the Constitution as belonging to Congress. Declaring war is explicitly enumerated. These powers belong to the federal government only."},
+  {concept:"Reserved Powers",color:"#1B6B3A",text:"California sets its own high school graduation requirements, licensing rules for contractors, and speed limits on state highways.",exp:"<strong>Reserved powers</strong> — under the 10th Amendment, powers not delegated to the federal government are reserved to the states or the people. Education, licensing, and traffic laws are classic state powers — the federal government has no enumerated authority over them."},
+  {concept:"Pork Barrel / Earmark",color:"#A0522D",text:"'Senator Jenkins secured $4.2 million in the federal transportation bill for a new parking garage at the airport in his hometown.'",exp:"<strong>Pork barrel legislation / earmark</strong> — adding spending provisions to a bill that benefits a specific district or state. Benefits the member's constituents and helps reelection. Critics call it wasteful; defenders call it representing their district's interests."},
+  {concept:"Trustee Model",color:"#1B4D8A",text:"'I know my district wants me to vote against this climate bill. But I've read the science, and I believe it's the right thing for the country. I'm voting yes.'",exp:"<strong>Trustee model of representation</strong> — the representative uses their own judgment about what's best for the country, even against constituent preferences. Edmund Burke's theory. Contrast with the delegate model (do exactly what constituents want) and politico model (switches between both)."},
+  {concept:"Delegate Model",color:"#B22234",text:"A congresswoman polls her district before every major vote and always votes exactly as the majority of her constituents prefer, regardless of her personal views.",exp:"<strong>Delegate model of representation</strong> — the representative acts as a direct agent of their constituents' expressed preferences. No personal judgment — just carry out the district's wishes. Most voters say they want this, but most members of Congress actually operate more as trustees or politicos."},
+  {concept:"Political Party",color:"#2E5D4B",text:"The Democratic Party nominates a candidate for president, develops a party platform on healthcare, and works to elect Democrats to Congress and state legislatures.",exp:"<strong>Political party</strong> — the key distinguishing feature: parties RUN CANDIDATES for office and seek to CONTROL GOVERNMENT. They develop platforms, mobilize voters, and organize the government once in power. Interest groups never run their own candidates under the group's name."},
+  {concept:"Interest Group",color:"#5C3D99",text:"The NRA lobbies Congress for gun rights legislation, donates to candidates via PACs, and files amicus curiae briefs in Second Amendment cases — but never runs its own candidate for office.",exp:"<strong>Interest group</strong> — advocates for specific policy goals WITHOUT running candidates under the group's own label. The NRA's activities (lobbying, PAC donations, litigation) are all classic interest group tactics. The crucial distinction from a political party: no candidates, no platform, no attempt to control government directly."},
+  {concept:"Candidate-Centered Campaigns",color:"#1B6B3A",text:"'Senator Martinez raised $12 million through her own email list, hired a private pollster, and ran ads featuring her personal story — while barely mentioning her party.'",exp:"<strong>Candidate-centered campaign</strong> — candidates build their own organizations, fundraising networks, and personal brands rather than relying on the party. This has been the dominant model since the 1970s, weakening parties as organizations while strengthening individual candidate identity."},
+  {concept:"Going Public / Bully Pulpit",color:"#7A1523",text:"Facing a Congress that won't act on immigration, the president gives a nationally televised speech calling on Americans to demand action from their representatives.",exp:"<strong>Going public / bully pulpit</strong> — an informal presidential power: using the media platform and public visibility of the presidency to pressure Congress by mobilizing public opinion. Theodore Roosevelt coined 'bully pulpit.' Modern presidents use social media, primetime addresses, and press conferences for the same purpose."},
+  {concept:"Retrospective Voting",color:"#2C3170",text:"An exit poll finds 78% of voters said 'the state of the economy' was the most important factor in their vote, and 82% of those voters chose the challenger over the incumbent.",exp:"<strong>Retrospective voting</strong> — voters are holding the incumbent accountable for economic conditions during their term. The economy is the classic retrospective voting trigger. When voters say 'are you better off than you were four years ago?', they're thinking retrospectively."},
+  {concept:"Rational Choice / Rational Abstention",color:"#B22234",text:"Voter registration and turnout consistently lag among 18-24 year olds. Political scientists note this group moves frequently, changes jobs often, and expresses low confidence that government responds to people like them.",exp:"<strong>Rational abstention</strong> — multiple structural and psychological factors increase the cost of voting (frequent moving = re-registration burden) and decrease the perceived benefit (low political efficacy = why bother). The rational calculation points toward not voting."},
+  {concept:"Formal Presidential Power",color:"#3D2B1F",text:"The president nominates a new Secretary of State after the previous one resigned, and the Senate Judiciary Committee begins holding confirmation hearings.",exp:"<strong>Formal presidential power — appointment power.</strong> The president's power to appoint cabinet members, federal judges, and other officials is explicitly in Article II. The Senate's advice and consent role is the check. Both formal powers — the appointment AND the confirmation — are in the Constitution."},
+  {concept:"Time, Place, and Manner Restriction",color:"#5C3D99",text:"A university bans amplified sound on the main quad between 8am and 5pm on weekdays but allows it on weekends and in designated outdoor spaces.",exp:"<strong>Time, place, and manner restriction</strong> — content-neutral restriction on HOW speech occurs. The school isn't saying what you can't say — it's saying when and where you can use amplification. The test: content-neutral? Serves significant interest (quiet learning environment)? Leaves open alternative channels (weekends, other areas)? Yes to all — constitutionally permissible."},
+  {concept:"Pork Barrel / Earmark",color:"#A0522D",text:"Critics call it 'wasteful government spending,' but the congresswoman says she's just 'bringing home the bacon' for the district that elected her. She's secured $8 million for a new federal courthouse — in a city that doesn't need one.",exp:"<strong>Pork barrel legislation</strong> — the 'bringing home the bacon' phrase is actually the origin of the term. Earmarks direct federal money to specific districts, often without competitive bidding or demonstrated need. Defenders argue it represents constituents; critics argue it wastes national resources on parochial projects."},
+  {concept:"Interest Group",color:"#5C3D99",text:"After a major oil spill, the Sierra Club runs television ads in key Senate districts, organizes a letter-writing campaign, and testifies before the Senate Environment Committee — all to push for stricter offshore drilling regulations.",exp:"<strong>Interest group activities</strong> — the Sierra Club is using multiple tactics (electioneering-adjacent ads, grassroots mobilization, lobbying through testimony) to influence policy. None of these involve running candidates. This is the classic interest group toolkit: advocate for a cause through every channel except running for office."},
+  {concept:"Concurrent Powers",color:"#C8960C",text:"A state creates its own small business loan program. Meanwhile, the federal SBA (Small Business Administration) offers its own federally funded loans. Both programs operate in the same state simultaneously.",exp:"<strong>Concurrent powers</strong> — both levels of government are exercising the power to spend money and support economic activity simultaneously. Neither has exclusive authority. Under the Supremacy Clause, if the programs conflict, federal law wins — but parallel programs operating without conflict are perfectly constitutional."},
+  {concept:"Trustee Model",color:"#1B4D8A",text:"'I'm not a delegate. I wasn't sent to Washington to take polls. I was sent here to make judgments, and on this vote, I believe the evidence points one way even if my constituents don't see it yet.'",exp:"<strong>Trustee model</strong> — the representative is explicitly rejecting the delegate model and claiming the right to exercise independent judgment. This is Burke's classic formulation. Note the tension: democratic theory says representatives should reflect constituents, but trustees argue voters elected them for their judgment, not just their compliance."},
+];
+
+const diffPairs = [
+  {
+    a:{name:"Rational Abstention",color:"#B22234",def:"Deciding NOT to vote because the expected cost (time, effort) outweighs the expected benefit (probability your vote changes the outcome). A rational calculation about participation."},
+    b:{name:"Retrospective Voting",color:"#2C3170",def:"Deciding HOW to vote based on past performance. Voters look backward and hold incumbents accountable for results — good economy = reward, bad economy = punish."},
+    distinction:"Rational abstention = WHETHER to vote. Retrospective voting = HOW you vote. One is about participation, one is about vote choice.",
+    scenarios:[
+      {text:"Four years of high unemployment leads voters to massively support challengers over incumbents in the midterm election.",answer:"b",exp:"<strong>Retrospective voting</strong> — voters are deciding HOW to vote based on the past four years of economic performance. They showed up to vote (so no abstention) and chose challengers to punish incumbents for bad results."},
+      {text:"A first-time voter decides not to register after concluding that with 140 million votes cast, one vote cannot realistically change the outcome.",answer:"a",exp:"<strong>Rational abstention</strong> — this is about WHETHER to vote, not how. The person calculated that the math doesn't justify the effort. Classic rational choice theory."},
+      {text:"A voter who always voted Republican switches to the Democratic candidate after a recession, saying 'I'm judging results, not labels.'",answer:"b",exp:"<strong>Retrospective voting</strong> — the voter is evaluating past results and switching based on performance. This is the classic retrospective voter: not locked into party ID, holding the incumbent accountable."},
+    ]
+  },
+  {
+    a:{name:"Political Party",color:"#2E5D4B",def:"An organization that RUNS CANDIDATES for office under its own label and seeks to control government. Develops platforms, organizes government, mobilizes voters for its candidates."},
+    b:{name:"Interest Group",color:"#5C3D99",def:"An organization that advocates for specific policy goals WITHOUT running its own candidates. Uses lobbying, litigation, electioneering, and grassroots mobilization to influence policy."},
+    distinction:"The single clearest difference: parties run candidates. Interest groups do not. Everything else flows from this.",
+    scenarios:[
+      {text:"The AARP has 38 million members and spends millions lobbying Congress on Medicare and Social Security — but never puts a candidate on the ballot.",answer:"b",exp:"<strong>Interest group</strong> — the AARP's size and influence don't make it a party. It has no candidates, no platform covering all issues, and no goal of controlling government directly. It's a single-issue advocacy organization — the definition of an interest group."},
+      {text:"The Republican Party selects its presidential nominee through a primary process, adopts a platform at its national convention, and funds campaigns in all 50 states.",answer:"a",exp:"<strong>Political party</strong> — nominating candidates, developing platforms, and organizing to win elections is exactly what parties do. The nomination process and the national convention are quintessential party activities."},
+      {text:"The League of Conservation Voters scores every member of Congress on environmental votes, endorses candidates, and runs ads against anti-environment politicians — but fields no candidates of its own.",answer:"b",exp:"<strong>Interest group</strong> — scoring, endorsing, and running ads are interest group electioneering tactics. The LCV influences elections without entering them directly. No candidates = interest group, not party."},
+    ]
+  },
+  {
+    a:{name:"Prior Restraint",color:"#7A1523",def:"Government censorship of speech or publication BEFORE it occurs — stopping it in advance. Presumptively unconstitutional. The government faces an extremely heavy burden to justify it. (NY Times v. US)"},
+    b:{name:"Time, Place, and Manner Restriction",color:"#5C3D99",def:"A content-neutral restriction on HOW, WHEN, or WHERE speech occurs — not what is said. Constitutional if content-neutral, serves significant interest, and leaves open alternative channels."},
+    distinction:"Prior restraint = stopping specific content BEFORE it's expressed. T/P/M = restricting the method/timing/location of speech regardless of content.",
+    scenarios:[
+      {text:"A federal court orders a newspaper not to publish classified documents about a military operation until a hearing can be held.",answer:"a",exp:"<strong>Prior restraint</strong> — this is stopping publication BEFORE it happens based on the government's objection to the content (classified military information). This is exactly the scenario from NY Times v. US (1971), which held that the government failed to meet the heavy burden required to justify prior restraint."},
+      {text:"A city ordinance requires all street protests to register 48 hours in advance, limits marches to specific routes, and prohibits amplified sound after 9pm.",answer:"b",exp:"<strong>Time, place, and manner restriction</strong> — the city isn't restricting what protesters say. It's regulating WHEN (48 hours notice, 9pm limit), WHERE (specific routes), and HOW (no amplification). Content-neutral = T/P/M restriction, not prior restraint."},
+      {text:"A university administration reviews all student newspaper content before publication and rejects articles it finds 'inappropriate.'",answer:"a",exp:"<strong>Prior restraint</strong> — reviewing and blocking content BEFORE publication is prior restraint. The university is stopping speech based on content before it can be expressed. Courts have been hostile to this. (Note: Hazelwood v. Kuhlmeier applies to school-sponsored press — slightly different, but the concept being tested here is prior restraint vs. T/P/M.)"},
+    ]
+  },
+  {
+    a:{name:"Formal Presidential Powers",color:"#3D2B1F",def:"Powers explicitly granted to the president by the Constitution — written in Article II. Examples: veto, appointment of officials and judges, commander-in-chief, granting pardons, making treaties (with Senate approval)."},
+    b:{name:"Informal Presidential Powers",color:"#1B6B3A",def:"Powers not written in the Constitution but developed through practice and politics. Examples: going public (bully pulpit), executive agreements, signing statements, impoundment, controlling the legislative agenda through agenda-setting."},
+    distinction:"Formal = in the Constitution (Article II). Informal = developed through practice, not explicitly granted.",
+    scenarios:[
+      {text:"The president announces that all executive agencies must submit to White House review before issuing any new regulations.",answer:"b",exp:"<strong>Informal presidential power</strong> — centralized regulatory review through OMB/OIRA is not explicitly in the Constitution. It developed through executive practice starting in the Reagan administration. It gives the president significant control over bureaucratic rulemaking through custom, not constitutional text."},
+      {text:"The president nominates three federal circuit court judges, who are then confirmed by the Senate 52-48.",answer:"a",exp:"<strong>Formal presidential power — appointment power.</strong> Article II explicitly grants the president power to appoint federal judges with Senate advice and consent. Both the nomination (president) and the confirmation (Senate) are formal, constitutionally specified powers."},
+      {text:"The president gives a series of speeches in swing states, publicly pressuring reluctant senators from those states to vote for a healthcare bill.",answer:"b",exp:"<strong>Informal presidential power — going public / bully pulpit.</strong> No constitutional provision gives the president the power to pressure Congress through public speeches. This emerged as a strategy — using the president's unique media access to build public pressure on legislators. Informal but extremely powerful."},
+    ]
+  },
+  {
+    a:{name:"Delegated / Enumerated Powers",color:"#2C3170",def:"Powers specifically listed in Article I, Section 8 of the Constitution as belonging to the federal government. Examples: coin money, declare war, regulate interstate commerce, establish post offices."},
+    b:{name:"Reserved Powers",color:"#1B6B3A",def:"Powers not delegated to the federal government and not prohibited to the states — reserved to the states or the people under the 10th Amendment. Examples: education, marriage law, police powers, speed limits."},
+    distinction:"Delegated = federal government only, listed in Article I. Reserved = state governments, anything not given to feds or prohibited to states.",
+    scenarios:[
+      {text:"Congress passes a bill establishing a national currency and regulating the money supply through the Federal Reserve.",answer:"a",exp:"<strong>Delegated / enumerated power</strong> — 'coin money' and regulate its value is explicitly listed in Article I, Section 8. The Federal Reserve implementing monetary policy is an exercise of this enumerated power. This belongs exclusively to the federal government."},
+      {text:"Georgia sets its own standards for what students must learn in high school and which tests they must pass to graduate.",answer:"b",exp:"<strong>Reserved power</strong> — education is not mentioned in the Constitution and is therefore reserved to the states under the 10th Amendment. The federal government can influence education through conditional grants (like No Child Left Behind) but cannot mandate curriculum directly."},
+      {text:"A state passes a law allowing its residents to purchase marijuana legally, despite federal law classifying it as illegal.",answer:"b",exp:"<strong>Reserved powers argument (federalism dispute)</strong> — states argue drug policy is a reserved power. The federal government argues the Commerce Clause gives it authority. This tension is the live federalism debate your class saw in the practice scenario questions. The state is claiming a power not explicitly given to the federal government."},
+    ]
+  },
+];
+
+const stimuli = [
+  {type:"POLITICAL CARTOON",content:"<strong>Description:</strong> A political cartoon shows a very large figure labeled <em>'Federal Government'</em> sitting on a tiny figure labeled <em>'States.'</em> The federal figure holds a large bag labeled <em>'Grant Money'</em> and is smiling. The state figure has a speech bubble saying <em>'But I thought we were partners...'</em>",step1:"The source shows the federal government as physically dominant over the states, using money as the instrument of control. The size difference signals a power imbalance.",step2:"The cartoon is critical of federal financial power — the 'grant money' bag suggests that conditional federal grants give Washington leverage over state policy. The state's confused reaction implies the relationship isn't equal.",q:"This cartoon most directly illustrates which concept?",opts:["Dual federalism — both levels of government are equal and separate","Fiscal/cooperative federalism — the federal government uses grants to influence state policy, effectively controlling state behavior","The Supremacy Clause — federal law automatically overrides state law","Reserved powers — states retain independent authority under the 10th Amendment"],correct:1,exp:"<strong>Fiscal / cooperative federalism</strong> — the cartoon specifically uses money (grants) as the tool of federal dominance. This is the mechanism of modern federalism: Washington offers states money with conditions attached, effectively directing state policy. This connects to 'creative federalism' and the LBJ Great Society questions your class missed."},
+  {type:"DATA TABLE",content:"<strong>Description:</strong> A table shows voter turnout percentages by age group in four consecutive elections:\n\n• Ages 18–29: 38%, 36%, 41%, 39%\n• Ages 30–44: 52%, 54%, 56%, 53%\n• Ages 45–59: 64%, 66%, 68%, 65%\n• Ages 60–74: 74%, 76%, 78%, 75%\n• Ages 75+: 72%, 70%, 73%, 71%",step1:"The table shows consistent voter turnout patterns across four elections. Turnout increases with age from 18-29 up to 60-74, then slightly decreases for 75+. The patterns are stable across all four elections.",step2:"The data argues that age is a reliable predictor of turnout. The consistent gap between youngest and oldest voters across elections suggests structural factors, not one-time events.",q:"A political scientist looking at this table would most likely use it to support the argument that:",opts:["Voter suppression primarily targets elderly voters","Political socialization and civic duty accumulate with age, explaining the persistent turnout gap","Third parties fail to mobilize young voters","The Electoral College discourages participation"],correct:1,exp:"<strong>Political socialization and civic duty</strong> — the consistent pattern across four elections points to a structural explanation, not a circumstantial one. Older voters have had more years to develop voting habits, stronger party identification, and a deeper sense of civic obligation through socialization. The stability across elections rules out issue-specific explanations."},
+  {type:"POLITICAL CARTOON",content:"<strong>Description:</strong> A cartoon shows three figures in a circle holding hands. One is labeled <em>'Congressional Subcommittee,'</em> one is labeled <em>'Federal Agency,'</em> and one is labeled <em>'Industry Lobby Group.'</em> They are inside a fortress labeled <em>'Policy.'</em> Outside the fortress, a small figure labeled <em>'The Public'</em> is knocking on a locked door.",step1:"Three specific actors form a closed circle inside a fortress controlling policy. The public is locked out. Each actor is labeled with an institution.",step2:"The cartoon is critical of iron triangles — the image argues that policy in certain domains is controlled by a self-reinforcing three-way relationship, with no room for the broader public interest.",q:"This cartoon most directly criticizes which theory of American democracy?",opts:["Pluralism — the idea that all groups compete equally for policy influence","Elite theory — the idea that a small wealthy elite controls all policy","Iron triangle / subgovernment theory — that policy in specific domains is made by insulated three-way relationships","Federalism — that states compete with the federal government for policy authority"],correct:0,exp:"<strong>Pluralism</strong> — this is the key. Pluralism claims that many groups compete and balance each other, producing broadly representative policy. The cartoon directly refutes pluralism by showing that the public (the many) is LOCKED OUT of policy that is made by three insulated actors. The cartoon is evidence for elite or iron triangle theory and against the pluralist claim that all groups have access."},
+  {type:"BAR GRAPH",content:"<strong>Description:</strong> A bar graph shows the percentage of Americans who say they 'trust the federal government to do what is right' from 1960 to 2020. In 1960 the bar reaches about 75%. It drops sharply after 1964, hits about 25% by 1980, rises slightly to 40% in the mid-1980s, fluctuates between 15-30% through the 1990s and 2000s, spikes briefly to 55% in late 2001, then falls to around 17-20% by 2020.",step1:"The graph shows a dramatic long-term decline in public trust in the federal government from ~75% in 1960 to ~17% in 2020, with one brief spike upward after 2001.",step2:"The overall trend argues that Americans have become dramatically more cynical about government over six decades. The 2001 spike corresponds to post-9/11 rally-around-the-flag effect.",q:"This graph most directly supports which argument about American politics?",opts:["Americans have always been distrustful of government","Political efficacy and trust in government have declined significantly since the 1960s, with brief exceptions during national crises","The federal government has become more competent since the 1960s","Public trust in government is determined primarily by which party controls the White House"],correct:1,exp:"<strong>Political efficacy and trust decline</strong> — the graph shows a clear long-term downward trend in trust, which political scientists connect to declining political efficacy (the sense that government responds to you and can be trusted). This is a major Unit 4 concept. The 2001 spike is a rally-around-the-flag effect — external crisis temporarily boosts trust. The trend connects to cynicism about institutions, low voter turnout, and the rise of anti-establishment politics."},
+  {type:"POLITICAL CARTOON",content:"<strong>Description:</strong> A cartoon from 1965 shows President Lyndon Johnson as a very tall figure handing out money bags labeled <em>'Federal Grants'</em> to small state governors, who are reaching up to receive them. Johnson's figure has a string attached to each money bag, and the strings run into the governors' pockets. A caption reads: <em>'Creative Federalism: Partners in Progress.'</em>",step1:"LBJ is giant, the governors are small. He's giving them money but the strings attached suggest control. The 'Creative Federalism' caption is ironic — the image suggests it's less a partnership and more a power relationship.",step2:"The cartoon argues that federal grants come with conditions (strings) that give Washington control over state policy — federal money = federal control. 'Partners in Progress' is presented sarcastically.",q:"This cartoon from 1965 best illustrates which concept?",opts:["Dual federalism — the idea that federal and state powers are separate and equal","New federalism — returning power to the states","Fiscal federalism / creative federalism — the federal government uses conditional grants to direct state policy","The Supremacy Clause — federal law overrides state law automatically"],correct:2,exp:"<strong>Fiscal federalism / creative federalism</strong> — LBJ's Great Society dramatically expanded the use of federal grants-in-aid to states, with conditions attached. This is 'creative federalism' — using federal spending power to fund and thereby influence state programs in areas like education, healthcare, and civil rights. The strings-attached money bags perfectly illustrate why states both want the money and resent the control. This connects directly to the LBJ questions both classes missed."},
+  {type:"PIE CHART",content:"<strong>Description:</strong> Two pie charts side by side. Left chart: 'Sources of Congressional Incumbents' Reelection Funds.' Shows PAC contributions: 42%, Individual large donors: 31%, Individual small donors: 19%, Party funds: 8%. Right chart: 'Sources of Challenger Candidates' Funds.' Shows Individual small donors: 44%, PAC contributions: 18%, Individual large donors: 28%, Party funds: 10%.",step1:"Incumbents get 42% of their money from PACs; challengers get only 18%. Challengers rely more on individual small donors. Party funds are small for both.",step2:"The data argues that PACs (organized interest groups) strongly favor incumbents over challengers — they give money to people who are already in power and can help them. This gives incumbents a structural financial advantage.",q:"These charts most directly support which argument?",opts:["Political parties are the most important source of campaign funding","Interest groups use PAC contributions strategically to support incumbents and maintain access to power","Small donors are more politically engaged than large donors","The Electoral College gives advantages to challengers over incumbents"],correct:1,exp:"<strong>Interest groups use PAC money strategically for access</strong> — PACs don't give to challengers because challengers probably won't win and can't deliver policy favors. Incumbents have a 90%+ reelection rate and control committee assignments. This data shows interest groups are buying access and influence, not expressing ideological preferences. This connects to iron triangle theory and the broader question of interest group power in American politics."},
+  {type:"TIMELINE GRAPHIC",content:"<strong>Description:</strong> A timeline graphic shows major voting rights expansions in US history:\n• 1870: 15th Amendment — Black men gain the right to vote\n• 1920: 19th Amendment — Women gain the right to vote\n• 1924: Indian Citizenship Act — Native Americans gain citizenship and voting rights\n• 1965: Voting Rights Act — Federal protections against racial discrimination in voting\n• 1971: 26th Amendment — Voting age lowered to 18\n• 1993: National Voter Registration Act — Motor Voter law simplifies registration\n• 2013: Shelby County v. Holder (not a required case) — Weakens Voting Rights Act preclearance",step1:"The timeline shows a long-term pattern of expanding voting rights through constitutional amendments, legislation, and occasionally rolling them back through court decisions.",step2:"The overall arc argues that voting rights in America have generally expanded over time but that expansion is not always permanent — the 2013 entry shows a reversal.",q:"This timeline most directly supports the argument that:",opts:["The right to vote has always been universally protected in the United States","Expanding political participation has required repeated formal legal interventions, including constitutional amendments and legislation","The Supreme Court has consistently protected voting rights","Voter turnout has increased as voting rights expanded"],correct:1,exp:"<strong>Expanding participation required formal intervention — over and over.</strong> The timeline shows that rights didn't expand naturally — each expansion required a specific legal act: amendment, legislation, court decision. This directly supports the argument that political participation in America has structural barriers that require active intervention to remove. It connects to Baker v. Carr (one person, one vote), the 24th Amendment (poll taxes), and the broader Unit 5 themes about structural barriers to participation."},
+  {type:"DATA TABLE",content:"<strong>Description:</strong> A table titled 'Presidential Approval Ratings and Economic Conditions' shows:\n\nPresident / Avg GDP Growth / Avg Approval Rating at End of Term\n• Kennedy-Johnson: +4.8% / 79%\n• Nixon: +2.4% / 24%\n• Carter: +0.9% / 34%\n• Reagan: +3.6% / 63%\n• Bush H.W.: +1.1% / 56%\n• Clinton: +3.8% / 66%\n• Bush W.: +0.9% / 34%\n• Obama: +2.2% / 59%",step1:"The table pairs economic performance (GDP growth) with presidential approval. Higher GDP growth generally correlates with higher end-of-term approval. Nixon is an outlier (Watergate).",step2:"The data argues that economic conditions are a strong predictor of presidential approval ratings — presidents whose economies grew well left office with higher approval.",q:"This table most directly provides evidence for which theory of voting behavior?",opts:["Prospective voting — voters evaluate future policy promises","Retrospective voting — voters hold leaders accountable for past economic performance","Party identification — voters support their party regardless of conditions","Rational abstention — poor economic conditions discourage voting"],correct:1,exp:"<strong>Retrospective voting</strong> — the correlation between economic performance and approval ratings is the empirical basis for retrospective voting theory. Voters reward presidents for good economies and punish them for bad ones — looking backward at results. This is also called 'pocketbook voting' or 'economic voting.' Nixon's outlier status shows that economic performance isn't the only factor — major scandals can override economic effects."},
+  {type:"POLITICAL CARTOON",content:"<strong>Description:</strong> A cartoon shows a senator at a desk receiving two visitors simultaneously. On one side, a large figure labeled <em>'Corporate Lobbyist'</em> hands the senator a large envelope labeled <em>'PAC Contribution.'</em> On the other side, a small group of people labeled <em>'Constituents'</em> hold signs and try to get the senator's attention, but the senator is turned completely toward the lobbyist.",step1:"The senator is physically turning away from constituents and toward the lobbyist who has money. The size difference between the lobbyist and the constituents signals the power imbalance.",step2:"The cartoon argues that money from interest groups distorts representation — elected officials are more responsive to organized money than to the voters who elected them.",q:"This cartoon most directly challenges which theory of American democracy?",opts:["Elite theory — the idea that a small group controls policy","Pluralism — the idea that many groups compete equally and representation is broadly distributed","Federalism — the idea that power is divided between federal and state governments","Judicial review — the idea that courts protect individual rights"],correct:1,exp:"<strong>Pluralism</strong> is challenged — the cartoon argues that competition among groups is NOT equal. The lobbyist's money bag gives privileged access that ordinary citizens don't have. Pluralism claims all groups compete and representation is broadly distributed; this cartoon says that's naive — money buys disproportionate access. This is the elite theory critique of pluralism, and it's a classic AP Gov argument to make in both directions."},
+  {type:"BAR GRAPH",content:"<strong>Description:</strong> A grouped bar graph titled 'How Members of Congress Vote Compared to Constituent Preferences.' Four policy areas shown, each with two bars:\n\n• Defense spending: Members favor increase 72% / Constituents favor increase 41%\n• Foreign aid: Members favor 68% / Constituents favor 29%\n• Campaign finance reform: Members favor 22% / Constituents favor 78%\n• Term limits: Members favor 18% / Constituents favor 74%",step1:"Across four policy areas, member votes and constituent preferences diverge significantly. Members favor defense and foreign aid much more than constituents; constituents want campaign finance reform and term limits far more than members want to give them.",step2:"The data argues that members of Congress are systematically NOT representing their constituents' preferences in these areas — especially on things that directly affect members' own power (term limits, campaign finance).",q:"This graph most directly illustrates which theory of representation?",opts:["The delegate model — members voting exactly as constituents prefer","The trustee model — members using their own judgment even when it conflicts with constituents","The politico model — members shifting between delegate and trustee based on the issue","Interest group capture — lobbyists determining all congressional votes"],correct:1,exp:"<strong>Trustee model</strong> — members are consistently voting based on their own judgment (or interests) rather than constituent preferences. Especially on term limits and campaign finance, where members benefit from the status quo, they vote against large constituent majorities. This is a somewhat cynical version of the trustee model — not 'I know better,' but 'I have my own interests.' The trustee/delegate/politico distinction is exactly what your class missed on the practice exam."},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let diagIdx=0, diagRight=0, diagWrong=0, diagScores={pattern:0,diff:0,stim:0};
+let ppDeck=[], ppIdx=0, ppRight=0, ppWrong=0, ppStreak=0;
+let dfPairIdx=0, dfScenIdx=0, dfRight=0, dfWrong=0;
+let stIdx=0, stRight=0, stWrong=0;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function setLabel(txt,col){const el=document.getElementById('mode-label');el.textContent=txt;el.style.background=col;el.style.display='inline-block';}
+function goLanding(){show('s-landing');document.getElementById('mode-label').style.display='none';}
+function goMode(m){
+  if(m==='diag'){startDiag();}
+  else if(m==='pattern'){startPattern();}
+  else if(m==='diff'){startDiff();}
+  else if(m==='stim'){startStim();}
+}
+
+// ─── DIAGNOSIS ─────────────────────────────────────────────────
+function startDiag(){
+  diagIdx=0;diagRight=0;diagWrong=0;
+  diagScores={pattern:0,diff:0,stim:0};
+  setLabel('🎯 Diagnosis',getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#5C3D99');
+  show('s-diag');loadDiagQ();
+}
+function loadDiagQ(){
+  if(diagIdx>=diagQs.length){showDiagResults();return;}
+  const q=diagQs[diagIdx];
+  document.getElementById('dq-prog-txt').textContent=`Question ${diagIdx+1} of ${diagQs.length}`;
+  document.getElementById('dq-score-txt').textContent=`${diagRight} correct`;
+  document.getElementById('dq-fill').style.width=(diagIdx/diagQs.length*100)+'%';
+  document.getElementById('dq-tag').textContent=q.topic+' · '+q.tag;
+  document.getElementById('dq-q').textContent=q.q;
+  document.getElementById('dq-opts').innerHTML=q.opts.map((o,i)=>
+    `<button class="opt" onclick="checkDiag(this,${i},${q.correct})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+  document.getElementById('dq-exp').className='exp';
+  document.getElementById('dq-exp').innerHTML='';
+  document.getElementById('dq-next').style.display='none';
+}
+function checkDiag(btn,chosen,correct){
+  btn.parentElement.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  const q=diagQs[diagIdx];
+  if(chosen===correct){
+    btn.classList.add('correct');diagRight++;
+    if(q.topic.includes('Voting')||q.topic.includes('Pattern')||q.topic.includes('Congress')||q.topic.includes('Candidate')||q.topic.includes('Socialization'))diagScores.pattern++;
+  } else {
+    btn.classList.add('wrong');
+    btn.parentElement.querySelectorAll('.opt')[correct].classList.add('reveal');
+    diagWrong++;
+  }
+  if(q.topic.includes('Party')||q.topic.includes('Restraint')||q.topic.includes('Manner')||q.topic.includes('Formal')||q.topic.includes('Power')||q.topic.includes('Delegated'))diagScores.diff++;
+  if(q.topic.includes('Stimulus'))diagScores.stim++;
+  document.getElementById('dq-exp').innerHTML=q.exp;
+  document.getElementById('dq-exp').classList.add('show');
+  document.getElementById('dq-next').style.display='flex';
+}
+function nextDiagQ(){diagIdx++;loadDiagQ();}
+function showDiagResults(){
+  const pct=Math.round(diagRight/diagQs.length*100);
+  document.getElementById('dr-right').textContent=diagRight;
+  document.getElementById('dr-wrong').textContent=diagWrong;
+  document.getElementById('dr-pct').textContent=pct+'%';
+  const recs=[];
+  if(pct<70)recs.push({icon:'👁️',text:'<strong>See the Pattern</strong> — Your results suggest concept recognition needs work. Start here.',col:'#FFF0F0',btn:'pattern'});
+  if(diagScores.diff>0||pct<80)recs.push({icon:'⚡',text:'<strong>What\'s the Difference</strong> — You missed some confusion pair questions. These concepts look similar but aren\'t — drill the distinctions.',col:'#E8EAF6',btn:'diff'});
+  recs.push({icon:'📰',text:'<strong>Read the Room</strong> — Stimulus questions are a consistent weakness. Even if you know the content, practice the 3-step method.',col:'#E0F7FA',btn:'stim'});
+  document.getElementById('dr-recs').innerHTML=recs.map(r=>`<div class="diag-rec" style="background:${r.col};"><span class="icon">${r.icon}</span><span style="font-size:14px;">${r.text}</span></div>`).join('');
+  show('s-diag-results');
+}
+
+// ─── PATTERN MODE ──────────────────────────────────────────────
+function startPattern(){
+  ppDeck=shuffle([...snippets]);ppIdx=0;ppRight=0;ppWrong=0;ppStreak=0;
+  setLabel('👁️ See the Pattern','#B22234');
+  show('s-pattern');loadSnippet();
+}
+function loadSnippet(){
+  if(ppIdx>=ppDeck.length){
+    document.getElementById('pp-snippet').textContent='🎉 All snippets complete!';
+    document.getElementById('pp-concepts').innerHTML='';
+    document.getElementById('pp-exp').className='exp';
+    document.getElementById('pp-restart').style.display='flex';
+    return;
+  }
+  const s=ppDeck[ppIdx];
+  const pct=Math.round(ppIdx/ppDeck.length*100);
+  document.getElementById('pp-txt').textContent=`Snippet ${ppIdx+1} of ${ppDeck.length}`;
+  document.getElementById('pp-score').textContent=`✓ ${ppRight} · ✗ ${ppWrong}`;
+  document.getElementById('pp-streak').textContent=`Streak: ${ppStreak}`;
+  document.getElementById('pp-fill').style.width=pct+'%';
+  document.getElementById('pp-snippet').textContent=s.text;
+  document.getElementById('pp-exp').className='exp';
+  document.getElementById('pp-exp').innerHTML='';
+  document.getElementById('pp-next').style.display='none';
+  document.getElementById('pp-restart').style.display='none';
+
+  // Build concept buttons — correct + 3 distractors
+  const allConcepts=snippets.map(x=>x.concept);
+  const distractors=shuffle([...new Set(allConcepts)].filter(c=>c!==s.concept)).slice(0,4);
+  const choices=shuffle([s.concept,...distractors]);
+  document.getElementById('pp-concepts').innerHTML=choices.map(c=>
+    `<button class="concept-btn" onclick="pickConcept(this,'${c.replace(/'/g,"\\'")}','${s.concept.replace(/'/g,"\\'")}')">${c}</button>`
+  ).join('');
+}
+function pickConcept(btn,picked,correct){
+  document.querySelectorAll('.concept-btn').forEach(b=>b.disabled=true);
+  const s=ppDeck[ppIdx];
+  if(picked===correct){
+    btn.classList.add('correct-pick');ppRight++;ppStreak++;
+  } else {
+    btn.classList.add('wrong-pick');ppWrong++;ppStreak=0;
+    document.querySelectorAll('.concept-btn').forEach(b=>{
+      if(b.textContent===correct)b.classList.add('should-pick');
+    });
+  }
+  document.getElementById('pp-streak').textContent=`Streak: ${ppStreak}`;
+  document.getElementById('pp-score').textContent=`✓ ${ppRight} · ✗ ${ppWrong}`;
+  document.getElementById('pp-exp').innerHTML=`<strong style="color:${s.color}">${s.concept}</strong><br><br>${s.exp}`;
+  document.getElementById('pp-exp').classList.add('show');
+  document.getElementById('pp-next').style.display='flex';
+}
+function nextSnippet(){ppIdx++;loadSnippet();}
+
+// ─── DIFFERENCE MODE ──────────────────────────────────────────
+function startDiff(){
+  dfPairIdx=0;dfScenIdx=0;dfRight=0;dfWrong=0;
+  setLabel('⚡ What\'s the Difference','#2C3170');
+  show('s-diff');loadDiffPair();
+}
+function loadDiffPair(){
+  if(dfPairIdx>=diffPairs.length){
+    document.getElementById('df-pair-header').innerHTML='<div style="grid-column:span 2;text-align:center;padding:20px;font-family:\'Playfair Display\',serif;font-size:20px;color:var(--success);">🎉 All confusion pairs complete!</div>';
+    document.getElementById('df-scenarios-wrap').innerHTML='';
+    document.getElementById('df-restart').style.display='flex';
+    return;
+  }
+  const pair=diffPairs[dfPairIdx];
+  dfScenIdx=0;
+  document.getElementById('df-txt').textContent=`Pair ${dfPairIdx+1} of ${diffPairs.length}: ${pair.a.name} vs. ${pair.b.name}`;
+  document.getElementById('df-score').textContent=`✓ ${dfRight} · ✗ ${dfWrong}`;
+  document.getElementById('df-fill').style.width=(dfPairIdx/diffPairs.length*100)+'%';
+  document.getElementById('df-pair-header').innerHTML=`
+    <div class="pair-col">
+      <div class="pair-col-hdr" style="background:${pair.a.color};">${pair.a.name}</div>
+      <div class="pair-col-body">${pair.a.def}</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-col-hdr" style="background:${pair.b.color};">${pair.b.name}</div>
+      <div class="pair-col-body">${pair.b.def}</div>
+    </div>`;
+  document.getElementById('df-next-pair').style.display='none';
+  document.getElementById('df-restart').style.display='none';
+  loadDiffScenario();
+}
+function loadDiffScenario(){
+  const pair=diffPairs[dfPairIdx];
+  if(dfScenIdx>=pair.scenarios.length){
+    document.getElementById('df-scenarios-wrap').innerHTML=`
+      <div style="background:#E8F5E9;border-radius:10px;padding:16px 20px;border:1px solid var(--success);">
+        <div style="font-weight:700;font-size:14px;color:var(--success);margin-bottom:8px;">✓ The one-sentence distinction:</div>
+        <div style="font-size:15px;line-height:1.7;">${pair.distinction}</div>
+      </div>`;
+    document.getElementById('df-next-pair').style.display='flex';
+    return;
+  }
+  const scen=pair.scenarios[dfScenIdx];
+  document.getElementById('df-scenarios-wrap').innerHTML=`
+    <div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700;">SCENARIO ${dfScenIdx+1} of ${pair.scenarios.length}</div>
+      <div class="diff-scenario">${scen.text}</div>
+      <div class="choice-row">
+        <button class="choice-btn" onclick="pickDiff(this,'a','${scen.answer}','${dfPairIdx}','${dfScenIdx}')" style="border-color:${pair.a.color};color:${pair.a.color};">${pair.a.name}</button>
+        <button class="choice-btn" onclick="pickDiff(this,'b','${scen.answer}','${dfPairIdx}','${dfScenIdx}')" style="border-color:${pair.b.color};color:${pair.b.color};">${pair.b.name}</button>
+      </div>
+      <div class="type-box">
+        <label>In one sentence — what's the key difference between these two concepts?</label>
+        <textarea placeholder="The key difference is..."></textarea>
+        <button class="reveal-btn" onclick="revealDiffAns(this,'${dfPairIdx}','${dfScenIdx}')">Reveal explanation</button>
+        <div class="model-ans" id="diff-exp-${dfPairIdx}-${dfScenIdx}"></div>
+      </div>
+    </div>`;
+}
+function pickDiff(btn,picked,correct,pi,si){
+  const row=btn.parentElement;
+  row.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);
+  if(picked===correct){btn.classList.add('correct');dfRight++;}
+  else{btn.classList.add('wrong');dfWrong++;
+    row.querySelectorAll('.choice-btn').forEach(b=>{if(b.getAttribute('onclick').includes("'"+correct+"'"))b.classList.add('correct');});}
+  document.getElementById('df-score').textContent=`✓ ${dfRight} · ✗ ${dfWrong}`;
+}
+function revealDiffAns(btn,pi,si){
+  const scen=diffPairs[parseInt(pi)].scenarios[parseInt(si)];
+  const el=document.getElementById(`diff-exp-${pi}-${si}`);
+  el.innerHTML=scen.exp;el.classList.add('show');btn.style.display='none';
+  dfScenIdx++;
+  setTimeout(()=>loadDiffScenario(),400);
+}
+function nextDiffPair(){dfPairIdx++;loadDiffPair();}
+
+// ─── STIMULUS MODE ────────────────────────────────────────────
+function startStim(){
+  stIdx=0;stRight=0;stWrong=0;
+  setLabel('📰 Read the Room','#1B6B6B');
+  show('s-stim');loadStim();
+}
+function loadStim(){
+  if(stIdx>=stimuli.length){
+    document.getElementById('st-box').innerHTML='<div style="text-align:center;padding:20px;font-size:18px;">🎉 All stimuli complete!</div>';
+    document.getElementById('st-next').style.display='none';
+    document.getElementById('st-restart').style.display='flex';
+    return;
+  }
+  const s=stimuli[stIdx];
+  const pct=Math.round(stIdx/stimuli.length*100);
+  document.getElementById('st-txt').textContent=`Stimulus ${stIdx+1} of ${stimuli.length}`;
+  document.getElementById('st-score').textContent=`✓ ${stRight} · ✗ ${stWrong}`;
+  document.getElementById('st-fill').style.width=pct+'%';
+  document.getElementById('st-type').textContent=s.type;
+  document.getElementById('st-content').innerHTML=s.content;
+  document.getElementById('st-step1').textContent=s.step1;
+  document.getElementById('st-step2').textContent=s.step2;
+  document.getElementById('st-question').textContent=s.q;
+  document.getElementById('st-opts').innerHTML=s.opts.map((o,i)=>
+    `<button class="opt" onclick="checkStim(this,${i},${s.correct})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+  document.getElementById('st-exp').className='exp';
+  document.getElementById('st-exp').innerHTML='';
+  document.getElementById('st-next').style.display='none';
+  document.getElementById('st-restart').style.display='none';
+}
+function checkStim(btn,chosen,correct){
+  btn.parentElement.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  if(chosen===correct){btn.classList.add('correct');stRight++;}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt')[correct].classList.add('reveal');stWrong++;}
+  document.getElementById('st-score').textContent=`✓ ${stRight} · ✗ ${stWrong}`;
+  document.getElementById('st-exp').innerHTML=stimuli[stIdx].exp;
+  document.getElementById('st-exp').classList.add('show');
+  document.getElementById('st-next').style.display='flex';
+}
+function nextStim(){stIdx++;loadStim();}
+</script>
+</body>
+</html>
